@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Year 8 Geography Revision Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0f1117;--surface:#1a1d2e;--surface2:#252840;--text:#e8eaf6;--text-dim:#9094b0;--radius:16px;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#1a1d2e,#252840);border-bottom:3px solid #4fc3f7;padding:28px 32px;text-align:center;}
+  header h1{font-family:'Fredoka One',cursive;font-size:2.6rem;background:linear-gradient(135deg,#4fc3f7,#00d4aa,#66bb6a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;}
+  header p{color:var(--text-dim);font-size:1rem;}
+  .hero-stats{display:flex;gap:16px;justify-content:center;padding:18px;flex-wrap:wrap;background:var(--surface);border-bottom:1px solid var(--surface2);}
+  .hero-stat{text-align:center;padding:10px 20px;background:var(--surface2);border-radius:12px;}
+  .hero-stat-num{font-size:1.5rem;font-weight:800;font-family:'Fredoka One',cursive;color:#4fc3f7;}
+  .hero-stat-label{font-size:0.72rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;}
+  .quick-links{display:flex;gap:12px;justify-content:center;padding:18px;flex-wrap:wrap;border-bottom:1px solid var(--surface2);}
+  .quick-btn{padding:10px 22px;border-radius:999px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.95rem;cursor:pointer;border:none;text-decoration:none;display:inline-block;transition:all .2s;}
+  .quick-btn.mixed{background:linear-gradient(135deg,#ff7043,#ffa726);color:#000;}
+  .quick-btn.mixed:hover{transform:translateY(-2px);box-shadow:0 4px 20px #ff704350;}
+  .quick-btn.exam{background:linear-gradient(135deg,#ab47bc,#ec407a);color:#fff;}
+  .quick-btn.exam:hover{transform:translateY(-2px);box-shadow:0 4px 20px #ab47bc50;}
+  main{max-width:1100px;margin:0 auto;padding:32px 20px;}
+
+  /* ── EXAM TOPICS SECTION ── */
+  .exam-section{margin-bottom:48px;}
+  .exam-section-header{background:linear-gradient(135deg,#1a1d2e,#252840);border:2px solid #ffd54f44;border-radius:var(--radius);padding:24px 28px;margin-bottom:24px;position:relative;overflow:hidden;}
+  .exam-section-header::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#ffd54f08,transparent);pointer-events:none;}
+  .exam-section-header h2{font-family:'Fredoka One',cursive;font-size:1.9rem;color:#ffd54f;margin-bottom:6px;}
+  .exam-section-header p{color:var(--text-dim);font-size:0.9rem;margin-bottom:14px;}
+  .exam-meta-chips{display:flex;gap:8px;flex-wrap:wrap;}
+  .emeta{padding:5px 14px;border-radius:999px;font-size:0.8rem;font-weight:700;background:#ffffff10;color:var(--text-dim);border:1px solid #ffffff20;}
+
+  .exam-topic-card{border-radius:var(--radius);overflow:hidden;margin-bottom:24px;border:2px solid transparent;transition:transform .2s;}
+  .exam-topic-card:hover{transform:translateY(-3px);}
+  .exam-topic-banner{padding:20px 24px;display:flex;align-items:flex-start;gap:16px;}
+  .exam-topic-icon{font-size:2.4rem;flex-shrink:0;line-height:1;}
+  .exam-topic-title{font-family:'Fredoka One',cursive;font-size:1.5rem;margin-bottom:3px;}
+  .exam-topic-desc{font-size:0.85rem;opacity:.8;margin-bottom:10px;}
+  .exam-marks-badge{display:inline-block;padding:3px 12px;border-radius:999px;font-size:0.78rem;font-weight:800;background:rgba(0,0,0,.25);}
+
+  /* subtopic chips inside exam card */
+  .subtopic-list{padding:0 24px 16px;display:flex;flex-wrap:wrap;gap:8px;}
+  .st-chip{padding:5px 12px;border-radius:999px;font-size:0.78rem;font-weight:700;background:rgba(255,255,255,.07);color:var(--text-dim);border:1px solid rgba(255,255,255,.1);}
+  .st-chip.key{color:#ffd54f;border-color:#ffd54f44;background:#ffd54f10;}
+
+  /* action buttons row */
+  .exam-action-row{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid rgba(255,255,255,.08);}
+  .exam-action-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;text-decoration:none;border:none;cursor:pointer;transition:all .2s;}
+  .exam-action-btn.quiz{background:rgba(255,255,255,.06);}
+  .exam-action-btn.flash{background:rgba(255,255,255,.03);border-left:1px solid rgba(255,255,255,.08);}
+  .exam-action-btn:hover{background:rgba(255,255,255,.12);}
+  .action-icon{font-size:1.2rem;}
+
+  /* colour themes */
+  .et-water{background:linear-gradient(135deg,#1a2a3a,#1a1d2e);border-color:#29b6f644;}
+  .et-water .exam-topic-title{color:#29b6f6;}
+  .et-water .exam-action-btn.quiz{color:#29b6f6;}
+  .et-water .exam-action-btn.flash{color:#4fc3f7;}
+
+  .et-climate{background:linear-gradient(135deg,#2a1a1a,#1a1d2e);border-color:#ef535044;}
+  .et-climate .exam-topic-title{color:#ef5350;}
+  .et-climate .exam-action-btn.quiz{color:#ef5350;}
+  .et-climate .exam-action-btn.flash{color:#ff7043;}
+
+  .et-energy{background:linear-gradient(135deg,#2a1f10,#1a1d2e);border-color:#ffa72644;}
+  .et-energy .exam-topic-title{color:#ffa726;}
+  .et-energy .exam-action-btn.quiz{color:#ffa726;}
+  .et-energy .exam-action-btn.flash{color:#ffcc02;}
+
+  /* ── ALL TOPICS SECTION ── */
+  .section-title{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--text-dim);margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--surface2);}
+  .topics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;margin-bottom:40px;}
+  .topic-card{background:var(--surface);border-radius:var(--radius);overflow:hidden;border:2px solid var(--surface2);transition:all .25s;}
+  .topic-card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.4);}
+  .topic-card-header{padding:16px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--surface2);}
+  .topic-icon-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+  .topic-card-header h2{font-family:'Fredoka One',cursive;font-size:1.1rem;}
+  .topic-card-header p{font-size:0.75rem;color:var(--text-dim);margin-top:2px;}
+  .topic-links{padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap;}
+  .topic-link{flex:1;min-width:90px;padding:9px 12px;border-radius:10px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.85rem;text-decoration:none;text-align:center;display:block;transition:all .2s;border:2px solid;}
+  .topic-link.quiz{background:transparent;}
+  .topic-link.quiz:hover{color:#000!important;}
+  .topic-link.flash{border-color:#ffffff20;background:#ffffff08;color:var(--text-dim);}
+  .topic-link.flash:hover{background:var(--surface2);color:var(--text);}
+
+  .tips-section{background:var(--surface);border-radius:var(--radius);padding:28px;margin-bottom:40px;border:1px solid var(--surface2);}
+  .tips-section h2{font-family:'Fredoka One',cursive;font-size:1.4rem;color:#ffa726;margin-bottom:16px;}
+  .tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+  .tip-card{background:var(--surface2);border-radius:12px;padding:14px;}
+  .tip-card h3{font-size:0.88rem;font-weight:800;margin-bottom:6px;}
+  .tip-card p{font-size:0.8rem;color:var(--text-dim);line-height:1.5;}
+  footer{text-align:center;padding:28px;color:var(--text-dim);font-size:0.85rem;border-top:1px solid var(--surface2);}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌍 Year 8 Geography Revision Hub</h1>
+  <p>KS3 · All Topics · Quizzes + Flashcards + Exam Guide + Mixed Quiz</p>
+</header>
+<div class="hero-stats">
+  <div class="hero-stat"><div class="hero-stat-num">11</div><div class="hero-stat-label">Topics</div></div>
+  <div class="hero-stat"><div class="hero-stat-num">230+</div><div class="hero-stat-label">Quiz Questions</div></div>
+  <div class="hero-stat"><div class="hero-stat-num">220+</div><div class="hero-stat-label">Flashcards</div></div>
+  <div class="hero-stat"><div class="hero-stat-num">3</div><div class="hero-stat-label">Exam Topics</div></div>
+  <div class="hero-stat"><div class="hero-stat-num">∞</div><div class="hero-stat-label">AI Questions</div></div>
+</div>
+<div class="quick-links">
+  <a href="mixed-quiz.html" class="quick-btn mixed">⚡ Mixed Topic Quiz</a>
+  <a href="exam-guide.html" class="quick-btn exam">📋 Exam Technique Guide</a>
+</div>
+
+<main>
+
+  <!-- ══════════════════════════════════════════════
+       EXAM TOPICS SECTION
+  ══════════════════════════════════════════════ -->
+  <div class="exam-section">
+    <div class="exam-section-header">
+      <h2>⭐ Exam Topics</h2>
+      <p>Your end-of-year exam covers these three topics — 20 marks each, 60 minutes total. Every subtopic from the revision list is covered below with dedicated quizzes and flashcard decks.</p>
+      <div class="exam-meta-chips">
+        <span class="emeta">📝 3 sections × 20 marks</span>
+        <span class="emeta">⏱️ 60 minutes</span>
+        <span class="emeta">💧 Water Worries</span>
+        <span class="emeta">🌡️ Climate Change</span>
+        <span class="emeta">⚡ Energy</span>
+      </div>
+    </div>
+
+    <!-- WATER WORRIES -->
+    <div class="exam-topic-card et-water">
+      <div class="exam-topic-banner">
+        <div class="exam-topic-icon">💧</div>
+        <div>
+          <div class="exam-topic-title">Water Worries</div>
+          <div class="exam-topic-desc">Importance of water · Water stores & flows · Hydrological cycle · Drainage basins · Hydrographs · Flooding (HIC & LIC case studies) · Hard & soft engineering · Water scarcity</div>
+          <span class="exam-marks-badge">20 marks · Section 1</span>
+        </div>
+      </div>
+      <div class="subtopic-list">
+        <span class="st-chip key">Importance of water</span>
+        <span class="st-chip key">Global water stores &amp; flows</span>
+        <span class="st-chip key">Hydrological cycle</span>
+        <span class="st-chip key">Drainage basin features</span>
+        <span class="st-chip key">Drainage basin processes</span>
+        <span class="st-chip key">Hydrographs</span>
+        <span class="st-chip key">Flooding HIC case study</span>
+        <span class="st-chip key">Flooding LIC case study</span>
+        <span class="st-chip key">Hard &amp; soft engineering</span>
+        <span class="st-chip key">Water scarcity causes &amp; impacts</span>
+      </div>
+      <div class="exam-action-row">
+        <a href="exam-quiz-water-worries.html" class="exam-action-btn quiz"><span class="action-icon">📝</span> Quiz — 24 Questions</a>
+        <a href="exam-flashcards-water-worries.html" class="exam-action-btn flash"><span class="action-icon">🃏</span> Flashcards — 20 Cards</a>
+      </div>
+    </div>
+
+    <!-- CLIMATE CHANGE -->
+    <div class="exam-topic-card et-climate">
+      <div class="exam-topic-banner">
+        <div class="exam-topic-icon">🌡️</div>
+        <div>
+          <div class="exam-topic-title">Climate Change</div>
+          <div class="exam-topic-desc">Climate change vs global warming · Natural & enhanced greenhouse effect · Human causes (fossil fuels, deforestation, agriculture) · Natural causes (orbital changes, sunspot cycles, volcanic eruptions) · Environmental & human impacts · Adaptation & mitigation strategies</div>
+          <span class="exam-marks-badge">20 marks · Section 2</span>
+        </div>
+      </div>
+      <div class="subtopic-list">
+        <span class="st-chip key">Climate change vs global warming</span>
+        <span class="st-chip key">Natural greenhouse effect</span>
+        <span class="st-chip key">Enhanced greenhouse effect</span>
+        <span class="st-chip key">Human causes</span>
+        <span class="st-chip key">Natural causes (orbital, sunspots, volcanic)</span>
+        <span class="st-chip key">Environmental impacts</span>
+        <span class="st-chip key">Human impacts</span>
+        <span class="st-chip key">Adaptation strategies</span>
+        <span class="st-chip key">Mitigation strategies</span>
+        <span class="st-chip key">International agreements</span>
+      </div>
+      <div class="exam-action-row">
+        <a href="exam-quiz-climate-change.html" class="exam-action-btn quiz"><span class="action-icon">📝</span> Quiz — 16 Questions</a>
+        <a href="exam-flashcards-climate-change.html" class="exam-action-btn flash"><span class="action-icon">🃏</span> Flashcards — 20 Cards</a>
+      </div>
+    </div>
+
+    <!-- ENERGY -->
+    <div class="exam-topic-card et-energy">
+      <div class="exam-topic-banner">
+        <div class="exam-topic-icon">⚡</div>
+        <div>
+          <div class="exam-topic-title">Energy</div>
+          <div class="exam-topic-desc">Key energy terms (energy mix, security, renewable, non-renewable, fossil fuels) · Factors affecting energy supply · Fossil fuel advantages & disadvantages · Environmental degradation case study · Renewable energy sources (HEP, solar, wind, biomass, geothermal) · Renewable energy project case study</div>
+          <span class="exam-marks-badge">20 marks · Section 3</span>
+        </div>
+      </div>
+      <div class="subtopic-list">
+        <span class="st-chip key">Energy mix &amp; energy security</span>
+        <span class="st-chip key">Renewable vs non-renewable</span>
+        <span class="st-chip key">Fossil fuels</span>
+        <span class="st-chip key">Factors affecting supply</span>
+        <span class="st-chip key">Fossil fuel advantages &amp; disadvantages</span>
+        <span class="st-chip key">Fossil fuel degradation case study</span>
+        <span class="st-chip key">HEP, Solar, Wind</span>
+        <span class="st-chip key">Biomass &amp; Geothermal</span>
+        <span class="st-chip key">Renewable energy case study</span>
+      </div>
+      <div class="exam-action-row">
+        <a href="exam-quiz-energy.html" class="exam-action-btn quiz"><span class="action-icon">📝</span> Quiz — 16 Questions</a>
+        <a href="exam-flashcards-energy.html" class="exam-action-btn flash"><span class="action-icon">🃏</span> Flashcards — 16 Cards</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       ALL TOPICS SECTION
+  ══════════════════════════════════════════════ -->
+  <div class="section-title">📚 All Topics — General Revision</div>
+  <div class="topics-grid">
+
+    <div class="topic-card" style="border-color:#00d4aa30;">
+      <div class="topic-card-header">
+        <div class="topic-icon-circle" style="background:#00d4aa20;">🗺️</div>
+        <div><h2 style="color:#00d4aa;">Map Skills</h2><p>Grid refs · Scale · Contours · OS maps</p></div>
+      </div>
+      <div class="topic-links">
+        <a href="quiz-map-skills.html" class="topic-link quiz" style="border-color:#00d4aa;color:#00d4aa;" onmouseover="this.style.background='#00d4aa'" onmouseout="this.style.background='transparent'">📝 Quiz</a>
+        <a href="flashcards-map-skills.html" class="topic-link flash">🃏 Flashcards</a>
+      </div>
+    </div>
+
+    <div class="topic-card" style="border-color:#4fc3f730;">
+      <div class="topic-card-header">
+        <div class="topic-icon-circle" style="background:#4fc3f720;">☁️</div>
+        <div><h2 style="color:#4fc3f7;">Weather &amp; Climate</h2><p>UK weather · Climate zones · Water cycle</p></div>
+      </div>
+      <div class="topic-links">
+        <a href="quiz-weather-climate.html" class="topic-link quiz" style="border-color:#4fc3f7;color:#4fc3f7;" onmouseover="this.style.background='#4fc3f7'" onmouseout="this.style.background='transparent'">📝 Quiz</a>
+        <a href="flashcards-weather-climate.html" class="topic-link flash">🃏 Flashcards</a>
+      </div>
+    </div>
+
+    <div class="topic-card" style="border-color:#66bb6a30;">
+      <div class="topic-card-header">
+        <div class="topic-icon-circle" style="background:#66bb6a20;">🌿</div>
+        <div><h2 style="color:#66bb6a;">Ecosystems</h2><p>Biomes · Rainforests · Food webs · Deforestation</p></div>
+      </div>
+      <div class="topic-links">
+        <a href="quiz-ecosystems.html" class="topic-link quiz" style="border-color:#66bb6a;color:#66bb6a;" onmouseover="this.style.background='#66bb6a'" onmouseout="this.style.background='transparent'">📝 Quiz</a>
+        <a href="flashcards-ecosystems.html" class="topic-link flash">🃏 Flashcards</a>
+      </div>
+    </div>
+
+    <div class="topic-card" style="border-color:#ff704330;">
+      <div class="topic-card-header">
+        <div class="topic-icon-circle" style="background:#ff704320;">🌋</div>
+        <div><h2 style="color:#ff7043;">Plate Tectonics</h2><p>Earthquakes · Volcanoes · Plate boundaries</p></div>
+      </div>
+      <div class="topic-links">
+        <a href="quiz-plate-tectonics.html" class="topic-link quiz" style="border-color:#ff7043;color:#ff7043;" onmouseover="this.style.background='#ff7043'" onmouseout="this.style.background='transparent'">📝 Quiz</a>
+        <a href="flashcards-plate-tectonics.html" class="topic-link flash">🃏 Flashcards</a>
+      </div>
+    </div>
+
+    <div class="topic-card" style="border-color:#29b6f630;">
+      <div class="topic-card-header">
+        <div class="topic-icon-circle" style="background:#29b6f620;">🌊</div>
+        <div><h2 style="color:#29b6f6;">Rivers</h2><p>Erosion · Transportation · Landforms · Flooding</p></div>
+      </div>
+      <div class="topic-links">
+        <a href="quiz-rivers.html" class="topic-link quiz" style="border-color:#29b6f6;color:#29b6f6;" onmouseover="this.style.background='#29b6f6'" onmouseout="this.style.background='transparent'">📝 Quiz</a>
+        <a href="flashcards-rivers.html" class="topic-link flash">🃏 Flashcards</a>
+      </div>
+    </div>
+
+    <div class="topic-card" style="border-color:#ab47bc30;">
+      <div class="topic-card-header">
+        <div class="topic-icon-circle" style="background:#ab47bc20;">🏖️</div>
+        <div><h2 style="color:#ab47bc;">Coasts</h2><p>Waves · Erosion · Landforms · Management</p></div>
+      </div>
+      <div class="topic-links">
+        <a href="quiz-coasts.html" class="topic-link quiz" style="border-color:#ab47bc;color:#ab47bc;" onmouseover="this.style.background='#ab47bc'" onmouseout="this.style.background='transparent'">📝 Quiz</a>
+        <a href="flashcards-coasts.html" class="topic-link flash">🃏 Flashcards</a>
+      </div>
+    </div>
+
+    <div class="topic-card" style="border-color:#ffa72630;">
+      <div class="topic-card-header">
+        <div class="topic-icon-circle" style="background:#ffa72620;">🏙️</div>
+        <div><h2 style="color:#ffa726;">Urban Issues</h2><p>Urbanisation · Megacities · Housing · Sustainability</p></div>
+      </div>
+      <div class="topic-links">
+        <a href="quiz-urban-issues.html" class="topic-link quiz" style="border-color:#ffa726;color:#ffa726;" onmouseover="this.style.background='#ffa726';this.style.color='#000'" onmouseout="this.style.background='transparent';this.style.color='#ffa726'">📝 Quiz</a>
+        <a href="flashcards-urban-issues.html" class="topic-link flash">🃏 Flashcards</a>
+      </div>
+    </div>
+
+    <div class="topic-card" style="border-color:#ec407a30;">
+      <div class="topic-card-header">
+        <div class="topic-icon-circle" style="background:#ec407a20;">🌍</div>
+        <div><h2 style="color:#ec407a;">Development</h2><p>HDI · Rich/poor world · Aid · Trade</p></div>
+      </div>
+      <div class="topic-links">
+        <a href="quiz-development.html" class="topic-link quiz" style="border-color:#ec407a;color:#ec407a;" onmouseover="this.style.background='#ec407a'" onmouseout="this.style.background='transparent'">📝 Quiz</a>
+        <a href="flashcards-development.html" class="topic-link flash">🃏 Flashcards</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tips-section">
+    <h2>🎯 Top Revision Tips</h2>
+    <div class="tips-grid">
+      <div class="tip-card"><h3 style="color:#29b6f6;">💧 Exam Topics First</h3><p>Focus on Water Worries, Climate Change, and Energy above all else — they're your entire exam. Use the Exam Topics section every session.</p></div>
+      <div class="tip-card"><h3 style="color:#4fc3f7;">🔁 Space Your Revision</h3><p>Study a subtopic, leave it 2 days, return to it. Spaced repetition dramatically improves long-term memory. Use the flashcard "Not Yet" filter.</p></div>
+      <div class="tip-card"><h3 style="color:#66bb6a;">🃏 Flashcards First</h3><p>Start with flashcards to learn key terms, then challenge yourself with quizzes. Don't skip straight to questions without building knowledge first.</p></div>
+      <div class="tip-card"><h3 style="color:#ff7043;">📝 Case Studies</h3><p>Name real places every time: Boscastle/Bangladesh (flooding), Alberta Tar Sands (fossil fuel damage), Paris Agreement (climate), Hornsea/Dinorwig (renewables).</p></div>
+      <div class="tip-card"><h3 style="color:#ffa726;">⚡ Mixed Quiz</h3><p>Once confident on individual topics, tackle the mixed quiz — closest to real exam conditions where you can't predict which topic comes next.</p></div>
+      <div class="tip-card"><h3 style="color:#ab47bc;">📋 Exam Guide</h3><p>Read the Exam Technique Guide to understand command words — there's a big difference between 'describe', 'explain', and 'evaluate'.</p></div>
+    </div>
+  </div>
+</main>
+<footer>Year 8 Geography Revision Toolkit · KS3 UK Curriculum · All files work offline except AI generation buttons · Keep all files in the same folder</footer>
+</body>
+</html>

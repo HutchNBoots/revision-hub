@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Climate Change Quiz — Year 8 Geography</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0f1117;--surface:#1a1d2e;--surface2:#252840;--accent:#ef5350;--accent2:#b71c1c;--text:#e8eaf6;--text-dim:#9094b0;--correct:#4caf50;--wrong:#f44336;--radius:16px;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#ef535022,#ef535008);border-bottom:2px solid var(--accent);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .header-left{display:flex;align-items:center;gap:14px;}
+  .topic-icon{font-size:2.2rem;}
+  header h1{font-family:'Fredoka One',cursive;font-size:1.7rem;color:var(--accent);}
+  header p{color:var(--text-dim);font-size:0.85rem;}
+  .back-btn{padding:8px 18px;border-radius:999px;background:var(--surface2);color:var(--text-dim);border:none;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;}
+  .back-btn:hover{background:#353860;color:var(--text);}
+  .exam-badge{background:#ef535022;border:1px solid #ef5350;color:#ef5350;padding:4px 12px;border-radius:999px;font-size:0.78rem;font-weight:800;margin-top:4px;display:inline-block;}
+  .stats-bar{display:flex;gap:16px;align-items:center;padding:12px 24px;background:var(--surface);border-bottom:1px solid var(--surface2);flex-wrap:wrap;}
+  .stat{text-align:center;}
+  .stat-num{font-size:1.3rem;font-weight:800;color:var(--accent);}
+  .stat-label{font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;}
+  .progress-bar{flex:1;height:8px;background:var(--surface2);border-radius:999px;overflow:hidden;min-width:80px;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;transition:width .4s;}
+  main{max-width:720px;margin:0 auto;padding:24px 20px;}
+  .subtopic-filter{background:var(--surface);border-radius:var(--radius);padding:16px 20px;margin-bottom:18px;border:1px solid var(--surface2);}
+  .subtopic-filter h3{font-size:0.8rem;font-weight:800;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{padding:5px 13px;border-radius:999px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all .2s;border:2px solid var(--surface2);background:var(--surface);color:var(--text-dim);}
+  .chip.active{border-color:var(--accent);color:var(--accent);background:#ef535018;}
+  .controls-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+  .ctrl-btn{padding:7px 16px;border-radius:999px;background:var(--surface2);color:var(--text-dim);border:none;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;transition:all .2s;}
+  .ctrl-btn:hover{background:#353860;color:var(--text);}
+  .nav-dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--surface2);cursor:pointer;transition:all .2s;border:2px solid transparent;}
+  .dot.current{border-color:var(--accent);transform:scale(1.3);}
+  .dot.correct{background:var(--correct);}
+  .dot.wrong{background:var(--wrong);}
+  .question-card{background:var(--surface);border-radius:var(--radius);padding:26px;margin-bottom:14px;border:2px solid var(--surface2);}
+  .q-meta{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .q-num{font-size:0.78rem;color:var(--text-dim);font-weight:700;}
+  .q-subtopic{padding:3px 10px;border-radius:999px;font-size:0.75rem;font-weight:700;background:#ef535018;color:var(--accent);border:1px solid #ef535044;}
+  .question-text{font-size:1.1rem;font-weight:800;line-height:1.4;margin-bottom:4px;}
+  .hint-btn{background:none;border:none;color:var(--text-dim);font-size:0.8rem;cursor:pointer;font-family:'Nunito',sans-serif;padding:6px 0;text-decoration:underline;display:block;}
+  .hint-text{font-size:0.83rem;color:#ffd54f;margin-top:6px;padding:7px 11px;background:#ffd54f15;border-radius:8px;display:none;}
+  .options{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
+  .opt-btn{padding:13px 16px;border-radius:10px;background:var(--surface2);border:2px solid transparent;color:var(--text);font-family:'Nunito',sans-serif;font-weight:700;font-size:0.93rem;text-align:left;cursor:pointer;transition:all .2s;}
+  .opt-btn:hover:not(:disabled){border-color:var(--accent);background:#ef535015;}
+  .opt-btn.correct{background:#4caf5018;border-color:var(--correct);color:var(--correct);}
+  .opt-btn.wrong{background:#f4433618;border-color:var(--wrong);color:var(--wrong);}
+  .opt-btn:disabled{cursor:default;}
+  .explanation{background:#ffffff08;border-left:3px solid var(--accent);padding:11px 14px;border-radius:0 8px 8px 0;margin-bottom:14px;font-size:0.86rem;line-height:1.55;display:none;}
+  .nav-row{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:20px;}
+  .nav-btn{padding:10px 22px;border-radius:999px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.93rem;cursor:pointer;border:none;transition:all .2s;}
+  .nav-btn.primary{background:var(--accent);color:#000;}
+  .nav-btn.primary:hover{background:var(--accent2);}
+  .nav-btn.secondary{background:var(--surface2);color:var(--text);}
+  .nav-btn.secondary:hover{background:#353860;}
+  .results{background:var(--surface);border-radius:var(--radius);padding:36px;text-align:center;display:none;}
+  .results.show{display:block;animation:fadeIn .4s ease;}
+  .results h2{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--accent);margin-bottom:8px;}
+  .big-score{font-size:3rem;font-weight:800;font-family:'Fredoka One',cursive;margin:14px 0;}
+  .subtopic-breakdown{margin:20px 0;text-align:left;}
+  .breakdown-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--surface2);}
+  .breakdown-label{font-size:0.85rem;flex:1;font-weight:700;}
+  .breakdown-bar-wrap{width:80px;height:7px;background:var(--surface2);border-radius:999px;overflow:hidden;}
+  .breakdown-bar{height:100%;background:var(--accent);border-radius:999px;}
+  .breakdown-score{font-size:0.85rem;font-weight:800;color:var(--accent);min-width:36px;text-align:right;}
+  .res-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:20px;}
+  .res-btn{padding:11px 22px;border-radius:999px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.95rem;cursor:pointer;border:none;text-decoration:none;display:inline-block;}
+  .res-btn.primary{background:var(--accent);color:#000;}
+  .res-btn.secondary{background:var(--surface2);color:var(--text);}
+  .ai-panel{background:var(--surface);border-radius:var(--radius);padding:22px;border:1px solid var(--accent);margin-bottom:20px;}
+  .ai-panel h3{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--accent);margin-bottom:6px;}
+  .ai-panel p{color:var(--text-dim);font-size:0.87rem;margin-bottom:14px;}
+  .ai-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+  .ai-generate-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:none;padding:11px 22px;border-radius:999px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.95rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;}
+  .ai-generate-btn:hover{transform:translateY(-2px);box-shadow:0 4px 20px #ef535044;}
+  .ai-generate-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+  .ai-status{margin-top:10px;font-size:0.87rem;color:var(--text-dim);min-height:18px;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .spinner{animation:spin 1s linear infinite;display:inline-block;} @keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <div class="topic-icon">🌡️</div>
+    <div>
+      <h1>Climate Change Quiz</h1>
+      <p>Year 8 Geography · KS3 · Global warming, greenhouse effect, causes, impacts, adaptation & mitigation</p>
+      <span class="exam-badge">⭐ End-of-Year Exam Topic</span>
+    </div>
+  </div>
+  <a href="hub.html" class="back-btn">← Hub</a>
+</header>
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num" id="scoreDisplay">0</div><div class="stat-label">Score</div></div>
+  <div class="stat"><div class="stat-num" id="totalDisplay">0</div><div class="stat-label">Total Qs</div></div>
+  <div class="stat"><div class="stat-num" id="correctDisplay" style="color:var(--correct)">0</div><div class="stat-label">Correct</div></div>
+  <div class="stat"><div class="stat-num" id="wrongDisplay" style="color:var(--wrong)">0</div><div class="stat-label">Wrong</div></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+<main>
+  <div id="quizArea">
+    <div class="subtopic-filter">
+      <h3>Filter by subtopic</h3>
+      <div class="chips" id="filterChips"><div class="chip active" data-topic="Climate Change vs Global Warming">Climate Change vs Global Warming</div>
+<div class="chip active" data-topic="Greenhouse Effect">Greenhouse Effect</div>
+<div class="chip active" data-topic="Human Causes">Human Causes</div>
+<div class="chip active" data-topic="Natural Causes">Natural Causes</div>
+<div class="chip active" data-topic="Impacts">Impacts</div>
+<div class="chip active" data-topic="Adaptation Strategies">Adaptation Strategies</div>
+<div class="chip active" data-topic="Mitigation Strategies">Mitigation Strategies</div></div>
+    </div>
+    <div class="controls-row">
+      <button class="ctrl-btn" onclick="shuffleQuestions()">🔀 Shuffle</button>
+      <button class="ctrl-btn" onclick="resetAnswers()">🔄 Reset Answers</button>
+      <button class="ctrl-btn" onclick="resetToOriginal()">↩ Reset to Original</button>
+    </div>
+    <div class="nav-dots" id="navDots"></div>
+    <div class="question-card">
+      <div class="q-meta">
+        <span class="q-num" id="qNum">Question 1</span>
+        <span class="q-subtopic" id="qSubtopic"></span>
+      </div>
+      <div class="question-text" id="questionText"></div>
+      <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Show Hint</button>
+      <div class="hint-text" id="hintText"></div>
+    </div>
+    <div class="options" id="optionsDiv"></div>
+    <div class="explanation" id="explanationDiv"></div>
+    <div class="nav-row">
+      <button class="nav-btn secondary" onclick="goTo(currentIdx-1)">← Prev</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="goTo(currentIdx+1)">Next →</button>
+    </div>
+    <div class="results" id="resultsDiv">
+      <h2 id="resultsEmoji">Quiz Complete! 🎓</h2>
+      <div class="big-score" id="bigScore"></div>
+      <div class="subtopic-breakdown" id="subtopicBreakdown"></div>
+      <div class="res-btns">
+        <button class="res-btn primary" onclick="resetAnswers()">🔄 Try Again</button>
+        <a href="hub.html" class="res-btn secondary">🏠 Hub</a>
+      </div>
+    </div>
+    <div class="ai-panel">
+      <h3>🤖 Generate More Questions</h3>
+      <p>Mr. Geo creates new questions on specific subtopics, validated by CheckerBot for KS3 accuracy.</p>
+      <div class="ai-chips" id="aiChips"><div class="chip active" data-topic="Climate Change vs Global Warming">Climate Change vs Global Warming</div>
+<div class="chip active" data-topic="Greenhouse Effect">Greenhouse Effect</div>
+<div class="chip active" data-topic="Human Causes">Human Causes</div>
+<div class="chip active" data-topic="Natural Causes">Natural Causes</div>
+<div class="chip active" data-topic="Impacts">Impacts</div>
+<div class="chip active" data-topic="Adaptation Strategies">Adaptation Strategies</div>
+<div class="chip active" data-topic="Mitigation Strategies">Mitigation Strategies</div></div>
+      <button class="ai-generate-btn" id="generateBtn" onclick="generateQuestions()"><span>✨</span> Generate 5 Questions</button>
+      <div class="ai-status" id="aiStatus"></div>
+    </div>
+  </div>
+</main>
+<script>
+const SEED_QUESTIONS = [{"id": "cc01", "q": "What is the difference between climate change and global warming?", "options": ["They mean exactly the same thing", "Global warming = the rise in average global temperatures; Climate change = the broader set of changes to weather patterns, sea levels, and precipitation caused by global warming", "Climate change only refers to natural change; global warming is human-caused", "Global warming is cooling; climate change is warming"], "answer": 1, "hint": "Global warming is one part of a bigger picture.", "explanation": "GLOBAL WARMING = the measurable increase in Earth's average surface temperature (especially since industrialisation). CLIMATE CHANGE = the broader term covering all changes to Earth's climate system: temperature rise, changing rainfall patterns, more extreme weather, sea level rise, ocean acidification — of which global warming is one component.", "subtopic": "Climate Change vs Global Warming"}, {"id": "cc02", "q": "How does the natural greenhouse effect work?", "options": ["Greenhouse gases block all solar radiation from reaching Earth", "Solar radiation passes through the atmosphere, warms Earth's surface, which emits heat (infrared radiation) that is absorbed and re-emitted by greenhouse gases, keeping Earth warm", "The ozone layer heats the atmosphere", "Clouds reflect heat back to Earth"], "answer": 1, "hint": "Think about heat being trapped.", "explanation": "Natural greenhouse effect: 1) Short-wave solar radiation passes through atmosphere → warms Earth's surface. 2) Surface emits long-wave infrared (heat) radiation upward. 3) Greenhouse gases (CO₂, water vapour, methane, nitrous oxide) absorb and re-emit this heat in all directions, including back to Earth. 4) This keeps Earth ~33°C warmer than it would otherwise be (-18°C without it). Essential for life.", "subtopic": "Greenhouse Effect"}, {"id": "cc03", "q": "What is the enhanced greenhouse effect?", "options": ["The same as the natural greenhouse effect", "When human activities increase atmospheric concentrations of greenhouse gases, trapping MORE heat and raising temperatures above natural levels", "When the Sun gets hotter", "When volcanoes add gases"], "answer": 1, "hint": "Human activities make the greenhouse effect stronger.", "explanation": "The ENHANCED greenhouse effect: human activities (burning fossil fuels, deforestation, agriculture) add extra greenhouse gases (especially CO₂ and methane) to the atmosphere. This thickens the 'greenhouse blanket', trapping more heat than the natural process — causing temperatures to rise above natural levels. CO₂ has risen from 280ppm (pre-industrial) to 420ppm+.", "subtopic": "Greenhouse Effect"}, {"id": "cc04", "q": "Which human activity is the LARGEST contributor to climate change?", "options": ["Agriculture", "Deforestation", "Burning fossil fuels (coal, oil, gas) releasing CO₂", "Manufacturing plastic"], "answer": 2, "hint": "Think about what powers our cars, power stations, and heating.", "explanation": "Burning fossil fuels is the largest human cause of climate change. When coal, oil, and gas are burned for energy (electricity generation, transport, heating, industry), stored carbon is released as CO₂. This accounts for ~75% of global greenhouse gas emissions. Energy sector and transport are the biggest contributors.", "subtopic": "Human Causes"}, {"id": "cc05", "q": "How does deforestation cause climate change?", "options": ["Forests cool the atmosphere by absorbing sunlight", "Trees store carbon; when felled and burned, stored CO₂ is released AND fewer trees absorb CO₂ — a double impact", "Deforestation increases rainfall", "Trees produce greenhouse gases"], "answer": 1, "hint": "What do trees do with carbon? What happens when they're gone?", "explanation": "Deforestation contributes to climate change in TWO ways: 1) RELEASE: when trees are burned/decay, stored carbon is released as CO₂. 2) REDUCED ABSORPTION: fewer trees means less carbon being absorbed from the atmosphere. Amazon deforestation contributes ~10% of global emissions. Also disrupts local water cycles and rainfall patterns.", "subtopic": "Human Causes"}, {"id": "cc06", "q": "How does agriculture cause climate change?", "options": ["Only by using tractors", "Rice paddies and waterlogged fields produce methane; livestock (cattle/sheep) produce methane during digestion; fertilisers produce nitrous oxide", "Agriculture absorbs greenhouse gases", "Only by burning fields"], "answer": 1, "hint": "Think about cows and wet rice fields.", "explanation": "Agriculture contributes to climate change through: 1) METHANE from livestock (cattle, sheep produce methane during digestion — 'enteric fermentation') and from flooded rice paddies. 2) NITROUS OXIDE from synthetic fertilisers. 3) CARBON DIOXIDE from land clearing and fossil fuel use in machinery. Agriculture produces ~11% of global greenhouse gas emissions.", "subtopic": "Human Causes"}, {"id": "cc07", "q": "What are orbital changes (Milankovitch cycles) as a NATURAL cause of climate change?", "options": ["Changes in the Sun's temperature", "Changes in Earth's orbit around the Sun (shape, tilt, wobble) over thousands of years that alter the amount and distribution of solar energy Earth receives, causing ice ages and warm periods", "Volcanic eruptions affecting orbit", "Changes in ocean currents"], "answer": 1, "hint": "The Earth's orbit isn't always the same shape.", "explanation": "Milankovitch cycles: natural variations in Earth's orbit and tilt that alter solar energy received. 1) ECCENTRICITY: orbit shape changes from circular to elliptical (~100,000 years). 2) AXIAL TILT: Earth's tilt varies (21.5–24.5°) over ~41,000 years. 3) PRECESSION: Earth wobbles on its axis (~26,000 years). These cause ice ages and interglacial warm periods — but operate over millennia, not decades.", "subtopic": "Natural Causes"}, {"id": "cc08", "q": "How can volcanic eruptions affect climate?", "options": ["Volcanoes always cause warming", "Volcanoes release sulphur dioxide that forms aerosols, REFLECTING sunlight and causing SHORT-TERM COOLING — but also release CO₂ (warming)", "Volcanic eruptions have no impact on climate", "Volcanoes only affect local areas"], "answer": 1, "hint": "One gas reflects sunlight; another traps heat.", "explanation": "Volcanic eruptions: release large quantities of sulphur dioxide (SO₂) which forms sulphate aerosols in the stratosphere, REFLECTING solar radiation → short-term COOLING (e.g. 1991 Mount Pinatubo reduced global temperatures ~0.5°C for 1–2 years). Also release CO₂ (warming, but natural volcanoes emit ~1% of human CO₂ output). Net effect: usually temporary cooling.", "subtopic": "Natural Causes"}, {"id": "cc09", "q": "What are sunspot cycles as a natural cause of climate change?", "options": ["Sunspots block solar radiation permanently", "Periods of increased sunspot activity slightly increase solar output, warming Earth; decreased activity (e.g. Maunder Minimum) may cool Earth — but the effect is small compared to human greenhouse gases", "Sunspots have no impact on Earth", "Sunspots only affect Antarctica"], "answer": 1, "hint": "Sunspots relate to the Sun's energy output.", "explanation": "Sunspots are dark, cooler areas on the Sun's surface associated with increased solar activity. More sunspots = slightly more solar energy reaching Earth = slight warming. The Maunder Minimum (1645–1715) — few sunspots — coincided with the 'Little Ice Age' in Europe. However, solar variation CANNOT explain the rapid warming since 1950 — greenhouse gases are the dominant cause.", "subtopic": "Natural Causes"}, {"id": "cc10", "q": "Name THREE environmental impacts of climate change.", "options": ["Cheaper food, less flooding, more wildlife", "Rising sea levels, increased frequency of extreme weather events, melting ice caps, coral bleaching, habitat loss, species extinction", "Only warmer summers in the UK", "No significant environmental impacts"], "answer": 1, "hint": "Think about ice, sea, and ecosystems.", "explanation": "Environmental impacts: 1) SEA LEVEL RISE (thermal expansion + ice melt) threatening coastal areas. 2) MELTING ICE CAPS/GLACIERS (habitat loss for polar bears, walrus; contributing to sea level rise). 3) EXTREME WEATHER (more intense storms, droughts, floods). 4) CORAL BLEACHING (warmer, more acidic oceans). 5) BIODIVERSITY LOSS (habitat shifts, species unable to adapt). 6) ALTERED PRECIPITATION PATTERNS.", "subtopic": "Impacts"}, {"id": "cc11", "q": "Name THREE human impacts of climate change.", "options": ["Lower food prices, better health, more tourism", "Food insecurity (droughts reducing crops), climate refugees (from flooding/drought), increased disease spread, economic damage from extreme weather, conflict over water", "No significant human impacts", "Only positive impacts — warmer weather is good"], "answer": 1, "hint": "Think about food, homes, health, and conflict.", "explanation": "Human impacts: 1) FOOD INSECURITY — droughts, floods, and shifting seasons reduce crop yields, threatening food supply. 2) CLIMATE REFUGEES — people displaced by sea level rise, flooding, desertification. 3) HEALTH — heat deaths, spread of tropical diseases (malaria) to new areas. 4) ECONOMIC DAMAGE — extreme weather costs billions (Hurricane Harvey 2017: $125bn damage). 5) CONFLICT over water and land resources.", "subtopic": "Impacts"}, {"id": "cc12", "q": "What is the difference between adaptation and mitigation in response to climate change?", "options": ["They are the same thing", "Mitigation = reducing greenhouse gas emissions to SLOW climate change; Adaptation = adjusting to climate change impacts that are ALREADY happening or unavoidable", "Mitigation is a natural process; adaptation is human", "Adaptation reduces emissions; mitigation copes with impacts"], "answer": 1, "hint": "One tackles the cause; the other deals with the effect.", "explanation": "MITIGATION = actions to REDUCE the cause of climate change (greenhouse gas emissions). E.g. renewable energy, afforestation, carbon capture. ADAPTATION = adjusting to COPE with inevitable climate change. E.g. flood defences, drought-resistant crops, early warning systems. Both are needed. Mitigation prevents future warming; adaptation protects communities from current/inevitable changes.", "subtopic": "Mitigation Strategies"}, {"id": "cc13", "q": "Give TWO examples of climate change ADAPTATION strategies.", "options": ["Building more coal power stations, driving more cars", "Flood protection schemes, early warning systems for extreme weather, drought-resistant crop varieties, coastal managed retreat", "Only reducing emissions", "Adapting means accepting climate change is not happening"], "answer": 1, "hint": "These help cope with changes that are already happening.", "explanation": "Adaptation strategies: 1) FLOOD PROTECTION — sea walls, raised embankments, flood barriers (e.g. Thames Barrier). 2) EARLY WARNING SYSTEMS — alerts for floods, droughts, heatwaves. 3) DROUGHT-RESISTANT CROPS — developed to maintain food production in hotter, drier conditions. 4) MANAGED COASTAL RETREAT — allowing flooding of low-value land. 5) CHANGING AGRICULTURAL PRACTICES — different crops/planting seasons.", "subtopic": "Adaptation Strategies"}, {"id": "cc14", "q": "What is afforestation as a climate change MITIGATION strategy?", "options": ["Cutting down forests", "Planting trees and creating new forests to absorb CO₂ from the atmosphere and act as a carbon sink", "Only protecting existing forests", "Moving forests to different locations"], "answer": 1, "hint": "Trees absorb carbon dioxide.", "explanation": "Afforestation = planting trees on land that was not previously forested (different from reforestation which replants existing forest). Trees absorb CO₂ via photosynthesis, acting as a CARBON SINK. One tree absorbs ~21kg CO₂/year. Large-scale afforestation could significantly offset emissions. LIMITATIONS: takes decades, land must be available, trees can be destroyed by fire/disease.", "subtopic": "Mitigation Strategies"}, {"id": "cc15", "q": "What was the Paris Agreement (2015) and what did it aim to achieve?", "options": ["A trade agreement between European countries", "An international agreement where nearly 200 countries pledged to limit global temperature rise to well below 2°C (ideally 1.5°C) above pre-industrial levels by reducing greenhouse gas emissions", "An agreement to build more nuclear power stations", "A treaty about ocean pollution"], "answer": 1, "hint": "It's a global deal on temperature targets.", "explanation": "Paris Agreement (2015): 196 parties agreed to limit global warming to 'well below 2°C above pre-industrial levels' and pursue efforts to limit to 1.5°C. Each country submits Nationally Determined Contributions (NDCs) — emission reduction pledges. Key milestone in international climate cooperation. However, binding enforcement mechanisms are weak and current pledges are insufficient to meet the 1.5°C target.", "subtopic": "Mitigation Strategies"}, {"id": "cc16", "q": "What is carbon capture and storage (CCS) as a mitigation strategy?", "options": ["Planting trees", "Technology that captures CO₂ emissions from power stations and factories, then stores it underground in geological formations rather than releasing it to the atmosphere", "Reducing car use", "Using solar panels"], "answer": 1, "hint": "Capture the CO₂ before it gets into the air.", "explanation": "Carbon capture and storage (CCS): CO₂ is captured at the point of emission (power station, factory), compressed, transported, and stored underground in depleted oil/gas fields or saline aquifers. ADVANTAGES: allows continued use of fossil fuels while reducing emissions. DISADVANTAGES: very expensive, energy-intensive, unproven at large scale, risk of leakage, does not encourage renewable transition.", "subtopic": "Mitigation Strategies"}];
+const TOPIC_TITLE = "Climate Change";
+let allQuestions = [...SEED_QUESTIONS], originalQuestions = [...SEED_QUESTIONS];
+let currentIdx = 0, answers = {}, activeFilters = null;
+
+function getFiltered() {
+  if (!activeFilters || activeFilters.size === 0) return allQuestions;
+  return allQuestions.filter(q => activeFilters.has(q.subtopic));
+}
+
+function init() {
+  renderDots(); renderQuestion(); updateStats();
+  document.getElementById('filterChips').addEventListener('click', e => {
+    if (!e.target.classList.contains('chip')) return;
+    e.target.classList.toggle('active');
+    const active = [...document.querySelectorAll('#filterChips .chip.active')].map(c => c.dataset.topic);
+    activeFilters = active.length > 0 && active.length < document.querySelectorAll('#filterChips .chip').length ? new Set(active) : null;
+    currentIdx = 0; renderDots(); renderQuestion();
+  });
+  document.getElementById('aiChips').addEventListener('click', e => {
+    if (e.target.classList.contains('chip')) e.target.classList.toggle('active');
+  });
+}
+
+function renderQuestion() {
+  const qs = getFiltered();
+  document.getElementById('resultsDiv').classList.remove('show');
+  if (currentIdx >= qs.length) { showResults(); return; }
+  const q = qs[currentIdx];
+  document.getElementById('qNum').textContent = `Question ${currentIdx + 1} of ${qs.length}`;
+  document.getElementById('qSubtopic').textContent = q.subtopic;
+  document.getElementById('questionText').textContent = q.q;
+  document.getElementById('hintText').style.display = 'none';
+  document.getElementById('hintText').textContent = q.hint;
+  document.getElementById('explanationDiv').style.display = 'none';
+  document.getElementById('progressFill').style.width = `${Math.round((currentIdx/qs.length)*100)}%`;
+  const opts = document.getElementById('optionsDiv'); opts.innerHTML = '';
+  const chosen = answers[q.id];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button'); btn.className = 'opt-btn'; btn.textContent = opt;
+    if (chosen !== undefined) {
+      btn.disabled = true;
+      if (i === q.answer) btn.classList.add('correct');
+      else if (i === chosen) btn.classList.add('wrong');
+    } else {
+      btn.onclick = () => selectAnswer(i);
+    }
+    opts.appendChild(btn);
+  });
+  if (chosen !== undefined) {
+    document.getElementById('explanationDiv').textContent = q.explanation;
+    document.getElementById('explanationDiv').style.display = 'block';
+  }
+  renderDots();
+}
+
+function showHint() { document.getElementById('hintText').style.display = 'block'; }
+
+function selectAnswer(i) {
+  const qs = getFiltered(); const q = qs[currentIdx];
+  answers[q.id] = i;
+  updateStats(); renderQuestion();
+}
+
+function goTo(i) {
+  const qs = getFiltered();
+  currentIdx = Math.max(0, Math.min(i, qs.length));
+  renderQuestion(); renderDots();
+}
+
+function renderDots() {
+  const qs = getFiltered(); const c = document.getElementById('navDots'); c.innerHTML = '';
+  qs.forEach((q, i) => {
+    const d = document.createElement('div');
+    const ans = answers[q.id];
+    d.className = 'dot' + (i === currentIdx ? ' current' : '') + (ans !== undefined ? (ans === q.answer ? ' correct' : ' wrong') : '');
+    d.onclick = () => goTo(i); c.appendChild(d);
+  });
+}
+
+function updateStats() {
+  const qs = getFiltered();
+  const correct = qs.filter(q => answers[q.id] === q.answer).length;
+  const wrong = qs.filter(q => answers[q.id] !== undefined && answers[q.id] !== q.answer).length;
+  document.getElementById('scoreDisplay').textContent = `${correct}/${qs.length}`;
+  document.getElementById('totalDisplay').textContent = allQuestions.length;
+  document.getElementById('correctDisplay').textContent = correct;
+  document.getElementById('wrongDisplay').textContent = wrong;
+}
+
+function showResults() {
+  const qs = getFiltered();
+  const correct = qs.filter(q => answers[q.id] === q.answer).length;
+  const pct = Math.round((correct/qs.length)*100);
+  document.getElementById('resultsDiv').classList.add('show');
+  const emoji = pct>=80?'🏆':pct>=60?'👍':pct>=40?'📚':'💪';
+  document.getElementById('resultsEmoji').textContent = `${emoji} Quiz Complete!`;
+  const bs = document.getElementById('bigScore');
+  bs.textContent = `${correct}/${qs.length} (${pct}%)`;
+  bs.style.color = pct>=80?'#4caf50':pct>=60?'#ffd54f':'#ff7043';
+  // Subtopic breakdown
+  const subtopics = [...new Set(qs.map(q => q.subtopic))];
+  const bd = document.getElementById('subtopicBreakdown');
+  bd.innerHTML = '<div style="font-size:.85rem;font-weight:800;color:var(--text-dim);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Subtopic Breakdown</div>';
+  subtopics.forEach(st => {
+    const stQs = qs.filter(q => q.subtopic === st);
+    const stCorrect = stQs.filter(q => answers[q.id] === q.answer).length;
+    const stPct = Math.round((stCorrect/stQs.length)*100);
+    const row = document.createElement('div'); row.className = 'breakdown-row';
+    row.innerHTML = `<div class="breakdown-label">${st}</div><div class="breakdown-bar-wrap"><div class="breakdown-bar" style="width:${stPct}%"></div></div><div class="breakdown-score">${stCorrect}/${stQs.length}</div>`;
+    bd.appendChild(row);
+  });
+}
+
+function shuffleQuestions() {
+  allQuestions = [...allQuestions].sort(() => Math.random() - .5);
+  currentIdx = 0; renderDots(); renderQuestion();
+}
+
+function resetAnswers() {
+  answers = {}; currentIdx = 0;
+  document.getElementById('resultsDiv').classList.remove('show');
+  renderDots(); renderQuestion(); updateStats();
+}
+
+function resetToOriginal() {
+  allQuestions = [...originalQuestions]; answers = {}; currentIdx = 0;
+  activeFilters = null;
+  document.querySelectorAll('#filterChips .chip').forEach(c => c.classList.add('active'));
+  document.getElementById('resultsDiv').classList.remove('show');
+  renderDots(); renderQuestion(); updateStats();
+}
+
+async function generateQuestions() {
+  const activeChips = [...document.querySelectorAll('#aiChips .chip.active')].map(c => c.dataset.topic);
+  if (activeChips.length === 0) { document.getElementById('aiStatus').textContent = 'Select at least one subtopic.'; return; }
+  const btn = document.getElementById('generateBtn'), status = document.getElementById('aiStatus');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner">⟳</span> Generating...';
+  status.textContent = 'Mr. Geo is writing questions... CheckerBot is reviewing them...';
+  const prompt = `You are Mr. Geo, an expert Year 8 UK Geography teacher with 15 years KS3 experience. Generate exactly 5 multiple-choice questions about Climate Change for 12-13 year old UK students preparing for their end-of-year exam. Subtopics to cover: ${activeChips.join(', ')}. CheckerBot validates each for KS3 accuracy, one unambiguous correct answer, and age-appropriateness. Return ONLY a valid JSON array (no markdown, no preamble): [{"id":"gen_x","q":"question","options":["A","B","C","D"],"answer":0,"hint":"short hint","explanation":"detailed KS3 explanation","subtopic":"subtopic name"}] British English only.`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const data = await res.json(); const text = data.content[0].text.replace(/```json|```/g,'').trim();
+    let newQs = JSON.parse(text);
+    newQs = newQs.map((q,i) => ({...q, id:'gen_'+Date.now()+'_'+i}));
+    allQuestions = [...allQuestions, ...newQs]; updateStats(); renderDots();
+    status.textContent = `✅ ${newQs.length} questions added by Mr. Geo, approved by CheckerBot!`;
+  } catch(e) { status.textContent = '⚠️ Generation failed. Check connection and try again.'; console.error(e); }
+  btn.disabled = false; btn.innerHTML = '<span>✨</span> Generate 5 Questions';
+}
+
+init();
+</script>
+</body>
+</html>

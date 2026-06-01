@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Quiz — Year 8 Geography</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0f1117;--surface:#1a1d2e;--surface2:#252840;--accent:#ffa726;--accent2:#e65100;--text:#e8eaf6;--text-dim:#9094b0;--correct:#4caf50;--wrong:#f44336;--radius:16px;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#ffa72622,#ffa72608);border-bottom:2px solid var(--accent);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .header-left{display:flex;align-items:center;gap:14px;}
+  .topic-icon{font-size:2.2rem;}
+  header h1{font-family:'Fredoka One',cursive;font-size:1.7rem;color:var(--accent);}
+  header p{color:var(--text-dim);font-size:0.85rem;}
+  .back-btn{padding:8px 18px;border-radius:999px;background:var(--surface2);color:var(--text-dim);border:none;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;}
+  .back-btn:hover{background:#353860;color:var(--text);}
+  .exam-badge{background:#ffa72622;border:1px solid #ffa726;color:#ffa726;padding:4px 12px;border-radius:999px;font-size:0.78rem;font-weight:800;margin-top:4px;display:inline-block;}
+  .stats-bar{display:flex;gap:16px;align-items:center;padding:12px 24px;background:var(--surface);border-bottom:1px solid var(--surface2);flex-wrap:wrap;}
+  .stat{text-align:center;}
+  .stat-num{font-size:1.3rem;font-weight:800;color:var(--accent);}
+  .stat-label{font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;}
+  .progress-bar{flex:1;height:8px;background:var(--surface2);border-radius:999px;overflow:hidden;min-width:80px;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;transition:width .4s;}
+  main{max-width:720px;margin:0 auto;padding:24px 20px;}
+  .subtopic-filter{background:var(--surface);border-radius:var(--radius);padding:16px 20px;margin-bottom:18px;border:1px solid var(--surface2);}
+  .subtopic-filter h3{font-size:0.8rem;font-weight:800;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{padding:5px 13px;border-radius:999px;font-size:0.8rem;font-weight:700;cursor:pointer;transition:all .2s;border:2px solid var(--surface2);background:var(--surface);color:var(--text-dim);}
+  .chip.active{border-color:var(--accent);color:var(--accent);background:#ffa72618;}
+  .controls-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+  .ctrl-btn{padding:7px 16px;border-radius:999px;background:var(--surface2);color:var(--text-dim);border:none;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;transition:all .2s;}
+  .ctrl-btn:hover{background:#353860;color:var(--text);}
+  .nav-dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--surface2);cursor:pointer;transition:all .2s;border:2px solid transparent;}
+  .dot.current{border-color:var(--accent);transform:scale(1.3);}
+  .dot.correct{background:var(--correct);}
+  .dot.wrong{background:var(--wrong);}
+  .question-card{background:var(--surface);border-radius:var(--radius);padding:26px;margin-bottom:14px;border:2px solid var(--surface2);}
+  .q-meta{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .q-num{font-size:0.78rem;color:var(--text-dim);font-weight:700;}
+  .q-subtopic{padding:3px 10px;border-radius:999px;font-size:0.75rem;font-weight:700;background:#ffa72618;color:var(--accent);border:1px solid #ffa72644;}
+  .question-text{font-size:1.1rem;font-weight:800;line-height:1.4;margin-bottom:4px;}
+  .hint-btn{background:none;border:none;color:var(--text-dim);font-size:0.8rem;cursor:pointer;font-family:'Nunito',sans-serif;padding:6px 0;text-decoration:underline;display:block;}
+  .hint-text{font-size:0.83rem;color:#ffd54f;margin-top:6px;padding:7px 11px;background:#ffd54f15;border-radius:8px;display:none;}
+  .options{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
+  .opt-btn{padding:13px 16px;border-radius:10px;background:var(--surface2);border:2px solid transparent;color:var(--text);font-family:'Nunito',sans-serif;font-weight:700;font-size:0.93rem;text-align:left;cursor:pointer;transition:all .2s;}
+  .opt-btn:hover:not(:disabled){border-color:var(--accent);background:#ffa72615;}
+  .opt-btn.correct{background:#4caf5018;border-color:var(--correct);color:var(--correct);}
+  .opt-btn.wrong{background:#f4433618;border-color:var(--wrong);color:var(--wrong);}
+  .opt-btn:disabled{cursor:default;}
+  .explanation{background:#ffffff08;border-left:3px solid var(--accent);padding:11px 14px;border-radius:0 8px 8px 0;margin-bottom:14px;font-size:0.86rem;line-height:1.55;display:none;}
+  .nav-row{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:20px;}
+  .nav-btn{padding:10px 22px;border-radius:999px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.93rem;cursor:pointer;border:none;transition:all .2s;}
+  .nav-btn.primary{background:var(--accent);color:#000;}
+  .nav-btn.primary:hover{background:var(--accent2);}
+  .nav-btn.secondary{background:var(--surface2);color:var(--text);}
+  .nav-btn.secondary:hover{background:#353860;}
+  .results{background:var(--surface);border-radius:var(--radius);padding:36px;text-align:center;display:none;}
+  .results.show{display:block;animation:fadeIn .4s ease;}
+  .results h2{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--accent);margin-bottom:8px;}
+  .big-score{font-size:3rem;font-weight:800;font-family:'Fredoka One',cursive;margin:14px 0;}
+  .subtopic-breakdown{margin:20px 0;text-align:left;}
+  .breakdown-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--surface2);}
+  .breakdown-label{font-size:0.85rem;flex:1;font-weight:700;}
+  .breakdown-bar-wrap{width:80px;height:7px;background:var(--surface2);border-radius:999px;overflow:hidden;}
+  .breakdown-bar{height:100%;background:var(--accent);border-radius:999px;}
+  .breakdown-score{font-size:0.85rem;font-weight:800;color:var(--accent);min-width:36px;text-align:right;}
+  .res-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:20px;}
+  .res-btn{padding:11px 22px;border-radius:999px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.95rem;cursor:pointer;border:none;text-decoration:none;display:inline-block;}
+  .res-btn.primary{background:var(--accent);color:#000;}
+  .res-btn.secondary{background:var(--surface2);color:var(--text);}
+  .ai-panel{background:var(--surface);border-radius:var(--radius);padding:22px;border:1px solid var(--accent);margin-bottom:20px;}
+  .ai-panel h3{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--accent);margin-bottom:6px;}
+  .ai-panel p{color:var(--text-dim);font-size:0.87rem;margin-bottom:14px;}
+  .ai-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+  .ai-generate-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:none;padding:11px 22px;border-radius:999px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.95rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;}
+  .ai-generate-btn:hover{transform:translateY(-2px);box-shadow:0 4px 20px #ffa72644;}
+  .ai-generate-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+  .ai-status{margin-top:10px;font-size:0.87rem;color:var(--text-dim);min-height:18px;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .spinner{animation:spin 1s linear infinite;display:inline-block;} @keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <div class="topic-icon">⚡</div>
+    <div>
+      <h1>Energy Quiz</h1>
+      <p>Year 8 Geography · KS3 · Energy terms, supply factors, fossil fuels, renewable energy sources & case studies</p>
+      <span class="exam-badge">⭐ End-of-Year Exam Topic</span>
+    </div>
+  </div>
+  <a href="hub.html" class="back-btn">← Hub</a>
+</header>
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num" id="scoreDisplay">0</div><div class="stat-label">Score</div></div>
+  <div class="stat"><div class="stat-num" id="totalDisplay">0</div><div class="stat-label">Total Qs</div></div>
+  <div class="stat"><div class="stat-num" id="correctDisplay" style="color:var(--correct)">0</div><div class="stat-label">Correct</div></div>
+  <div class="stat"><div class="stat-num" id="wrongDisplay" style="color:var(--wrong)">0</div><div class="stat-label">Wrong</div></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+<main>
+  <div id="quizArea">
+    <div class="subtopic-filter">
+      <h3>Filter by subtopic</h3>
+      <div class="chips" id="filterChips"><div class="chip active" data-topic="Key Energy Terms">Key Energy Terms</div>
+<div class="chip active" data-topic="Factors Affecting Supply">Factors Affecting Supply</div>
+<div class="chip active" data-topic="Fossil Fuels">Fossil Fuels</div>
+<div class="chip active" data-topic="Fossil Fuel Case Study">Fossil Fuel Case Study</div>
+<div class="chip active" data-topic="Renewable Energy Sources">Renewable Energy Sources</div>
+<div class="chip active" data-topic="Renewable Energy Case Study">Renewable Energy Case Study</div></div>
+    </div>
+    <div class="controls-row">
+      <button class="ctrl-btn" onclick="shuffleQuestions()">🔀 Shuffle</button>
+      <button class="ctrl-btn" onclick="resetAnswers()">🔄 Reset Answers</button>
+      <button class="ctrl-btn" onclick="resetToOriginal()">↩ Reset to Original</button>
+    </div>
+    <div class="nav-dots" id="navDots"></div>
+    <div class="question-card">
+      <div class="q-meta">
+        <span class="q-num" id="qNum">Question 1</span>
+        <span class="q-subtopic" id="qSubtopic"></span>
+      </div>
+      <div class="question-text" id="questionText"></div>
+      <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Show Hint</button>
+      <div class="hint-text" id="hintText"></div>
+    </div>
+    <div class="options" id="optionsDiv"></div>
+    <div class="explanation" id="explanationDiv"></div>
+    <div class="nav-row">
+      <button class="nav-btn secondary" onclick="goTo(currentIdx-1)">← Prev</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="goTo(currentIdx+1)">Next →</button>
+    </div>
+    <div class="results" id="resultsDiv">
+      <h2 id="resultsEmoji">Quiz Complete! 🎓</h2>
+      <div class="big-score" id="bigScore"></div>
+      <div class="subtopic-breakdown" id="subtopicBreakdown"></div>
+      <div class="res-btns">
+        <button class="res-btn primary" onclick="resetAnswers()">🔄 Try Again</button>
+        <a href="hub.html" class="res-btn secondary">🏠 Hub</a>
+      </div>
+    </div>
+    <div class="ai-panel">
+      <h3>🤖 Generate More Questions</h3>
+      <p>Mr. Geo creates new questions on specific subtopics, validated by CheckerBot for KS3 accuracy.</p>
+      <div class="ai-chips" id="aiChips"><div class="chip active" data-topic="Key Energy Terms">Key Energy Terms</div>
+<div class="chip active" data-topic="Factors Affecting Supply">Factors Affecting Supply</div>
+<div class="chip active" data-topic="Fossil Fuels">Fossil Fuels</div>
+<div class="chip active" data-topic="Fossil Fuel Case Study">Fossil Fuel Case Study</div>
+<div class="chip active" data-topic="Renewable Energy Sources">Renewable Energy Sources</div>
+<div class="chip active" data-topic="Renewable Energy Case Study">Renewable Energy Case Study</div></div>
+      <button class="ai-generate-btn" id="generateBtn" onclick="generateQuestions()"><span>✨</span> Generate 5 Questions</button>
+      <div class="ai-status" id="aiStatus"></div>
+    </div>
+  </div>
+</main>
+<script>
+const SEED_QUESTIONS = [{"id": "en01", "q": "What is meant by 'energy mix'?", "options": ["Using only one energy source", "The combination of different energy sources (fossil fuels, nuclear, renewables) used by a country to meet its total energy demand", "Only renewable energy sources", "The amount of energy wasted"], "answer": 1, "hint": "Mix = different types combined.", "explanation": "Energy mix = the combination of different energy sources a country uses to generate electricity and meet energy demand. Every country has a different energy mix depending on resources, technology, wealth, and policy. E.g. UK energy mix includes gas, wind, nuclear, and solar. Countries are increasingly shifting their mix toward renewables to reduce carbon emissions.", "subtopic": "Key Energy Terms"}, {"id": "en02", "q": "What is energy security?", "options": ["Using padlocks on power stations", "Having a reliable, affordable, and sufficient supply of energy to meet a country's needs without over-dependence on imports from potentially unreliable sources", "Only using domestic energy sources", "Only using renewable energy"], "answer": 1, "hint": "Think about reliability and independence.", "explanation": "Energy security = reliable access to sufficient energy at affordable prices. A country with high energy security: has diverse domestic energy sources, multiple import partners, strategic reserves, and modern infrastructure. Countries dependent on energy imports from unstable regions (e.g. Europe importing Russian gas) are vulnerable to supply disruptions.", "subtopic": "Key Energy Terms"}, {"id": "en03", "q": "What is the definition of renewable energy?", "options": ["Energy that is very cheap", "Energy from sources that naturally replenish within a human timescale and will not run out — e.g. solar, wind, hydro, biomass, geothermal", "Energy from coal and gas", "Energy stored in batteries"], "answer": 1, "hint": "Think 'replenishable' — it won't run out.", "explanation": "Renewable energy = energy from sources that are naturally replenished on a human timescale and theoretically inexhaustible. Examples: solar (sunlight), wind, hydro (moving water), biomass (organic matter), geothermal (Earth's heat), tidal. Contrast with non-renewable/finite sources that will eventually run out (coal, oil, gas, uranium).", "subtopic": "Key Energy Terms"}, {"id": "en04", "q": "Name the three main fossil fuels.", "options": ["Solar, wind, and nuclear", "Coal, oil (petroleum), and natural gas", "Wood, biomass, and peat", "Uranium, coal, and wind"], "answer": 1, "hint": "They are all formed from ancient organic matter over millions of years.", "explanation": "The three fossil fuels are COAL, OIL (petroleum), and NATURAL GAS. They formed from ancient plant and animal remains buried under pressure and heat over millions of years. They are non-renewable — once burned they cannot be replaced. They release CO₂ when burned, driving climate change. Currently provide ~80% of global energy.", "subtopic": "Key Energy Terms"}, {"id": "en05", "q": "How does a country's level of development affect its energy supply?", "options": ["Development has no effect on energy", "HICs can invest in diverse, expensive energy infrastructure (nuclear, renewables); LICs may lack capital to develop beyond basic energy sources and may rely on biomass (wood, dung) for cooking", "LICs use more energy than HICs", "Only very poor countries use fossil fuels"], "answer": 1, "hint": "Think about money and technology.", "explanation": "Level of development affects energy supply: HICs (high income) have capital to invest in diverse energy infrastructure — nuclear, offshore wind, smart grids. LICs often rely on traditional biomass (wood, dung, charcoal) for cooking/heating due to lack of investment. MICs (e.g. China, India) are rapidly expanding coal/gas capacity while beginning to invest in renewables.", "subtopic": "Factors Affecting Supply"}, {"id": "en06", "q": "How does physical geography (resource endowment) affect energy supply?", "options": ["All countries have the same energy resources", "Countries with oil reserves, wind, sunshine, fast rivers, or geothermal activity can develop those specific energy sources — resource availability determines options", "Geography is irrelevant to energy supply", "Only tropical countries have energy resources"], "answer": 1, "hint": "You can only use what nature gives you.", "explanation": "Resource endowment = the natural energy resources a country possesses. Saudi Arabia: vast oil reserves. Iceland: abundant geothermal energy. Norway: HEP from steep glacial rivers. UK: offshore wind potential. Countries without fossil fuels must import or develop renewables. Physical geography (sunshine hours, wind speeds, river gradients, volcanic activity) determines which renewables are viable.", "subtopic": "Factors Affecting Supply"}, {"id": "en07", "q": "Give TWO advantages of using fossil fuels for energy.", "options": ["They are renewable and clean", "Reliable (supply on demand), energy-dense (large amount of energy per kg), existing infrastructure, relatively cheap, well-understood technology", "They produce no pollution", "They are unlimited in supply"], "answer": 1, "hint": "Think about reliability and energy content.", "explanation": "Advantages of fossil fuels: 1) HIGH ENERGY DENSITY — large amounts of energy per unit of fuel. 2) RELIABLE — available on demand (unlike wind/solar). 3) EXISTING INFRASTRUCTURE — power stations, pipelines, vehicles already built. 4) RELATIVELY CHEAP (in some countries). 5) WELL-UNDERSTOOD technology. 6) Can be STORED and transported easily. These explain why they dominate global energy supply despite environmental costs.", "subtopic": "Fossil Fuels"}, {"id": "en08", "q": "Give TWO disadvantages of using fossil fuels for energy.", "options": ["They are too clean and too renewable", "They are non-renewable (will run out), burning them releases CO₂ causing climate change, extraction causes environmental damage, and combustion produces air pollution", "They are too expensive everywhere", "They cannot produce enough energy"], "answer": 1, "hint": "Think about supply running out and pollution.", "explanation": "Disadvantages of fossil fuels: 1) NON-RENEWABLE — finite supply, will run out (oil ~50 years, gas ~50 years, coal ~150 years at current use). 2) CLIMATE CHANGE — burning releases stored CO₂. 3) AIR POLLUTION — produces NO₂, SO₂, particulates causing health issues. 4) ENVIRONMENTAL DAMAGE from extraction (oil spills, habitat destruction, land subsidence). 5) ENERGY INSECURITY if dependent on imports.", "subtopic": "Fossil Fuels"}, {"id": "en09", "q": "What environmental damage has been caused by fossil fuel extraction in a named area?", "options": ["No significant environmental damage has occurred", "Alberta Tar Sands, Canada: vast areas of boreal forest cleared, toxic tailings ponds leaking into waterways, high CO₂ emissions from extraction, habitat destruction for wildlife including caribou", "Oil extraction only damages tropical areas", "Coal mining only affects underground areas"], "answer": 1, "hint": "Think about a named example — Canada, Nigeria, or similar.", "explanation": "ALBERTA TAR SANDS, CANADA: world's third-largest oil reserves, extracted by open-pit mining (bitumen from oil sands). Environmental impacts: 3,400km² of boreal forest destroyed; toxic tailings ponds visible from space; risk of contamination to Athabasca River; CO₂ emissions 3-5× higher than conventional oil; habitat loss for caribou, bears, migratory birds; indigenous community health concerns. Alternatively: Niger Delta oil spills (Nigeria) — 7,000 spills since 1970, farmland/fisheries destroyed.", "subtopic": "Fossil Fuel Case Study"}, {"id": "en10", "q": "Give TWO advantages of hydroelectric power (HEP) as a renewable energy source.", "options": ["It always causes flooding and displaces communities", "Once built it has very low running costs, produces no direct emissions, is reliable (water flows consistently), and can respond quickly to demand", "HEP only works in very hot climates", "HEP uses solar panels in water"], "answer": 1, "hint": "Think about running costs and reliability.", "explanation": "HEP advantages: 1) NO FUEL COSTS — water is free, low running costs after construction. 2) NO DIRECT EMISSIONS — no CO₂ during operation. 3) RELIABLE — rivers flow continuously (especially with reservoirs). 4) FLEXIBLE — can increase/decrease output quickly (pumped storage HEP). 5) LONG LIFESPAN — dams last 50–100+ years. 6) Can provide WATER STORAGE for irrigation and drinking.", "subtopic": "Renewable Energy Sources"}, {"id": "en11", "q": "Give ONE advantage and ONE disadvantage of solar power.", "options": ["It works everywhere and is free with no disadvantages", "ADVANTAGE: produces no emissions during operation, low maintenance, suitable for off-grid use; DISADVANTAGE: intermittent (only works in daylight/sunshine), requires large areas of land/panels, high upfront cost", "Solar only works in tropical countries", "Solar causes air pollution"], "answer": 1, "hint": "Think sunny days vs cloudy nights.", "explanation": "Solar ADVANTAGES: no emissions during operation, fuel-free, low maintenance, can be installed on rooftops/buildings, suitable for remote off-grid areas. Solar DISADVANTAGES: INTERMITTENT — no power at night or in poor light; output varies with weather/season; high initial installation cost; requires battery storage; large-scale solar farms need significant land area; manufacturing panels uses energy/materials.", "subtopic": "Renewable Energy Sources"}, {"id": "en12", "q": "Give ONE advantage and ONE disadvantage of wind power.", "options": ["It is completely silent and always reliable", "ADVANTAGE: no emissions, fuel-free, UK has excellent wind resource (25% of Europe's wind); DISADVANTAGE: intermittent (no wind = no power), visual/noise concerns, bird strike risk, expensive offshore installation", "Wind works everywhere with no disadvantages", "Wind power is more expensive than all other sources"], "answer": 1, "hint": "The UK is very windy — but not always.", "explanation": "Wind ADVANTAGES: no emissions during operation, no fuel cost, UK has excellent wind resource (offshore wind potential is world-leading), increasingly cost-competitive, low land use (farming continues around turbines). Wind DISADVANTAGES: INTERMITTENT (when wind doesn't blow, no power); visual impact complaints; noise concerns; bird/bat mortality risk; offshore installation expensive; need backup power for calm periods.", "subtopic": "Renewable Energy Sources"}, {"id": "en13", "q": "What is biomass energy and what is a concern about calling it 'renewable'?", "options": ["Biomass is the same as coal", "Biomass = organic material (wood, crop waste, animal waste) burned for energy; concern = it releases CO₂ when burned (though this is offset if replanting occurs), deforestation risk if wood is unsustainably sourced, and land use conflicts with food production", "Biomass has no disadvantages", "Biomass only comes from animal waste"], "answer": 1, "hint": "Think about what is burned and what is released.", "explanation": "Biomass = organic material used as fuel: wood, wood pellets, crop residues, animal waste, energy crops. Technically renewable if plants are replanted (carbon absorbed during growth = carbon released when burned). CONCERNS: 1) If forests are cut for biomass, net CO₂ may increase (Drax power station controversy). 2) Land used for energy crops competes with food production. 3) Air pollution from combustion. 4) Biodiversity loss from energy crop monocultures.", "subtopic": "Renewable Energy Sources"}, {"id": "en14", "q": "Give TWO advantages and ONE disadvantage of geothermal energy.", "options": ["It is available everywhere and has no disadvantages", "ADVANTAGES: no emissions, runs 24/7 (not intermittent like wind/solar), low running costs; DISADVANTAGE: only available in volcanic/tectonically active regions (e.g. Iceland, Kenya, New Zealand, parts of USA)", "Geothermal is only useful for heating swimming pools", "Geothermal energy is more expensive than all others"], "answer": 1, "hint": "Where is there heat underground?", "explanation": "Geothermal ADVANTAGES: 1) NO EMISSIONS during operation. 2) BASELOAD power — runs 24/7, not intermittent. 3) LOW RUNNING COSTS once well drilled. 4) SMALL LAND FOOTPRINT. Geothermal DISADVANTAGES: 1) GEOGRAPHICALLY LIMITED — only practical in volcanically active regions (Iceland 25% geothermal, Kenya 40%). 2) High UPFRONT DRILLING COSTS. 3) Small risk of triggering seismic activity. 4) Some releases of H₂S (hydrogen sulphide) gas.", "subtopic": "Renewable Energy Sources"}, {"id": "en15", "q": "Describe the pros and cons of a named renewable energy project.", "options": ["No renewable energy projects exist yet", "Dinorwig Power Station (Wales, pumped storage HEP): PROS — rapid response, 1,800MW, no emissions, tourist attraction, uses off-peak electricity; CONS — construction flooded valley, habitat disruption, expensive to build", "All renewable projects are identical", "Renewable projects always destroy habitats"], "answer": 1, "hint": "Think of a specific named project you have studied.", "explanation": "DINORWIG (Electric Mountain), Snowdonia, Wales: pumped-storage HEP. PROS: generates 1,800MW in 16 seconds (responds to peak demand instantly), no emissions, can store energy by pumping water uphill using cheap off-peak electricity, tourist visitor centre, 40-year operational lifespan. CONS: construction required tunnelling and reservoir creation, disrupted local habitats, high construction cost (£425m in 1984). Alternative: Hornsea Offshore Wind Farm (UK) — world's largest offshore wind farm, 1.2GW, 174 turbines, no emissions, but shipping lane concerns.", "subtopic": "Renewable Energy Case Study"}, {"id": "en16", "q": "How does climate affect a country's energy supply options?", "options": ["Climate has no effect on energy choices", "Countries with high sunshine hours can invest in solar; those with strong winds develop wind power; those with high rainfall/mountainous terrain develop HEP; hot dry climates may reduce HEP viability", "Climate only matters for fossil fuels", "All climates allow the same energy mix"], "answer": 1, "hint": "Sunshine → solar; wind → turbines; rain → HEP.", "explanation": "Climate directly determines renewable energy potential: HIGH SUNSHINE (Saudi Arabia, Spain, California) → solar power viable. STRONG WINDS (UK North Sea, Denmark) → offshore/onshore wind. HIGH RAINFALL + STEEP TERRAIN (Norway, Iceland, Brazil, Nepal) → HEP. VOLCANIC REGIONS (Iceland, Kenya, New Zealand) → geothermal. Fossil fuel development is less climate-dependent but extraction affected by permafrost, heat, etc.", "subtopic": "Factors Affecting Supply"}];
+const TOPIC_TITLE = "Energy";
+let allQuestions = [...SEED_QUESTIONS], originalQuestions = [...SEED_QUESTIONS];
+let currentIdx = 0, answers = {}, activeFilters = null;
+
+function getFiltered() {
+  if (!activeFilters || activeFilters.size === 0) return allQuestions;
+  return allQuestions.filter(q => activeFilters.has(q.subtopic));
+}
+
+function init() {
+  renderDots(); renderQuestion(); updateStats();
+  document.getElementById('filterChips').addEventListener('click', e => {
+    if (!e.target.classList.contains('chip')) return;
+    e.target.classList.toggle('active');
+    const active = [...document.querySelectorAll('#filterChips .chip.active')].map(c => c.dataset.topic);
+    activeFilters = active.length > 0 && active.length < document.querySelectorAll('#filterChips .chip').length ? new Set(active) : null;
+    currentIdx = 0; renderDots(); renderQuestion();
+  });
+  document.getElementById('aiChips').addEventListener('click', e => {
+    if (e.target.classList.contains('chip')) e.target.classList.toggle('active');
+  });
+}
+
+function renderQuestion() {
+  const qs = getFiltered();
+  document.getElementById('resultsDiv').classList.remove('show');
+  if (currentIdx >= qs.length) { showResults(); return; }
+  const q = qs[currentIdx];
+  document.getElementById('qNum').textContent = `Question ${currentIdx + 1} of ${qs.length}`;
+  document.getElementById('qSubtopic').textContent = q.subtopic;
+  document.getElementById('questionText').textContent = q.q;
+  document.getElementById('hintText').style.display = 'none';
+  document.getElementById('hintText').textContent = q.hint;
+  document.getElementById('explanationDiv').style.display = 'none';
+  document.getElementById('progressFill').style.width = `${Math.round((currentIdx/qs.length)*100)}%`;
+  const opts = document.getElementById('optionsDiv'); opts.innerHTML = '';
+  const chosen = answers[q.id];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button'); btn.className = 'opt-btn'; btn.textContent = opt;
+    if (chosen !== undefined) {
+      btn.disabled = true;
+      if (i === q.answer) btn.classList.add('correct');
+      else if (i === chosen) btn.classList.add('wrong');
+    } else {
+      btn.onclick = () => selectAnswer(i);
+    }
+    opts.appendChild(btn);
+  });
+  if (chosen !== undefined) {
+    document.getElementById('explanationDiv').textContent = q.explanation;
+    document.getElementById('explanationDiv').style.display = 'block';
+  }
+  renderDots();
+}
+
+function showHint() { document.getElementById('hintText').style.display = 'block'; }
+
+function selectAnswer(i) {
+  const qs = getFiltered(); const q = qs[currentIdx];
+  answers[q.id] = i;
+  updateStats(); renderQuestion();
+}
+
+function goTo(i) {
+  const qs = getFiltered();
+  currentIdx = Math.max(0, Math.min(i, qs.length));
+  renderQuestion(); renderDots();
+}
+
+function renderDots() {
+  const qs = getFiltered(); const c = document.getElementById('navDots'); c.innerHTML = '';
+  qs.forEach((q, i) => {
+    const d = document.createElement('div');
+    const ans = answers[q.id];
+    d.className = 'dot' + (i === currentIdx ? ' current' : '') + (ans !== undefined ? (ans === q.answer ? ' correct' : ' wrong') : '');
+    d.onclick = () => goTo(i); c.appendChild(d);
+  });
+}
+
+function updateStats() {
+  const qs = getFiltered();
+  const correct = qs.filter(q => answers[q.id] === q.answer).length;
+  const wrong = qs.filter(q => answers[q.id] !== undefined && answers[q.id] !== q.answer).length;
+  document.getElementById('scoreDisplay').textContent = `${correct}/${qs.length}`;
+  document.getElementById('totalDisplay').textContent = allQuestions.length;
+  document.getElementById('correctDisplay').textContent = correct;
+  document.getElementById('wrongDisplay').textContent = wrong;
+}
+
+function showResults() {
+  const qs = getFiltered();
+  const correct = qs.filter(q => answers[q.id] === q.answer).length;
+  const pct = Math.round((correct/qs.length)*100);
+  document.getElementById('resultsDiv').classList.add('show');
+  const emoji = pct>=80?'🏆':pct>=60?'👍':pct>=40?'📚':'💪';
+  document.getElementById('resultsEmoji').textContent = `${emoji} Quiz Complete!`;
+  const bs = document.getElementById('bigScore');
+  bs.textContent = `${correct}/${qs.length} (${pct}%)`;
+  bs.style.color = pct>=80?'#4caf50':pct>=60?'#ffd54f':'#ff7043';
+  // Subtopic breakdown
+  const subtopics = [...new Set(qs.map(q => q.subtopic))];
+  const bd = document.getElementById('subtopicBreakdown');
+  bd.innerHTML = '<div style="font-size:.85rem;font-weight:800;color:var(--text-dim);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Subtopic Breakdown</div>';
+  subtopics.forEach(st => {
+    const stQs = qs.filter(q => q.subtopic === st);
+    const stCorrect = stQs.filter(q => answers[q.id] === q.answer).length;
+    const stPct = Math.round((stCorrect/stQs.length)*100);
+    const row = document.createElement('div'); row.className = 'breakdown-row';
+    row.innerHTML = `<div class="breakdown-label">${st}</div><div class="breakdown-bar-wrap"><div class="breakdown-bar" style="width:${stPct}%"></div></div><div class="breakdown-score">${stCorrect}/${stQs.length}</div>`;
+    bd.appendChild(row);
+  });
+}
+
+function shuffleQuestions() {
+  allQuestions = [...allQuestions].sort(() => Math.random() - .5);
+  currentIdx = 0; renderDots(); renderQuestion();
+}
+
+function resetAnswers() {
+  answers = {}; currentIdx = 0;
+  document.getElementById('resultsDiv').classList.remove('show');
+  renderDots(); renderQuestion(); updateStats();
+}
+
+function resetToOriginal() {
+  allQuestions = [...originalQuestions]; answers = {}; currentIdx = 0;
+  activeFilters = null;
+  document.querySelectorAll('#filterChips .chip').forEach(c => c.classList.add('active'));
+  document.getElementById('resultsDiv').classList.remove('show');
+  renderDots(); renderQuestion(); updateStats();
+}
+
+async function generateQuestions() {
+  const activeChips = [...document.querySelectorAll('#aiChips .chip.active')].map(c => c.dataset.topic);
+  if (activeChips.length === 0) { document.getElementById('aiStatus').textContent = 'Select at least one subtopic.'; return; }
+  const btn = document.getElementById('generateBtn'), status = document.getElementById('aiStatus');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner">⟳</span> Generating...';
+  status.textContent = 'Mr. Geo is writing questions... CheckerBot is reviewing them...';
+  const prompt = `You are Mr. Geo, an expert Year 8 UK Geography teacher with 15 years KS3 experience. Generate exactly 5 multiple-choice questions about Energy for 12-13 year old UK students preparing for their end-of-year exam. Subtopics to cover: ${activeChips.join(', ')}. CheckerBot validates each for KS3 accuracy, one unambiguous correct answer, and age-appropriateness. Return ONLY a valid JSON array (no markdown, no preamble): [{"id":"gen_x","q":"question","options":["A","B","C","D"],"answer":0,"hint":"short hint","explanation":"detailed KS3 explanation","subtopic":"subtopic name"}] British English only.`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const data = await res.json(); const text = data.content[0].text.replace(/```json|```/g,'').trim();
+    let newQs = JSON.parse(text);
+    newQs = newQs.map((q,i) => ({...q, id:'gen_'+Date.now()+'_'+i}));
+    allQuestions = [...allQuestions, ...newQs]; updateStats(); renderDots();
+    status.textContent = `✅ ${newQs.length} questions added by Mr. Geo, approved by CheckerBot!`;
+  } catch(e) { status.textContent = '⚠️ Generation failed. Check connection and try again.'; console.error(e); }
+  btn.disabled = false; btn.innerHTML = '<span>✨</span> Generate 5 Questions';
+}
+
+init();
+</script>
+</body>
+</html>
