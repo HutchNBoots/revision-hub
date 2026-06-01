@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geometry: Shapes Quiz — Year 8 Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--accent:#fb923c;--accent2:#fdba74;--correct:#10b981;--wrong:#ef4444;--text:#e2e8f0;--muted:#94a3b8;--border:#2d3748;--hint:#8b5cf6}
+  *{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#7c2d12,#fb923c);padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem}
+  header .back{color:#fff;text-decoration:none;font-size:1.4rem}header h1{font-family:'Fredoka One',cursive;font-size:1.8rem;color:#fff}
+  header .badge{margin-left:auto;background:rgba(0,0,0,0.3);border-radius:20px;padding:0.3rem 1rem;font-weight:700;color:#fff}
+  .container{max-width:860px;margin:0 auto;padding:2rem 1rem}
+  .dots-wrap{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:1.5rem}
+  .dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:var(--card);cursor:pointer;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all 0.2s}
+  .dot.current{border-color:var(--accent);color:var(--accent)}.dot.correct{background:var(--correct);border-color:var(--correct);color:#fff}.dot.wrong{background:var(--wrong);border-color:var(--wrong);color:#fff}
+  .q-card{background:var(--card);border-radius:16px;padding:2rem;margin-bottom:1.5rem;border:1px solid var(--border)}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+  .q-num{font-size:0.85rem;color:var(--muted);font-weight:700}.difficulty{font-size:0.75rem;padding:0.2rem 0.7rem;border-radius:20px;font-weight:700}
+  .easy{background:#064e3b;color:#6ee7b7}.medium{background:#78350f;color:#fcd34d}.hard{background:#7f1d1d;color:#fca5a5}
+  .q-text{font-size:1.15rem;font-weight:700;line-height:1.5;margin-bottom:1.5rem}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}@media(max-width:560px){.options{grid-template-columns:1fr}}
+  .opt{background:var(--card2);border:2px solid var(--border);border-radius:12px;padding:0.85rem 1rem;cursor:pointer;font-size:1rem;font-weight:600;text-align:left;color:var(--text);transition:all 0.2s;display:flex;align-items:center;gap:0.6rem}
+  .opt:hover:not(:disabled){border-color:var(--accent);background:#1e1e3a}.opt.selected-wrong{border-color:var(--wrong);background:#450a0a;color:#fca5a5}.opt.reveal-correct{border-color:var(--correct);background:#064e3b;color:#6ee7b7}.opt:disabled{cursor:default}
+  .opt-letter{width:26px;height:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;flex-shrink:0}
+  .hint-btn{margin-top:1rem;background:none;border:1px dashed var(--hint);color:var(--hint);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:600}
+  .hint-box{margin-top:0.75rem;background:#2e1065;border-left:3px solid var(--hint);padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:0.95rem;display:none}
+  .feedback{margin-top:1.2rem;border-radius:12px;padding:1.2rem;display:none}.feedback.correct{background:#064e3b;border:1px solid var(--correct)}.feedback.wrong{background:#450a0a;border:1px solid var(--wrong)}
+  .feedback h3{font-family:'Fredoka One',cursive;font-size:1.1rem;margin-bottom:0.5rem}.feedback.correct h3{color:#6ee7b7}.feedback.wrong h3{color:#fca5a5}
+  .solution{margin-top:0.75rem;background:rgba(0,0,0,0.3);border-radius:8px;padding:1rem;font-size:0.95rem;line-height:1.7}.solution strong{color:var(--accent2)}
+  .nav-row{display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap}
+  .btn{padding:0.75rem 1.5rem;border-radius:10px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;transition:all 0.2s}
+  .btn-primary{background:var(--accent);color:#000}.btn-primary:hover{background:var(--accent2)}.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}.btn-sm{font-size:0.85rem;padding:0.5rem 1rem}
+  .score-bar{background:var(--card);border-radius:12px;padding:1rem 1.5rem;display:flex;gap:2rem;align-items:center;margin-bottom:1.5rem;border:1px solid var(--border);flex-wrap:wrap}
+  .score-item{text-align:center}.score-item .val{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--accent)}.score-item .lbl{font-size:0.75rem;color:var(--muted)}
+  #results-screen{display:none;background:var(--card);border-radius:16px;padding:2rem;text-align:center;border:1px solid var(--border)}
+  #results-screen h2{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--accent);margin-bottom:0.5rem}
+  .results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}.res-box{background:var(--card2);border-radius:12px;padding:1rem}.res-box .big{font-family:'Fredoka One',cursive;font-size:2rem}.res-box .small{font-size:0.8rem;color:var(--muted)}
+  .grade{font-family:'Fredoka One',cursive;font-size:3rem;margin:1rem 0}
+  .ai-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:2rem}
+  .ai-panel h3{font-family:'Fredoka One',cursive;color:var(--accent);margin-bottom:0.5rem;font-size:1.3rem}.ai-panel p{color:var(--muted);font-size:0.9rem;margin-bottom:1rem}
+  .ai-status{font-size:0.9rem;color:var(--muted);margin-top:0.75rem;min-height:1.2em;font-style:italic}
+  .ai-key-row{display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap}
+  .ai-key-row input{flex:1;min-width:200px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.9rem}
+  .ai-key-row input:focus{outline:none;border-color:var(--accent)}.reset-row{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem}
+</style>
+</head>
+<body>
+<header>
+  <a href="hub.html" class="back">⬅</a>
+  <h1>📐 Geometry: Shapes</h1>
+  <div class="badge" id="header-score">0 / 0</div>
+</header>
+<div class="container">
+  <div class="score-bar">
+    <div class="score-item"><div class="val" id="sc-correct">0</div><div class="lbl">Correct</div></div>
+    <div class="score-item"><div class="val" id="sc-wrong">0</div><div class="lbl">Wrong</div></div>
+    <div class="score-item"><div class="val" id="sc-remain">20</div><div class="lbl">Remaining</div></div>
+    <div class="score-item"><div class="val" id="sc-pct">0%</div><div class="lbl">Score</div></div>
+  </div>
+  <div class="dots-wrap" id="dots"></div>
+  <div id="quiz-area">
+    <div class="q-card">
+      <div class="q-meta"><span class="q-num" id="q-num">Question 1 of 20</span><span class="difficulty" id="q-diff">Easy</span></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <button class="hint-btn" onclick="showHint()">💡 Show Hint</button>
+      <div class="hint-box" id="hint-box"></div>
+      <div class="feedback" id="feedback"><h3 id="fb-title"></h3><div class="solution" id="fb-solution"></div></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="prevQ()">← Previous</button>
+      <button class="btn btn-primary" onclick="nextQ()">Next →</button>
+      <button class="btn btn-secondary btn-sm" onclick="finishQuiz()">Finish Quiz</button>
+    </div>
+    <div class="reset-row">
+      <button class="btn btn-secondary btn-sm" onclick="resetAnswers()">↺ Reset Answers</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetOriginal()">⟳ Reset to Original 20</button>
+    </div>
+  </div>
+  <div id="results-screen">
+    <h2>Quiz Complete! 🎉</h2>
+    <div class="grade" id="grade-emoji"></div>
+    <p id="grade-msg" style="color:var(--muted);margin-bottom:1rem;"></p>
+    <div class="results-grid">
+      <div class="res-box"><div class="big" style="color:var(--correct)" id="r-correct">0</div><div class="small">Correct</div></div>
+      <div class="res-box"><div class="big" style="color:var(--wrong)" id="r-wrong">0</div><div class="small">Wrong</div></div>
+      <div class="res-box"><div class="big" style="color:var(--accent)" id="r-pct">0%</div><div class="small">Score</div></div>
+    </div>
+    <div class="nav-row" style="justify-content:center">
+      <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+      <button class="btn btn-secondary" onclick="resetOriginal()">Reset to Original 20</button>
+      <a href="hub.html" class="btn btn-secondary">← Back to Hub</a>
+    </div>
+  </div>
+  <div class="ai-panel">
+    <h3>🤖 Generate More Questions</h3>
+    <p>Mr. Euler will write new Geometry: Shapes questions, then CheckerBot verifies them.</p>
+    <div class="ai-key-row">
+      <input type="password" id="api-key" placeholder="Paste your Anthropic API key here…">
+      <button class="btn btn-primary" onclick="generateAI()">Generate 5 More</button>
+    </div>
+    <div class="ai-status" id="ai-status"></div>
+  </div>
+</div>
+<script>
+const SEED_QUESTIONS = [
+  {q:"Find the area of a rectangle with length 9 cm and width 5 cm.",opts:["28 cm²","40 cm²","45 cm²","54 cm²"],ans:2,hint:"Area of rectangle = length × width.",solution:"<strong>Formula:</strong> Area = l × w<br><strong>Step 1:</strong> Area = 9 × 5 = <strong>45 cm²</strong>",diff:"easy"},
+  {q:"Find the perimeter of a rectangle with length 12 cm and width 7 cm.",opts:["19 cm","38 cm","84 cm","84 cm²"],ans:1,hint:"Perimeter = 2 × (length + width).",solution:"<strong>Formula:</strong> P = 2(l + w)<br><strong>Step 1:</strong> P = 2(12 + 7) = 2 × 19 = <strong>38 cm</strong>",diff:"easy"},
+  {q:"Calculate the area of a triangle with base 10 cm and perpendicular height 6 cm.",opts:["30 cm²","60 cm²","16 cm²","32 cm²"],ans:0,hint:"Area of triangle = ½ × base × height.",solution:"<strong>Formula:</strong> Area = ½ × b × h<br><strong>Step 1:</strong> Area = ½ × 10 × 6 = <strong>30 cm²</strong>",diff:"easy"},
+  {q:"Calculate the circumference of a circle with diameter 10 cm. Use π ≈ 3.14.",opts:["31.4 cm","62.8 cm","15.7 cm","78.5 cm"],ans:0,hint:"Circumference = π × diameter. (Or π × 2r if given radius.)",solution:"<strong>Formula:</strong> C = πd<br><strong>Step 1:</strong> C = 3.14 × 10 = <strong>31.4 cm</strong>",diff:"easy"},
+  {q:"Calculate the area of a circle with radius 5 cm. Give your answer in terms of π.",opts:["10π cm²","25π cm²","5π cm²","50π cm²"],ans:1,hint:"Area of circle = π × r².",solution:"<strong>Formula:</strong> A = πr²<br><strong>Step 1:</strong> A = π × 5² = π × 25 = <strong>25π cm²</strong>",diff:"easy"},
+  {q:"Find the volume of a cuboid with length 6 cm, width 4 cm, and height 3 cm.",opts:["13 cm³","36 cm³","48 cm³","72 cm³"],ans:3,hint:"Volume of cuboid = length × width × height.",solution:"<strong>Formula:</strong> V = l × w × h<br><strong>Step 1:</strong> V = 6 × 4 × 3 = <strong>72 cm³</strong>",diff:"easy"},
+  {q:"A square has area 49 cm². What is its perimeter?",opts:["14 cm","28 cm","28 cm²","7 cm"],ans:1,hint:"Find the side length first (square root of area), then multiply by 4.",solution:"<strong>Step 1:</strong> Side = √49 = 7 cm<br><strong>Step 2:</strong> Perimeter = 4 × 7 = <strong>28 cm</strong>",diff:"easy"},
+  {q:"Find the area of a trapezium with parallel sides of 8 cm and 12 cm, and a height of 5 cm.",opts:["50 cm²","75 cm²","100 cm²","40 cm²"],ans:0,hint:"Area of trapezium = ½ × (a + b) × h.",solution:"<strong>Formula:</strong> A = ½(a + b)h<br><strong>Step 1:</strong> A = ½ × (8 + 12) × 5 = ½ × 20 × 5 = <strong>50 cm²</strong>",diff:"medium"},
+  {q:"Calculate the volume of a cylinder with radius 4 cm and height 10 cm. Give your answer in terms of π.",opts:["40π cm³","80π cm³","160π cm³","320π cm³"],ans:2,hint:"Volume of cylinder = π × r² × h.",solution:"<strong>Formula:</strong> V = πr²h<br><strong>Step 1:</strong> V = π × 4² × 10 = π × 16 × 10 = <strong>160π cm³</strong>",diff:"medium"},
+  {q:"Find the hypotenuse of a right-angled triangle with legs of 6 cm and 8 cm.",opts:["10 cm","12 cm","14 cm","100 cm"],ans:0,hint:"Use Pythagoras: a² + b² = c².",solution:"<strong>Pythagoras:</strong> c² = a² + b²<br><strong>Step 1:</strong> c² = 6² + 8² = 36 + 64 = 100<br><strong>Step 2:</strong> c = √100 = <strong>10 cm</strong>",diff:"medium"},
+  {q:"A right-angled triangle has hypotenuse 13 cm and one leg 5 cm. Find the other leg.",opts:["8 cm","10 cm","12 cm","18 cm"],ans:2,hint:"Use Pythagoras: a² + b² = c². Rearrange to find the missing leg.",solution:"<strong>Step 1:</strong> 5² + b² = 13²<br><strong>Step 2:</strong> 25 + b² = 169<br><strong>Step 3:</strong> b² = 169 − 25 = 144<br><strong>Step 4:</strong> b = √144 = <strong>12 cm</strong>",diff:"medium"},
+  {q:"Find the surface area of a cube with side length 4 cm.",opts:["16 cm²","64 cm²","96 cm²","48 cm²"],ans:2,hint:"A cube has 6 identical faces. Area of each face = side².",solution:"<strong>Step 1:</strong> Area of one face = 4² = 16 cm²<br><strong>Step 2:</strong> 6 faces: 6 × 16 = <strong>96 cm²</strong>",diff:"medium"},
+  {q:"A circle has circumference 62.8 cm. Find its radius. Use π ≈ 3.14.",opts:["5 cm","10 cm","20 cm","31.4 cm"],ans:1,hint:"C = 2πr, so r = C ÷ (2π).",solution:"<strong>Step 1:</strong> 62.8 = 2 × 3.14 × r<br><strong>Step 2:</strong> 62.8 = 6.28r<br><strong>Step 3:</strong> r = 62.8 ÷ 6.28 = <strong>10 cm</strong>",diff:"medium"},
+  {q:"Find the area of a parallelogram with base 9 cm and perpendicular height 7 cm.",opts:["32 cm²","63 cm²","56 cm²","126 cm²"],ans:1,hint:"Area of parallelogram = base × perpendicular height (same as a rectangle).",solution:"<strong>Formula:</strong> A = b × h<br><strong>Step 1:</strong> A = 9 × 7 = <strong>63 cm²</strong>",diff:"medium"},
+  {q:"A cylinder has volume 300π cm³ and height 12 cm. Find its radius.",opts:["5 cm","√25 cm","25 cm","√300 cm"],ans:0,hint:"V = πr²h. Rearrange to find r².",solution:"<strong>Step 1:</strong> 300π = π × r² × 12<br><strong>Step 2:</strong> 300 = 12r²<br><strong>Step 3:</strong> r² = 25<br><strong>Step 4:</strong> r = √25 = <strong>5 cm</strong>",diff:"medium"},
+  {q:"A point is 7 km north and 24 km east of a starting point. How far is it from the start in a straight line?",opts:["25 km","31 km","17 km","√527 km"],ans:0,hint:"This is a Pythagoras problem. The straight-line distance is the hypotenuse.",solution:"<strong>Step 1:</strong> d² = 7² + 24² = 49 + 576 = 625<br><strong>Step 2:</strong> d = √625 = <strong>25 km</strong>",diff:"hard"},
+  {q:"Find the area of a sector with radius 9 cm and angle 80°. Give your answer to 1 d.p. (π = 3.14159…)",opts:["56.5 cm²","113.1 cm²","18.8 cm²","72.4 cm²"],ans:0,hint:"Area of sector = (θ/360) × πr².",solution:"<strong>Formula:</strong> A = (θ/360) × πr²<br><strong>Step 1:</strong> A = (80/360) × π × 81<br><strong>Step 2:</strong> = 0.2222 × 254.47<br><strong>Step 3:</strong> ≈ <strong>56.5 cm²</strong>",diff:"hard"},
+  {q:"A composite shape is a rectangle (10 cm × 6 cm) with a semicircle on one end (diameter 6 cm). Find the total area to 1 d.p.",opts:["74.1 cm²","88.3 cm²","60 cm²","69.1 cm²"],ans:0,hint:"Area = rectangle + semicircle. Semicircle area = ½πr².",solution:"<strong>Step 1:</strong> Rectangle = 10 × 6 = 60 cm²<br><strong>Step 2:</strong> Semicircle radius = 3 cm<br><strong>Step 3:</strong> Semicircle = ½ × π × 9 = 14.14 cm²<br><strong>Step 4:</strong> Total = 60 + 14.1 = <strong>74.1 cm²</strong>",diff:"hard"},
+  {q:"A prism has a triangular cross-section with base 6 cm and height 4 cm. The prism is 10 cm long. Find its volume.",opts:["120 cm³","60 cm³","240 cm³","80 cm³"],ans:0,hint:"Volume of prism = cross-sectional area × length.",solution:"<strong>Step 1:</strong> Cross-section (triangle) area = ½ × 6 × 4 = 12 cm²<br><strong>Step 2:</strong> Volume = 12 × 10 = <strong>120 cm³</strong>",diff:"hard"},
+  {q:"A ladder 10 m long leans against a vertical wall. The foot of the ladder is 4 m from the base of the wall. How high up the wall does the ladder reach? Give your answer to 2 d.p.",opts:["9.17 m","8.00 m","9.17 m","9.80 m"],ans:0,hint:"Use Pythagoras: height² = ladder² − base distance².",solution:"<strong>Step 1:</strong> h² = 10² − 4² = 100 − 16 = 84<br><strong>Step 2:</strong> h = √84 ≈ <strong>9.17 m</strong>",diff:"hard"},
+];
+
+let questions=[...SEED_QUESTIONS],current=0,answers=new Array(questions.length).fill(null);
+function buildDots(){const w=document.getElementById('dots');w.innerHTML='';questions.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===current?' current':'')+(answers[i]==='correct'?' correct':answers[i]==='wrong'?' wrong':'');d.textContent=i+1;d.onclick=()=>{current=i;render()};w.appendChild(d)})}
+function updateScore(){const c=answers.filter(a=>a==='correct').length,ww=answers.filter(a=>a==='wrong').length,ans=c+ww,pct=ans?Math.round(c/ans*100):0;document.getElementById('sc-correct').textContent=c;document.getElementById('sc-wrong').textContent=ww;document.getElementById('sc-remain').textContent=questions.length-ans;document.getElementById('sc-pct').textContent=pct+'%';document.getElementById('header-score').textContent=c+' / '+questions.length}
+function render(){const q=questions[current];document.getElementById('q-num').textContent=`Question ${current+1} of ${questions.length}`;const de=document.getElementById('q-diff');de.textContent={easy:'Easy',medium:'Medium',hard:'Hard'}[q.diff];de.className='difficulty '+q.diff;document.getElementById('q-text').innerHTML=q.q;document.getElementById('hint-box').style.display='none';document.getElementById('hint-box').textContent=q.hint;const fb=document.getElementById('feedback');fb.style.display='none';fb.className='feedback';const opts=document.getElementById('options');opts.innerHTML='';['A','B','C','D'].forEach((l,i)=>{const btn=document.createElement('button');btn.className='opt';btn.innerHTML=`<span class="opt-letter">${l}</span> ${q.opts[i]}`;if(answers[current]!==null){btn.disabled=true;if(i===q.ans)btn.classList.add('reveal-correct')};btn.onclick=()=>checkAnswer(i);opts.appendChild(btn)});if(answers[current]!==null)showFeedback(answers[current]==='correct');buildDots();updateScore()}
+function checkAnswer(i){if(answers[current]!==null)return;const q=questions[current],ok=i===q.ans;answers[current]=ok?'correct':'wrong';document.getElementById('options').querySelectorAll('.opt').forEach((b,idx)=>{b.disabled=true;if(idx===q.ans)b.classList.add('reveal-correct');if(idx===i&&!ok)b.classList.add('selected-wrong')});showFeedback(ok);buildDots();updateScore()}
+function showFeedback(ok){const q=questions[current],fb=document.getElementById('feedback');fb.style.display='block';fb.className='feedback '+(ok?'correct':'wrong');document.getElementById('fb-title').textContent=ok?'✅ Correct! Well done!':'❌ Not quite — here\'s how to do it:';document.getElementById('fb-solution').innerHTML=q.solution}
+function showHint(){const b=document.getElementById('hint-box');b.style.display=b.style.display==='none'?'block':'none'}
+function prevQ(){if(current>0){current--;render()}}
+function nextQ(){if(current<questions.length-1){current++;render()}else finishQuiz()}
+function finishQuiz(){const c=answers.filter(a=>a==='correct').length,ww=answers.filter(a=>a==='wrong').length,pct=Math.round(c/questions.length*100);document.getElementById('r-correct').textContent=c;document.getElementById('r-wrong').textContent=ww;document.getElementById('r-pct').textContent=pct+'%';document.getElementById('grade-emoji').textContent=pct>=90?'🏆':pct>=70?'⭐':pct>=50?'👍':'📚';document.getElementById('grade-msg').textContent=pct>=90?'Shape master!':pct>=70?'Great geometry skills!':pct>=50?'Good effort!':'Keep practising!';document.getElementById('quiz-area').style.display='none';document.getElementById('results-screen').style.display='block'}
+function restartQuiz(){answers=new Array(questions.length).fill(null);current=0;document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+function resetAnswers(){answers=new Array(questions.length).fill(null);document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+function resetOriginal(){questions=[...SEED_QUESTIONS];answers=new Array(questions.length).fill(null);current=0;document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+async function generateAI(){const key=document.getElementById('api-key').value.trim();if(!key){document.getElementById('ai-status').textContent='⚠️ Please enter your Anthropic API key.';return}const s=document.getElementById('ai-status');s.textContent='🧑‍🏫 Mr. Euler is writing 5 new questions…';const p=`You are Mr. Euler, expert Year 8 UK Maths teacher. Generate 5 MCQ on GEOMETRY: SHAPES (area, perimeter, volume, surface area, circles, Pythagoras, prisms, composite shapes). 4 options, ONE correct, hint, step-by-step HTML solution using <strong> tags, double-check arithmetic, British English, mix difficulty. JSON only: [{"q":"","opts":["","","",""],"ans":0,"hint":"","solution":"","diff":"easy|medium|hard"}]`;try{const r1=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:p}]})});const d1=await r1.json();const newQs=JSON.parse(d1.content[0].text.trim().replace(/```json|```/g,''));s.textContent='🔍 CheckerBot verifying…';const cp=`You are CheckerBot. Verify 5 Geometry:Shapes questions — correct arithmetic (especially π calculations and Pythagoras), one answer, KS3 level, clear solution. ${JSON.stringify(newQs)}. Respond: APPROVED: [json]`;const r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:cp}]})});const d2=await r2.json();const cr=d2.content[0].text.trim();if(!cr.startsWith('APPROVED:')){s.textContent='❌ CheckerBot rejected. Try again.';return}const checked=JSON.parse(cr.replace('APPROVED:','').trim().replace(/```json|```/g,''));questions=[...questions,...checked];answers=new Array(questions.length).fill(null);buildDots();s.textContent=`✅ 5 new questions added! Now ${questions.length} total.`;updateScore()}catch(e){s.textContent='❌ Error: '+e.message}}
+render();
+</script>
+</body>
+</html>

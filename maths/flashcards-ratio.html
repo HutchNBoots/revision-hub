@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ratio &amp; Proportion Flashcards &mdash; Year 8 Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--accent:#34d399;--accent2:#6ee7b7;--correct:#10b981;--wrong:#ef4444;--text:#e2e8f0;--muted:#94a3b8;--border:#2d3748}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh}
+header{background:linear-gradient(135deg,#065f46,#34d399);padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem}
+header .back{color:#fff;text-decoration:none;font-size:1.4rem}
+header h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:#fff}
+header .badge{margin-left:auto;background:rgba(0,0,0,0.3);border-radius:20px;padding:0.3rem 1rem;font-weight:700;color:#fff;font-size:0.9rem}
+.container{max-width:780px;margin:0 auto;padding:2rem 1rem}
+.progress-row{display:flex;gap:1.5rem;background:var(--card);border-radius:12px;padding:1rem 1.5rem;margin-bottom:1.5rem;border:1px solid var(--border);flex-wrap:wrap;align-items:center}
+.prog-item{text-align:center}.prog-item .val{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--accent)}.prog-item .lbl{font-size:0.72rem;color:var(--muted)}
+.prog-bar-wrap{flex:1;min-width:120px;background:var(--border);border-radius:99px;height:8px;overflow:hidden}
+.prog-bar{height:100%;background:var(--accent);border-radius:99px;transition:width 0.4s}
+.card-counter{text-align:center;color:var(--muted);font-size:0.9rem;margin-bottom:0.75rem}
+.scene{width:100%;height:300px;perspective:1000px;margin-bottom:1.2rem;cursor:pointer}
+@media(max-width:560px){.scene{height:260px}}
+.card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.5s ease}
+.scene.flipped .card-inner{transform:rotateY(180deg)}
+.card-face{position:absolute;inset:0;border-radius:20px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;padding:2rem;border:2px solid var(--border)}
+.card-front{background:linear-gradient(135deg,var(--card),var(--card2));flex-direction:column;gap:1rem}
+.card-front .label{font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:800}
+.card-front .term{font-family:'Fredoka One',cursive;font-size:1.4rem;text-align:center;line-height:1.3}
+.card-front .tap-hint{font-size:0.8rem;color:var(--muted)}
+.card-back{background:linear-gradient(135deg,#1e293b,#0f172a);flex-direction:column;gap:0.75rem;transform:rotateY(180deg);overflow-y:auto;align-items:flex-start;padding:1.5rem 2rem}
+.card-back .back-label{font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent2);font-weight:800;align-self:center}
+.card-back .definition{font-size:0.95rem;font-weight:700;line-height:1.5}
+.card-back .example{margin-top:0.5rem;background:rgba(0,0,0,0.4);border-left:3px solid var(--accent);padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:0.88rem;line-height:1.6;color:#cbd5e1}
+.card-back .example strong{color:var(--accent2)}
+.action-row{display:flex;gap:0.75rem;justify-content:center;margin-bottom:1.2rem;flex-wrap:wrap}
+.btn{padding:0.75rem 1.5rem;border-radius:10px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;transition:all 0.2s}
+.btn-gotit{background:var(--correct);color:#fff}.btn-gotit:hover{background:#059669}
+.btn-notyet{background:var(--wrong);color:#fff}.btn-notyet:hover{background:#dc2626}
+.btn-primary{background:var(--accent);color:#000}
+.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}.btn-sm{font-size:0.85rem;padding:0.5rem 1rem}
+.nav-row{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.ctrl-row{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.pile-row{display:flex;gap:1rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap}
+.pile{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.5rem 1rem;font-size:0.85rem;font-weight:700}
+.pile.gotit{border-color:var(--correct);color:var(--correct)}.pile.notyet{border-color:var(--wrong);color:var(--wrong)}
+.mode-banner{background:#1e3a2f;border:1px solid var(--correct);border-radius:10px;padding:0.6rem 1rem;text-align:center;font-size:0.85rem;color:#6ee7b7;margin-bottom:1rem;display:none}
+.ai-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:2rem}
+.ai-panel h3{font-family:'Fredoka One',cursive;color:var(--accent);margin-bottom:0.5rem;font-size:1.3rem}
+.ai-panel p{color:var(--muted);font-size:0.9rem;margin-bottom:1rem}
+.ai-status{font-size:0.9rem;color:var(--muted);margin-top:0.75rem;min-height:1.2em;font-style:italic}
+.ai-key-row{display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap}
+.ai-key-row input{flex:1;min-width:200px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.9rem}
+.ai-key-row input:focus{outline:none;border-color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <a href="hub.html" class="back">&#8678;</a>
+  <h1>&#9878; Ratio &amp; Proportion Flashcards</h1>
+  <div class="badge" id="header-badge">1 / 20</div>
+</header>
+<div class="container">
+  <div class="progress-row">
+    <div class="prog-item"><div class="val" id="p-gotit">0</div><div class="lbl">Got It</div></div>
+    <div class="prog-bar-wrap"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+    <div class="prog-item"><div class="val" id="p-notyet">0</div><div class="lbl">Not Yet</div></div>
+    <div class="prog-item"><div class="val" id="p-unseen">20</div><div class="lbl">Unseen</div></div>
+  </div>
+  <div class="mode-banner" id="mode-banner">&#128218; Study Not Yet Mode &mdash; reviewing cards you haven&apos;t mastered yet</div>
+  <div class="card-counter" id="card-counter">Card 1 of 20</div>
+  <div class="scene" id="scene" onclick="flipCard()">
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <div class="label">Concept / Rule</div>
+        <div class="term" id="card-term"></div>
+        <div class="tap-hint">Tap to reveal</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="back-label">Explanation + Worked Example</div>
+        <div class="definition" id="card-def"></div>
+        <div class="example" id="card-ex"></div>
+      </div>
+    </div>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-notyet" onclick="markCard('notyet')">&#10007; Not Yet</button>
+    <button class="btn btn-gotit" onclick="markCard('gotit')">&#10003; Got It!</button>
+  </div>
+  <div class="nav-row">
+    <button class="btn btn-secondary btn-sm" onclick="prevCard()">&#8592; Prev</button>
+    <button class="btn btn-secondary btn-sm" onclick="nextCard()">Next &#8594;</button>
+  </div>
+  <div class="ctrl-row">
+    <button class="btn btn-secondary btn-sm" onclick="shuffleCards()">&#128256; Shuffle</button>
+    <button class="btn btn-secondary btn-sm" onclick="studyNotYet()">&#128218; Study Not Yet</button>
+    <button class="btn btn-secondary btn-sm" onclick="resetAll()">&#8634; Reset All</button>
+    <button class="btn btn-secondary btn-sm" onclick="resetOriginal()">&#8635; Original 20</button>
+  </div>
+  <div class="pile-row">
+    <div class="pile gotit">Got It: <span id="pile-gotit">0</span></div>
+    <div class="pile notyet">Not Yet: <span id="pile-notyet">0</span></div>
+  </div>
+  <div class="ai-panel">
+    <h3>&#129302; Generate More Cards</h3>
+    <p>Mr. Euler creates new Ratio flashcards, then CheckerBot verifies them.</p>
+    <div class="ai-key-row">
+      <input type="password" id="api-key" placeholder="Paste your Anthropic API key here...">
+      <button class="btn btn-primary" onclick="generateAI()">Generate 5 More</button>
+    </div>
+    <div class="ai-status" id="ai-status"></div>
+  </div>
+</div>
+<script>
+const SEED_CARDS = [{"term": "Simplifying Ratios", "def": "Divide all parts by their HCF to write the ratio in its simplest form.", "ex": "<strong>Simplify 24:36:</strong><br>HCF = 12<br>24&divide;12 : 36&divide;12<br><strong>= 2:3</strong>"}, {"term": "Sharing in a Ratio", "def": "Add the parts, find one part&apos;s value, then multiply for each share.", "ex": "<strong>Share &pound;80 in ratio 3:5:</strong><br>Parts = 8, one part = &pound;10<br>3 parts = &pound;30<br>5 parts = &pound;50"}, {"term": "Direct Proportion (y = kx)", "def": "As one quantity increases, the other increases at the same rate. Find k first.", "ex": "<strong>y &prop; x. y=12 when x=4:</strong><br>k = 12&divide;4 = 3<br>When x=7: y = 3&times;7 = <strong>21</strong>"}, {"term": "Inverse Proportion (xy = k)", "def": "As one increases, the other decreases. Product stays constant: xy = k.", "ex": "<strong>y inversely &prop; x. y=8 when x=3:</strong><br>k = 24<br>When x=6: y = 24&divide;6 = <strong>4</strong>"}, {"term": "Unitary Method", "def": "Find the value for ONE unit, then scale up or down as needed.", "ex": "<strong>5 pens cost &pound;3.50. Cost of 8?</strong><br>1 pen = &pound;0.70<br>8 pens = 8&times;&pound;0.70 = <strong>&pound;5.60</strong>"}, {"term": "Map Scales", "def": "Scale 1:n means 1 unit on map = n units real. Convert to km by &divide;100,000.", "ex": "<strong>Scale 1:50,000. Map = 3cm:</strong><br>Real = 3&times;50,000 = 150,000cm<br>= <strong>1.5 km</strong>"}, {"term": "Best Value", "def": "Calculate price per gram (or per ml) for each option and compare.", "ex": "<strong>400g for &pound;2.00 vs 600g for &pound;2.70:</strong><br>0.5p/g vs 0.45p/g<br><strong>600g is better value</strong>"}, {"term": "Percentage Change", "def": "% change = (change &divide; original) &times; 100. Positive = increase.", "ex": "<strong>&pound;40 rises to &pound;52:</strong><br>Change = &pound;12<br>(12&divide;40)&times;100 = <strong>30%</strong>"}, {"term": "Ratio to Fraction", "def": "Each part as fraction = that part &divide; total of all parts.", "ex": "<strong>Ratio 3:7. Fraction of first part?</strong><br>Total = 10<br>First = <strong>3/10</strong>"}, {"term": "Three-Part Ratio", "def": "Add all parts, find one part, then multiply for each share.", "ex": "<strong>Share 210 in 1:2:4:</strong><br>7 parts = 210, 1 part = 30<br><strong>30 : 60 : 120</strong>"}, {"term": "Reverse Percentage", "def": "Divide by the multiplier to find the original value before a % change.", "ex": "<strong>Sale price &pound;68 after 15% off:</strong><br>Multiplier = 0.85<br>&pound;68 &divide; 0.85 = <strong>&pound;80</strong>"}, {"term": "Recipe Scaling", "def": "Find amount per person, then multiply by required number of people.", "ex": "<strong>Recipe for 4 uses 300g. Amount for 7?</strong><br>Per person: 75g<br>7 people: 75&times;7 = <strong>525g</strong>"}, {"term": "Workers and Time", "def": "More workers = less time. Use: workers &times; time = constant.", "ex": "<strong>6 workers take 4 days. Time for 8?</strong><br>Constant = 24 person-days<br>8 workers: 24&divide;8 = <strong>3 days</strong>"}, {"term": "Currency Conversion", "def": "Multiply by the exchange rate (to foreign). Divide to convert back.", "ex": "<strong>&pound;1 = &euro;1.15. Convert &pound;80:</strong><br>80 &times; 1.15 = <strong>&euro;92</strong>"}, {"term": "Similar Shapes and Ratio", "def": "Corresponding sides of similar shapes are in the same ratio (scale factor).", "ex": "<strong>Rect 6&times;4. Similar rect, width 15:</strong><br>Scale factor = 15&divide;6 = 2.5<br>Height = 4&times;2.5 = <strong>10cm</strong>"}, {"term": "Direct Proportion y &prop; x&sup2;", "def": "y = kx&sup2;. Find k using a given pair, then use formula for new values.", "ex": "<strong>y=50 when x=5:</strong><br>k = 50&divide;25 = 2<br>When x=3: y = 2(9) = <strong>18</strong>"}, {"term": "Expressing as a Ratio", "def": "Convert both quantities to the same unit, then simplify.", "ex": "<strong>45 min : 2 hours = 45:120</strong><br>HCF = 15<br><strong>= 3:8</strong>"}, {"term": "Finding One Part Given Another", "def": "If you know one share, use it to find one part, then find others.", "ex": "<strong>Ratio 2:5. Larger share = &pound;35:</strong><br>5 parts = &pound;35 &rArr; 1 part = &pound;7<br>Total = 7&times;&pound;7 = <strong>&pound;49</strong>"}, {"term": "Concentration (Mixing)", "def": "Divide total volume proportionally between the parts of the ratio.", "ex": "<strong>Squash:water = 1:4. Make 500ml:</strong><br>5 parts = 500ml, 1 part = 100ml<br><strong>100ml squash</strong>"}, {"term": "Percentage of an Amount", "def": "Multiply the amount by the percentage written as a decimal.", "ex": "<strong>35% of &pound;240:</strong><br>0.35 &times; 240 = <strong>&pound;84</strong>"}];
+const AI_TOPIC = 'RATIO AND PROPORTION (simplifying ratios, sharing in ratio, direct proportion, inverse proportion, best value, map scales, percentage change)';
+
+let cards=[...SEED_CARDS],current=0,status=new Array(cards.length).fill(null),studyMode=false,studyQueue=[];
+function getDisplayCards(){return studyMode?studyQueue:cards}
+function render(){const d=getDisplayCards(),c=d[current];if(!c)return;document.getElementById('scene').classList.remove('flipped');document.getElementById('card-term').textContent=c.term;document.getElementById('card-def').innerHTML=c.def;document.getElementById('card-ex').innerHTML=c.ex;document.getElementById('card-counter').textContent='Card '+(current+1)+' of '+d.length;document.getElementById('header-badge').textContent=(current+1)+' / '+d.length;updateProgress()}
+function flipCard(){document.getElementById('scene').classList.toggle('flipped')}
+function prevCard(){if(current>0){current--;render()}}
+function nextCard(){const d=getDisplayCards();if(current<d.length-1){current++;render()}}
+function markCard(r){const d=getDisplayCards(),c=d[current],idx=cards.indexOf(c);if(idx>=0)status[idx]=r;updateProgress();setTimeout(function(){if(current<d.length-1){current++;render()}},300)}
+function updateProgress(){const g=status.filter(function(s){return s==='gotit'}).length,n=status.filter(function(s){return s==='notyet'}).length;document.getElementById('p-gotit').textContent=g;document.getElementById('p-notyet').textContent=n;document.getElementById('p-unseen').textContent=cards.length-g-n;document.getElementById('pile-gotit').textContent=g;document.getElementById('pile-notyet').textContent=n;document.getElementById('prog-bar').style.width=(cards.length?Math.round(g/cards.length*100):0)+'%'}
+function shuffleCards(){for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];[status[i],status[j]]=[status[j],status[i]]}current=0;studyMode=false;document.getElementById('mode-banner').style.display='none';render()}
+function studyNotYet(){studyQueue=cards.filter(function(_,i){return status[i]==='notyet'||status[i]===null});if(!studyQueue.length){alert('No Not Yet cards - great work!');return}studyMode=true;current=0;document.getElementById('mode-banner').style.display='block';render()}
+function resetAll(){status=new Array(cards.length).fill(null);current=0;studyMode=false;document.getElementById('mode-banner').style.display='none';render()}
+function resetOriginal(){cards=[...SEED_CARDS];status=new Array(cards.length).fill(null);current=0;studyMode=false;document.getElementById('mode-banner').style.display='none';render()}
+async function generateAI(){const key=document.getElementById('api-key').value.trim();if(!key){document.getElementById('ai-status').textContent='Please enter your API key.';return}const s=document.getElementById('ai-status');s.textContent='Mr. Euler is creating 5 new flashcards...';const p='You are Mr. Euler, expert Year 8 UK Maths teacher. Create 5 flashcards on '+AI_TOPIC+'. Each card front = a rule/formula/concept name. Back = clear explanation + worked example using <strong> tags. British English. Respond ONLY with valid JSON array: [{"term":"","def":"","ex":""}]';try{const r1=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:p}]})});const d1=await r1.json();const raw=d1.content[0].text.trim().replace(/```json|```/g,'');const newCards=JSON.parse(raw);s.textContent='CheckerBot verifying...';const cp='You are CheckerBot, strict examiner. Verify these 5 flashcards: (1) worked example arithmetic is correct, (2) explanation is clear, (3) KS3 Year 8 appropriate, (4) relevant to topic. Cards: '+JSON.stringify(newCards)+'. If all good respond APPROVED: then the JSON. Fix any errors first.';const r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:cp}]})});const d2=await r2.json();const cr=d2.content[0].text.trim();if(!cr.startsWith('APPROVED:')){s.textContent='CheckerBot rejected. Try again.';return}const checked=JSON.parse(cr.replace('APPROVED:','').trim().replace(/```json|```/g,''));cards=[...cards,...checked];status=[...status,...new Array(checked.length).fill(null)];s.textContent='5 cards added! Now '+cards.length+' total.';updateProgress()}catch(e){s.textContent='Error: '+e.message}}
+render();
+
+</script>
+</body>
+</html>

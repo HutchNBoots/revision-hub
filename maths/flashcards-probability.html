@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probability Flashcards &mdash; Year 8 Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--accent:#f87171;--accent2:#fca5a5;--correct:#10b981;--wrong:#ef4444;--text:#e2e8f0;--muted:#94a3b8;--border:#2d3748}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh}
+header{background:linear-gradient(135deg,#7f1d1d,#f87171);padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem}
+header .back{color:#fff;text-decoration:none;font-size:1.4rem}
+header h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:#fff}
+header .badge{margin-left:auto;background:rgba(0,0,0,0.3);border-radius:20px;padding:0.3rem 1rem;font-weight:700;color:#fff;font-size:0.9rem}
+.container{max-width:780px;margin:0 auto;padding:2rem 1rem}
+.progress-row{display:flex;gap:1.5rem;background:var(--card);border-radius:12px;padding:1rem 1.5rem;margin-bottom:1.5rem;border:1px solid var(--border);flex-wrap:wrap;align-items:center}
+.prog-item{text-align:center}.prog-item .val{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--accent)}.prog-item .lbl{font-size:0.72rem;color:var(--muted)}
+.prog-bar-wrap{flex:1;min-width:120px;background:var(--border);border-radius:99px;height:8px;overflow:hidden}
+.prog-bar{height:100%;background:var(--accent);border-radius:99px;transition:width 0.4s}
+.card-counter{text-align:center;color:var(--muted);font-size:0.9rem;margin-bottom:0.75rem}
+.scene{width:100%;height:300px;perspective:1000px;margin-bottom:1.2rem;cursor:pointer}
+@media(max-width:560px){.scene{height:260px}}
+.card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.5s ease}
+.scene.flipped .card-inner{transform:rotateY(180deg)}
+.card-face{position:absolute;inset:0;border-radius:20px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;padding:2rem;border:2px solid var(--border)}
+.card-front{background:linear-gradient(135deg,var(--card),var(--card2));flex-direction:column;gap:1rem}
+.card-front .label{font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:800}
+.card-front .term{font-family:'Fredoka One',cursive;font-size:1.4rem;text-align:center;line-height:1.3}
+.card-front .tap-hint{font-size:0.8rem;color:var(--muted)}
+.card-back{background:linear-gradient(135deg,#1e293b,#0f172a);flex-direction:column;gap:0.75rem;transform:rotateY(180deg);overflow-y:auto;align-items:flex-start;padding:1.5rem 2rem}
+.card-back .back-label{font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent2);font-weight:800;align-self:center}
+.card-back .definition{font-size:0.95rem;font-weight:700;line-height:1.5}
+.card-back .example{margin-top:0.5rem;background:rgba(0,0,0,0.4);border-left:3px solid var(--accent);padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:0.88rem;line-height:1.6;color:#cbd5e1}
+.card-back .example strong{color:var(--accent2)}
+.action-row{display:flex;gap:0.75rem;justify-content:center;margin-bottom:1.2rem;flex-wrap:wrap}
+.btn{padding:0.75rem 1.5rem;border-radius:10px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;transition:all 0.2s}
+.btn-gotit{background:var(--correct);color:#fff}.btn-gotit:hover{background:#059669}
+.btn-notyet{background:var(--wrong);color:#fff}.btn-notyet:hover{background:#dc2626}
+.btn-primary{background:var(--accent);color:#000}
+.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}.btn-sm{font-size:0.85rem;padding:0.5rem 1rem}
+.nav-row{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.ctrl-row{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.pile-row{display:flex;gap:1rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap}
+.pile{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.5rem 1rem;font-size:0.85rem;font-weight:700}
+.pile.gotit{border-color:var(--correct);color:var(--correct)}.pile.notyet{border-color:var(--wrong);color:var(--wrong)}
+.mode-banner{background:#1e3a2f;border:1px solid var(--correct);border-radius:10px;padding:0.6rem 1rem;text-align:center;font-size:0.85rem;color:#6ee7b7;margin-bottom:1rem;display:none}
+.ai-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:2rem}
+.ai-panel h3{font-family:'Fredoka One',cursive;color:var(--accent);margin-bottom:0.5rem;font-size:1.3rem}
+.ai-panel p{color:var(--muted);font-size:0.9rem;margin-bottom:1rem}
+.ai-status{font-size:0.9rem;color:var(--muted);margin-top:0.75rem;min-height:1.2em;font-style:italic}
+.ai-key-row{display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap}
+.ai-key-row input{flex:1;min-width:200px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.9rem}
+.ai-key-row input:focus{outline:none;border-color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <a href="hub.html" class="back">&#8678;</a>
+  <h1>&#127922; Probability Flashcards</h1>
+  <div class="badge" id="header-badge">1 / 20</div>
+</header>
+<div class="container">
+  <div class="progress-row">
+    <div class="prog-item"><div class="val" id="p-gotit">0</div><div class="lbl">Got It</div></div>
+    <div class="prog-bar-wrap"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+    <div class="prog-item"><div class="val" id="p-notyet">0</div><div class="lbl">Not Yet</div></div>
+    <div class="prog-item"><div class="val" id="p-unseen">20</div><div class="lbl">Unseen</div></div>
+  </div>
+  <div class="mode-banner" id="mode-banner">&#128218; Study Not Yet Mode &mdash; reviewing cards you haven&apos;t mastered yet</div>
+  <div class="card-counter" id="card-counter">Card 1 of 20</div>
+  <div class="scene" id="scene" onclick="flipCard()">
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <div class="label">Concept / Rule</div>
+        <div class="term" id="card-term"></div>
+        <div class="tap-hint">Tap to reveal</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="back-label">Explanation + Worked Example</div>
+        <div class="definition" id="card-def"></div>
+        <div class="example" id="card-ex"></div>
+      </div>
+    </div>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-notyet" onclick="markCard('notyet')">&#10007; Not Yet</button>
+    <button class="btn btn-gotit" onclick="markCard('gotit')">&#10003; Got It!</button>
+  </div>
+  <div class="nav-row">
+    <button class="btn btn-secondary btn-sm" onclick="prevCard()">&#8592; Prev</button>
+    <button class="btn btn-secondary btn-sm" onclick="nextCard()">Next &#8594;</button>
+  </div>
+  <div class="ctrl-row">
+    <button class="btn btn-secondary btn-sm" onclick="shuffleCards()">&#128256; Shuffle</button>
+    <button class="btn btn-secondary btn-sm" onclick="studyNotYet()">&#128218; Study Not Yet</button>
+    <button class="btn btn-secondary btn-sm" onclick="resetAll()">&#8634; Reset All</button>
+    <button class="btn btn-secondary btn-sm" onclick="resetOriginal()">&#8635; Original 20</button>
+  </div>
+  <div class="pile-row">
+    <div class="pile gotit">Got It: <span id="pile-gotit">0</span></div>
+    <div class="pile notyet">Not Yet: <span id="pile-notyet">0</span></div>
+  </div>
+  <div class="ai-panel">
+    <h3>&#129302; Generate More Cards</h3>
+    <p>Mr. Euler creates new Probability flashcards, then CheckerBot verifies them.</p>
+    <div class="ai-key-row">
+      <input type="password" id="api-key" placeholder="Paste your Anthropic API key here...">
+      <button class="btn btn-primary" onclick="generateAI()">Generate 5 More</button>
+    </div>
+    <div class="ai-status" id="ai-status"></div>
+  </div>
+</div>
+<script>
+const SEED_CARDS = [{"term": "Basic Probability", "def": "P(event) = favourable outcomes &divide; total equally likely outcomes.", "ex": "<strong>Bag: 3 red, 5 blue. P(blue):</strong><br>P(blue) = 5&divide;8 = <strong>5/8</strong>"}, {"term": "Probability Scale", "def": "All probabilities lie between 0 (impossible) and 1 (certain).", "ex": "P(impossible) = <strong>0</strong><br>P(certain) = <strong>1</strong><br>P(fair coin heads) = <strong>0.5</strong>"}, {"term": "Complementary Events", "def": "P(not A) = 1 &minus; P(A). One event either happens or it doesn&apos;t.", "ex": "<strong>P(rain) = 0.35:</strong><br>P(no rain) = 1&minus;0.35 = <strong>0.65</strong>"}, {"term": "Mutually Exclusive Events", "def": "Events that cannot both happen. P(A or B) = P(A) + P(B).", "ex": "<strong>P(red)=0.4, P(blue)=0.3:</strong><br>P(red or blue) = 0.4+0.3 = <strong>0.7</strong>"}, {"term": "Independent Events", "def": "Events with no effect on each other. P(A and B) = P(A) &times; P(B).", "ex": "<strong>Die rolled twice. P(both 6):</strong><br>1/6 &times; 1/6 = <strong>1/36</strong>"}, {"term": "Sample Space Diagrams", "def": "List ALL equally likely outcomes to find probabilities.", "ex": "<strong>Two coins: HH, HT, TH, TT</strong><br>P(exactly 1 head) = 2/4 = <strong>1/2</strong>"}, {"term": "Tree Diagrams", "def": "Multiply along branches to get combined probabilities. Add between branches for &lsquo;or&rsquo;.", "ex": "<strong>P(Pass)=0.7, P(Merit|Pass)=0.5:</strong><br>P(Pass &amp; Merit) = 0.7&times;0.5 = <strong>0.35</strong>"}, {"term": "Without Replacement", "def": "When an item is not put back, total and favourable outcomes both change.", "ex": "<strong>4R, 6B. P(R then B):</strong><br>4/10 &times; 6/9 = 24/90 = <strong>4/15</strong>"}, {"term": "Relative Frequency", "def": "Relative freq = events occurred &divide; total trials. Estimates probability experimentally.", "ex": "<strong>Die rolled 100 times, six appears 18 times:</strong><br>Rel. freq = 18/100 = <strong>0.18</strong>"}, {"term": "Expected Frequency", "def": "Expected occurrences = probability &times; number of trials.", "ex": "<strong>P(H) = 0.5, flip 200 times:</strong><br>Expected H = 0.5&times;200 = <strong>100</strong>"}, {"term": "Inclusion-Exclusion Rule", "def": "P(A or B) = P(A) + P(B) &minus; P(A and B). Avoids double-counting overlaps.", "ex": "<strong>P(F)=0.6, P(C)=0.4, P(both)=0.2:</strong><br>P(F or C) = 0.6+0.4&minus;0.2 = <strong>0.8</strong>"}, {"term": "Conditional Probability", "def": "P(B|A) means probability of B given A has happened. P(A&cap;B) = P(A)&times;P(B|A).", "ex": "<strong>P(A)=0.6, P(B|A)=0.4:</strong><br>P(A and B) = 0.6&times;0.4 = <strong>0.24</strong>"}, {"term": "P(at least one)", "def": "P(at least one) = 1 &minus; P(none). Often the quickest method.", "ex": "<strong>P(at least one H in 3 flips):</strong><br>P(none) = (1/2)&sup3; = 1/8<br>P(at least 1H) = 1&minus;1/8 = <strong>7/8</strong>"}, {"term": "Biased Events", "def": "A biased coin/die does not have equal probability for each outcome.", "ex": "<strong>P(H)=0.6 for biased coin:</strong><br>P(T) = 0.4<br>P(HH) = 0.6&times;0.6 = <strong>0.36</strong>"}, {"term": "Two-Stage Tree Diagram", "def": "Draw two sets of branches. Multiply along each path; add paths for the same outcome.", "ex": "<strong>P(Merit) via two branches:</strong><br>0.7&times;0.5 + 0.3&times;0.2<br>= 0.35+0.06 = <strong>0.41</strong>"}, {"term": "Listing Outcomes Systematically", "def": "For combined events, list outcomes in a table or organised list to avoid missing any.", "ex": "<strong>Roll 1&ndash;3, flip coin:</strong><br>1H,1T,2H,2T,3H,3T<br>P(2 and H) = 1/6"}, {"term": "Venn Diagrams in Probability", "def": "Overlapping circles show combined events. Intersection = both events.", "ex": "<strong>P(A)=0.5, P(B)=0.4, P(A&cap;B)=0.2:</strong><br>P(A only)=0.3, P(B only)=0.2"}, {"term": "Experimental vs Theoretical", "def": "More trials &rarr; experimental frequency gets closer to theoretical probability.", "ex": "<strong>Flip coin 10 times: might get 7H (0.7)</strong><br>Flip 1000 times: expect &asymp;500H (0.5)"}, {"term": "P(one red, one blue) &ndash; Without Replacement", "def": "Two ways: R then B, OR B then R. Add both probabilities.", "ex": "<strong>3R, 2B. P(one each):</strong><br>3/5&times;2/4 + 2/5&times;3/4<br>= 6/20+6/20 = <strong>3/5</strong>"}, {"term": "Probability from Frequency Tables", "def": "P(event) = frequency of that event &divide; total frequency.", "ex": "<strong>Colour freq: R=12, B=8, G=5, total=25:</strong><br>P(red) = 12/25 = <strong>0.48</strong>"}];
+const AI_TOPIC = 'PROBABILITY (basic probability, complementary events, mutually exclusive, independent events, tree diagrams, without replacement, relative frequency)';
+
+let cards=[...SEED_CARDS],current=0,status=new Array(cards.length).fill(null),studyMode=false,studyQueue=[];
+function getDisplayCards(){return studyMode?studyQueue:cards}
+function render(){const d=getDisplayCards(),c=d[current];if(!c)return;document.getElementById('scene').classList.remove('flipped');document.getElementById('card-term').textContent=c.term;document.getElementById('card-def').innerHTML=c.def;document.getElementById('card-ex').innerHTML=c.ex;document.getElementById('card-counter').textContent='Card '+(current+1)+' of '+d.length;document.getElementById('header-badge').textContent=(current+1)+' / '+d.length;updateProgress()}
+function flipCard(){document.getElementById('scene').classList.toggle('flipped')}
+function prevCard(){if(current>0){current--;render()}}
+function nextCard(){const d=getDisplayCards();if(current<d.length-1){current++;render()}}
+function markCard(r){const d=getDisplayCards(),c=d[current],idx=cards.indexOf(c);if(idx>=0)status[idx]=r;updateProgress();setTimeout(function(){if(current<d.length-1){current++;render()}},300)}
+function updateProgress(){const g=status.filter(function(s){return s==='gotit'}).length,n=status.filter(function(s){return s==='notyet'}).length;document.getElementById('p-gotit').textContent=g;document.getElementById('p-notyet').textContent=n;document.getElementById('p-unseen').textContent=cards.length-g-n;document.getElementById('pile-gotit').textContent=g;document.getElementById('pile-notyet').textContent=n;document.getElementById('prog-bar').style.width=(cards.length?Math.round(g/cards.length*100):0)+'%'}
+function shuffleCards(){for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];[status[i],status[j]]=[status[j],status[i]]}current=0;studyMode=false;document.getElementById('mode-banner').style.display='none';render()}
+function studyNotYet(){studyQueue=cards.filter(function(_,i){return status[i]==='notyet'||status[i]===null});if(!studyQueue.length){alert('No Not Yet cards - great work!');return}studyMode=true;current=0;document.getElementById('mode-banner').style.display='block';render()}
+function resetAll(){status=new Array(cards.length).fill(null);current=0;studyMode=false;document.getElementById('mode-banner').style.display='none';render()}
+function resetOriginal(){cards=[...SEED_CARDS];status=new Array(cards.length).fill(null);current=0;studyMode=false;document.getElementById('mode-banner').style.display='none';render()}
+async function generateAI(){const key=document.getElementById('api-key').value.trim();if(!key){document.getElementById('ai-status').textContent='Please enter your API key.';return}const s=document.getElementById('ai-status');s.textContent='Mr. Euler is creating 5 new flashcards...';const p='You are Mr. Euler, expert Year 8 UK Maths teacher. Create 5 flashcards on '+AI_TOPIC+'. Each card front = a rule/formula/concept name. Back = clear explanation + worked example using <strong> tags. British English. Respond ONLY with valid JSON array: [{"term":"","def":"","ex":""}]';try{const r1=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:p}]})});const d1=await r1.json();const raw=d1.content[0].text.trim().replace(/```json|```/g,'');const newCards=JSON.parse(raw);s.textContent='CheckerBot verifying...';const cp='You are CheckerBot, strict examiner. Verify these 5 flashcards: (1) worked example arithmetic is correct, (2) explanation is clear, (3) KS3 Year 8 appropriate, (4) relevant to topic. Cards: '+JSON.stringify(newCards)+'. If all good respond APPROVED: then the JSON. Fix any errors first.';const r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:cp}]})});const d2=await r2.json();const cr=d2.content[0].text.trim();if(!cr.startsWith('APPROVED:')){s.textContent='CheckerBot rejected. Try again.';return}const checked=JSON.parse(cr.replace('APPROVED:','').trim().replace(/```json|```/g,''));cards=[...cards,...checked];status=[...status,...new Array(checked.length).fill(null)];s.textContent='5 cards added! Now '+cards.length+' total.';updateProgress()}catch(e){s.textContent='Error: '+e.message}}
+render();
+
+</script>
+</body>
+</html>

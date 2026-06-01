@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Measures Flashcards &mdash; Year 8 Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--accent:#fbbf24;--accent2:#fde68a;--correct:#10b981;--wrong:#ef4444;--text:#e2e8f0;--muted:#94a3b8;--border:#2d3748}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh}
+header{background:linear-gradient(135deg,#78350f,#fbbf24);padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem}
+header .back{color:#fff;text-decoration:none;font-size:1.4rem}
+header h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:#fff}
+header .badge{margin-left:auto;background:rgba(0,0,0,0.3);border-radius:20px;padding:0.3rem 1rem;font-weight:700;color:#fff;font-size:0.9rem}
+.container{max-width:780px;margin:0 auto;padding:2rem 1rem}
+.progress-row{display:flex;gap:1.5rem;background:var(--card);border-radius:12px;padding:1rem 1.5rem;margin-bottom:1.5rem;border:1px solid var(--border);flex-wrap:wrap;align-items:center}
+.prog-item{text-align:center}.prog-item .val{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--accent)}.prog-item .lbl{font-size:0.72rem;color:var(--muted)}
+.prog-bar-wrap{flex:1;min-width:120px;background:var(--border);border-radius:99px;height:8px;overflow:hidden}
+.prog-bar{height:100%;background:var(--accent);border-radius:99px;transition:width 0.4s}
+.card-counter{text-align:center;color:var(--muted);font-size:0.9rem;margin-bottom:0.75rem}
+.scene{width:100%;height:300px;perspective:1000px;margin-bottom:1.2rem;cursor:pointer}
+@media(max-width:560px){.scene{height:260px}}
+.card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.5s ease}
+.scene.flipped .card-inner{transform:rotateY(180deg)}
+.card-face{position:absolute;inset:0;border-radius:20px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;padding:2rem;border:2px solid var(--border)}
+.card-front{background:linear-gradient(135deg,var(--card),var(--card2));flex-direction:column;gap:1rem}
+.card-front .label{font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:800}
+.card-front .term{font-family:'Fredoka One',cursive;font-size:1.4rem;text-align:center;line-height:1.3}
+.card-front .tap-hint{font-size:0.8rem;color:var(--muted)}
+.card-back{background:linear-gradient(135deg,#1e293b,#0f172a);flex-direction:column;gap:0.75rem;transform:rotateY(180deg);overflow-y:auto;align-items:flex-start;padding:1.5rem 2rem}
+.card-back .back-label{font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent2);font-weight:800;align-self:center}
+.card-back .definition{font-size:0.95rem;font-weight:700;line-height:1.5}
+.card-back .example{margin-top:0.5rem;background:rgba(0,0,0,0.4);border-left:3px solid var(--accent);padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:0.88rem;line-height:1.6;color:#cbd5e1}
+.card-back .example strong{color:var(--accent2)}
+.action-row{display:flex;gap:0.75rem;justify-content:center;margin-bottom:1.2rem;flex-wrap:wrap}
+.btn{padding:0.75rem 1.5rem;border-radius:10px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;transition:all 0.2s}
+.btn-gotit{background:var(--correct);color:#fff}.btn-gotit:hover{background:#059669}
+.btn-notyet{background:var(--wrong);color:#fff}.btn-notyet:hover{background:#dc2626}
+.btn-primary{background:var(--accent);color:#000}
+.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}.btn-sm{font-size:0.85rem;padding:0.5rem 1rem}
+.nav-row{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.ctrl-row{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.pile-row{display:flex;gap:1rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap}
+.pile{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.5rem 1rem;font-size:0.85rem;font-weight:700}
+.pile.gotit{border-color:var(--correct);color:var(--correct)}.pile.notyet{border-color:var(--wrong);color:var(--wrong)}
+.mode-banner{background:#1e3a2f;border:1px solid var(--correct);border-radius:10px;padding:0.6rem 1rem;text-align:center;font-size:0.85rem;color:#6ee7b7;margin-bottom:1rem;display:none}
+.ai-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:2rem}
+.ai-panel h3{font-family:'Fredoka One',cursive;color:var(--accent);margin-bottom:0.5rem;font-size:1.3rem}
+.ai-panel p{color:var(--muted);font-size:0.9rem;margin-bottom:1rem}
+.ai-status{font-size:0.9rem;color:var(--muted);margin-top:0.75rem;min-height:1.2em;font-style:italic}
+.ai-key-row{display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap}
+.ai-key-row input{flex:1;min-width:200px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.9rem}
+.ai-key-row input:focus{outline:none;border-color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <a href="hub.html" class="back">&#8678;</a>
+  <h1>&#9201; Measures Flashcards</h1>
+  <div class="badge" id="header-badge">1 / 20</div>
+</header>
+<div class="container">
+  <div class="progress-row">
+    <div class="prog-item"><div class="val" id="p-gotit">0</div><div class="lbl">Got It</div></div>
+    <div class="prog-bar-wrap"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+    <div class="prog-item"><div class="val" id="p-notyet">0</div><div class="lbl">Not Yet</div></div>
+    <div class="prog-item"><div class="val" id="p-unseen">20</div><div class="lbl">Unseen</div></div>
+  </div>
+  <div class="mode-banner" id="mode-banner">&#128218; Study Not Yet Mode &mdash; reviewing cards you haven&apos;t mastered yet</div>
+  <div class="card-counter" id="card-counter">Card 1 of 20</div>
+  <div class="scene" id="scene" onclick="flipCard()">
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <div class="label">Concept / Rule</div>
+        <div class="term" id="card-term"></div>
+        <div class="tap-hint">Tap to reveal</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="back-label">Explanation + Worked Example</div>
+        <div class="definition" id="card-def"></div>
+        <div class="example" id="card-ex"></div>
+      </div>
+    </div>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-notyet" onclick="markCard('notyet')">&#10007; Not Yet</button>
+    <button class="btn btn-gotit" onclick="markCard('gotit')">&#10003; Got It!</button>
+  </div>
+  <div class="nav-row">
+    <button class="btn btn-secondary btn-sm" onclick="prevCard()">&#8592; Prev</button>
+    <button class="btn btn-secondary btn-sm" onclick="nextCard()">Next &#8594;</button>
+  </div>
+  <div class="ctrl-row">
+    <button class="btn btn-secondary btn-sm" onclick="shuffleCards()">&#128256; Shuffle</button>
+    <button class="btn btn-secondary btn-sm" onclick="studyNotYet()">&#128218; Study Not Yet</button>
+    <button class="btn btn-secondary btn-sm" onclick="resetAll()">&#8634; Reset All</button>
+    <button class="btn btn-secondary btn-sm" onclick="resetOriginal()">&#8635; Original 20</button>
+  </div>
+  <div class="pile-row">
+    <div class="pile gotit">Got It: <span id="pile-gotit">0</span></div>
+    <div class="pile notyet">Not Yet: <span id="pile-notyet">0</span></div>
+  </div>
+  <div class="ai-panel">
+    <h3>&#129302; Generate More Cards</h3>
+    <p>Mr. Euler creates new Measures flashcards, then CheckerBot verifies them.</p>
+    <div class="ai-key-row">
+      <input type="password" id="api-key" placeholder="Paste your Anthropic API key here...">
+      <button class="btn btn-primary" onclick="generateAI()">Generate 5 More</button>
+    </div>
+    <div class="ai-status" id="ai-status"></div>
+  </div>
+</div>
+<script>
+const SEED_CARDS = [{"term": "Speed, Distance, Time", "def": "Speed = Distance &divide; Time. Distance = Speed &times; Time. Time = Distance &divide; Speed.", "ex": "<strong>Car: 120 km in 2 hours:</strong><br>Speed = 120&divide;2 = <strong>60 km/h</strong>"}, {"term": "Density, Mass, Volume", "def": "Density = Mass &divide; Volume. Mass = Density &times; Volume. Volume = Mass &divide; Density.", "ex": "<strong>Mass=250g, Volume=50cm&sup3;:</strong><br>Density = 250&divide;50 = <strong>5 g/cm&sup3;</strong>"}, {"term": "Metric Length Conversions", "def": "1 km = 1000 m. 1 m = 100 cm. 1 cm = 10 mm. Multiply going down, divide going up.", "ex": "<strong>3.5 km to metres:</strong><br>3.5&times;1000 = <strong>3500 m</strong>"}, {"term": "Metric Mass Conversions", "def": "1 tonne = 1000 kg. 1 kg = 1000 g. 1 g = 1000 mg.", "ex": "<strong>2500 g to kg:</strong><br>2500&divide;1000 = <strong>2.5 kg</strong>"}, {"term": "Metric Volume Conversions", "def": "1 litre = 1000 ml. 1 ml = 1 cm&sup3;. 1 m&sup3; = 1,000,000 cm&sup3;.", "ex": "<strong>4.2 litres to ml:</strong><br>4.2&times;1000 = <strong>4200 ml</strong>"}, {"term": "km/h to m/s", "def": "Divide by 3.6 to convert km/h to m/s. Multiply by 3.6 to go back.", "ex": "<strong>72 km/h to m/s:</strong><br>72&divide;3.6 = <strong>20 m/s</strong>"}, {"term": "Converting Time", "def": "Convert minutes to decimal hours by dividing by 60. Use for SDT calculations.", "ex": "<strong>2 hours 45 minutes:</strong><br>45&divide;60 = 0.75<br>= <strong>2.75 hours</strong>"}, {"term": "Miles to Kilometres", "def": "1 mile &asymp; 1.6 km. Multiply miles by 1.6 to get km.", "ex": "<strong>50 miles to km:</strong><br>50&times;1.6 = <strong>80 km</strong>"}, {"term": "Average Speed", "def": "Average speed = total distance &divide; total time. NOT the average of two speeds.", "ex": "<strong>60 km at 40 km/h, then 90 km at 60 km/h:</strong><br>Times: 1.5h + 1.5h = 3h<br>Avg = 150&divide;3 = <strong>50 km/h</strong>"}, {"term": "Pressure Formula", "def": "Pressure = Force &divide; Area. Units: N/m&sup2; or Pascals (Pa).", "ex": "<strong>Force = 60N, Area = 0.3m&sup2;:</strong><br>Pressure = 60&divide;0.3 = <strong>200 N/m&sup2;</strong>"}, {"term": "Units of Area", "def": "1 m&sup2; = 10,000 cm&sup2;. Square the length conversion factor!", "ex": "<strong>5 m&sup2; to cm&sup2;:</strong><br>5&times;10,000 = <strong>50,000 cm&sup2;</strong>"}, {"term": "Distance-Time Graphs", "def": "Gradient = speed. Horizontal line = stationary. Steeper = faster. Back = returning.", "ex": "<strong>(0,0) to (3,60):</strong><br>Speed = 60&divide;3 = <strong>20 km/h</strong>"}, {"term": "Speed-Time Graphs", "def": "Gradient = acceleration. Area under graph = distance. Trapezium area for total distance.", "ex": "<strong>Trapezium under graph (base 4, top 10, height 5):</strong><br>Area = &frac12;(4+10)&times;5 = <strong>35 m</strong>"}, {"term": "Compound Measures", "def": "Combine two units: e.g. speed (km/h), density (g/cm&sup3;), pressure (N/m&sup2;).", "ex": "<strong>Density 8 g/cm&sup3;, Volume 50 cm&sup3;:</strong><br>Mass = 8&times;50 = <strong>400 g</strong>"}, {"term": "Upper and Lower Bounds", "def": "Value rounded to nearest unit: bounds are &plusmn;0.5 of that unit.", "ex": "<strong>Length = 12 cm (nearest cm):</strong><br>Lower = 11.5 cm<br>Upper = 12.5 cm"}, {"term": "Reading Timetables", "def": "Subtract departure from arrival to find journey time. Convert to decimal hours for speed.", "ex": "<strong>Depart 09:45, arrive 12:18:</strong><br>= 2 h 33 min = 2.55 h"}, {"term": "Scale Drawings", "def": "All measurements reduced by the same scale factor. Use scale to find real distances.", "ex": "<strong>Scale 1:200. Drawing = 4cm:</strong><br>Real = 4&times;200 = 800cm = <strong>8 m</strong>"}, {"term": "Litres to cm&sup3;", "def": "1 litre = 1000 cm&sup3;. Divide cm&sup3; by 1000 to convert to litres.", "ex": "<strong>Volume = 2500 cm&sup3;:</strong><br>2500&divide;1000 = <strong>2.5 litres</strong>"}, {"term": "Fuel Consumption", "def": "Use ratio and proportion: fuel used = distance &divide; fuel efficiency.", "ex": "<strong>Car does 40 mpg. Journey = 160 miles:</strong><br>Fuel = 160&divide;40 = <strong>4 gallons</strong>"}, {"term": "Estimating Measures", "def": "Use sensible approximations for real-world objects to check reasonableness of answers.", "ex": "<strong>Adult height &asymp; 1.7 m</strong><br><strong>Car mass &asymp; 1.5 tonnes</strong><br><strong>Classroom volume &asymp; 200 m&sup3;</strong>"}];
+const AI_TOPIC = 'MEASURES (unit conversions, speed/distance/time, density/mass/volume, compound measures, pressure, time calculations)';
+
+let cards=[...SEED_CARDS],current=0,status=new Array(cards.length).fill(null),studyMode=false,studyQueue=[];
+function getDisplayCards(){return studyMode?studyQueue:cards}
+function render(){const d=getDisplayCards(),c=d[current];if(!c)return;document.getElementById('scene').classList.remove('flipped');document.getElementById('card-term').textContent=c.term;document.getElementById('card-def').innerHTML=c.def;document.getElementById('card-ex').innerHTML=c.ex;document.getElementById('card-counter').textContent='Card '+(current+1)+' of '+d.length;document.getElementById('header-badge').textContent=(current+1)+' / '+d.length;updateProgress()}
+function flipCard(){document.getElementById('scene').classList.toggle('flipped')}
+function prevCard(){if(current>0){current--;render()}}
+function nextCard(){const d=getDisplayCards();if(current<d.length-1){current++;render()}}
+function markCard(r){const d=getDisplayCards(),c=d[current],idx=cards.indexOf(c);if(idx>=0)status[idx]=r;updateProgress();setTimeout(function(){if(current<d.length-1){current++;render()}},300)}
+function updateProgress(){const g=status.filter(function(s){return s==='gotit'}).length,n=status.filter(function(s){return s==='notyet'}).length;document.getElementById('p-gotit').textContent=g;document.getElementById('p-notyet').textContent=n;document.getElementById('p-unseen').textContent=cards.length-g-n;document.getElementById('pile-gotit').textContent=g;document.getElementById('pile-notyet').textContent=n;document.getElementById('prog-bar').style.width=(cards.length?Math.round(g/cards.length*100):0)+'%'}
+function shuffleCards(){for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];[status[i],status[j]]=[status[j],status[i]]}current=0;studyMode=false;document.getElementById('mode-banner').style.display='none';render()}
+function studyNotYet(){studyQueue=cards.filter(function(_,i){return status[i]==='notyet'||status[i]===null});if(!studyQueue.length){alert('No Not Yet cards - great work!');return}studyMode=true;current=0;document.getElementById('mode-banner').style.display='block';render()}
+function resetAll(){status=new Array(cards.length).fill(null);current=0;studyMode=false;document.getElementById('mode-banner').style.display='none';render()}
+function resetOriginal(){cards=[...SEED_CARDS];status=new Array(cards.length).fill(null);current=0;studyMode=false;document.getElementById('mode-banner').style.display='none';render()}
+async function generateAI(){const key=document.getElementById('api-key').value.trim();if(!key){document.getElementById('ai-status').textContent='Please enter your API key.';return}const s=document.getElementById('ai-status');s.textContent='Mr. Euler is creating 5 new flashcards...';const p='You are Mr. Euler, expert Year 8 UK Maths teacher. Create 5 flashcards on '+AI_TOPIC+'. Each card front = a rule/formula/concept name. Back = clear explanation + worked example using <strong> tags. British English. Respond ONLY with valid JSON array: [{"term":"","def":"","ex":""}]';try{const r1=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:p}]})});const d1=await r1.json();const raw=d1.content[0].text.trim().replace(/```json|```/g,'');const newCards=JSON.parse(raw);s.textContent='CheckerBot verifying...';const cp='You are CheckerBot, strict examiner. Verify these 5 flashcards: (1) worked example arithmetic is correct, (2) explanation is clear, (3) KS3 Year 8 appropriate, (4) relevant to topic. Cards: '+JSON.stringify(newCards)+'. If all good respond APPROVED: then the JSON. Fix any errors first.';const r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:cp}]})});const d2=await r2.json();const cr=d2.content[0].text.trim();if(!cr.startsWith('APPROVED:')){s.textContent='CheckerBot rejected. Try again.';return}const checked=JSON.parse(cr.replace('APPROVED:','').trim().replace(/```json|```/g,''));cards=[...cards,...checked];status=[...status,...new Array(checked.length).fill(null)];s.textContent='5 cards added! Now '+cards.length+' total.';updateProgress()}catch(e){s.textContent='Error: '+e.message}}
+render();
+
+</script>
+</body>
+</html>

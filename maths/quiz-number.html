@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Number Quiz — Year 8 Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f1a;
+    --card: #1a1a2e;
+    --card2: #16213e;
+    --accent: #f59e0b;
+    --accent2: #fbbf24;
+    --correct: #10b981;
+    --wrong: #ef4444;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #2d3748;
+    --hint: #8b5cf6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Nunito', sans-serif; min-height: 100vh; }
+
+  header { background: linear-gradient(135deg, #92400e, #f59e0b); padding: 1.2rem 2rem; display: flex; align-items: center; gap: 1rem; }
+  header .back { color: #fff; text-decoration: none; font-size: 1.4rem; }
+  header h1 { font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: #fff; }
+  header .badge { margin-left: auto; background: rgba(0,0,0,0.3); border-radius: 20px; padding: 0.3rem 1rem; font-weight: 700; color: #fff; }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 2rem 1rem; }
+
+  /* Nav dots */
+  .dots-wrap { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 1.5rem; }
+  .dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); background: var(--card); cursor: pointer; font-size: 0.65rem; font-weight: 700; display: flex; align-items: center; justify-content: center; color: var(--muted); transition: all 0.2s; }
+  .dot.current { border-color: var(--accent); color: var(--accent); }
+  .dot.correct { background: var(--correct); border-color: var(--correct); color: #fff; }
+  .dot.wrong { background: var(--wrong); border-color: var(--wrong); color: #fff; }
+
+  /* Question card */
+  .q-card { background: var(--card); border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; border: 1px solid var(--border); }
+  .q-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .q-num { font-size: 0.85rem; color: var(--muted); font-weight: 700; }
+  .difficulty { font-size: 0.75rem; padding: 0.2rem 0.7rem; border-radius: 20px; font-weight: 700; }
+  .easy { background: #064e3b; color: #6ee7b7; }
+  .medium { background: #78350f; color: #fcd34d; }
+  .hard { background: #7f1d1d; color: #fca5a5; }
+  .q-text { font-size: 1.15rem; font-weight: 700; line-height: 1.5; margin-bottom: 1.5rem; }
+
+  /* Options */
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  @media(max-width:560px){ .options { grid-template-columns: 1fr; } }
+  .opt { background: var(--card2); border: 2px solid var(--border); border-radius: 12px; padding: 0.85rem 1rem; cursor: pointer; font-size: 1rem; font-weight: 600; text-align: left; color: var(--text); transition: all 0.2s; display: flex; align-items: center; gap: 0.6rem; }
+  .opt:hover:not(:disabled) { border-color: var(--accent); background: #1e1e3a; }
+  .opt.selected-correct { border-color: var(--correct); background: #064e3b; color: #6ee7b7; }
+  .opt.selected-wrong { border-color: var(--wrong); background: #450a0a; color: #fca5a5; }
+  .opt.reveal-correct { border-color: var(--correct); background: #064e3b; color: #6ee7b7; }
+  .opt:disabled { cursor: default; }
+  .opt-letter { width: 26px; height: 26px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; }
+
+  /* Hint */
+  .hint-btn { margin-top: 1rem; background: none; border: 1px dashed var(--hint); color: var(--hint); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 600; }
+  .hint-box { margin-top: 0.75rem; background: #2e1065; border-left: 3px solid var(--hint); padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; font-size: 0.95rem; display: none; }
+
+  /* Feedback */
+  .feedback { margin-top: 1.2rem; border-radius: 12px; padding: 1.2rem; display: none; }
+  .feedback.correct { background: #064e3b; border: 1px solid var(--correct); }
+  .feedback.wrong { background: #450a0a; border: 1px solid var(--wrong); }
+  .feedback h3 { font-family: 'Fredoka One', cursive; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .feedback.correct h3 { color: #6ee7b7; }
+  .feedback.wrong h3 { color: #fca5a5; }
+  .solution { margin-top: 0.75rem; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 1rem; font-size: 0.95rem; line-height: 1.7; }
+  .solution strong { color: var(--accent2); }
+
+  /* Nav buttons */
+  .nav-row { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+  .btn { padding: 0.75rem 1.5rem; border-radius: 10px; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 1rem; transition: all 0.2s; }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-secondary { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-sm { font-size: 0.85rem; padding: 0.5rem 1rem; }
+
+  /* Score bar */
+  .score-bar { background: var(--card); border-radius: 12px; padding: 1rem 1.5rem; display: flex; gap: 2rem; align-items: center; margin-bottom: 1.5rem; border: 1px solid var(--border); flex-wrap: wrap; }
+  .score-item { text-align: center; }
+  .score-item .val { font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: var(--accent); }
+  .score-item .lbl { font-size: 0.75rem; color: var(--muted); }
+
+  /* Results screen */
+  #results-screen { display: none; background: var(--card); border-radius: 16px; padding: 2rem; text-align: center; border: 1px solid var(--border); }
+  #results-screen h2 { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--accent); margin-bottom: 0.5rem; }
+  .results-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin: 1.5rem 0; }
+  .res-box { background: var(--card2); border-radius: 12px; padding: 1rem; }
+  .res-box .big { font-family: 'Fredoka One', cursive; font-size: 2rem; }
+  .res-box .small { font-size: 0.8rem; color: var(--muted); }
+  .grade { font-family: 'Fredoka One', cursive; font-size: 3rem; margin: 1rem 0; }
+
+  /* AI Panel */
+  .ai-panel { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-top: 2rem; }
+  .ai-panel h3 { font-family: 'Fredoka One', cursive; color: var(--accent); margin-bottom: 0.5rem; font-size: 1.3rem; }
+  .ai-panel p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
+  .ai-status { font-size: 0.9rem; color: var(--muted); margin-top: 0.75rem; min-height: 1.2em; font-style: italic; }
+  .ai-key-row { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+  .ai-key-row input { flex: 1; min-width: 200px; background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 0.9rem; color: var(--text); font-family: 'Nunito', sans-serif; font-size: 0.9rem; }
+  .ai-key-row input:focus { outline: none; border-color: var(--accent); }
+
+  .reset-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="hub.html" class="back">⬅</a>
+  <h1>🔢 Number</h1>
+  <div class="badge" id="header-score">0 / 0</div>
+</header>
+
+<div class="container">
+  <!-- Score bar -->
+  <div class="score-bar">
+    <div class="score-item"><div class="val" id="sc-correct">0</div><div class="lbl">Correct</div></div>
+    <div class="score-item"><div class="val" id="sc-wrong">0</div><div class="lbl">Wrong</div></div>
+    <div class="score-item"><div class="val" id="sc-remain">20</div><div class="lbl">Remaining</div></div>
+    <div class="score-item"><div class="val" id="sc-pct">0%</div><div class="lbl">Score</div></div>
+  </div>
+
+  <!-- Nav dots -->
+  <div class="dots-wrap" id="dots"></div>
+
+  <!-- Question area -->
+  <div id="quiz-area">
+    <div class="q-card" id="q-card">
+      <div class="q-meta">
+        <span class="q-num" id="q-num">Question 1 of 20</span>
+        <span class="difficulty" id="q-diff">Easy</span>
+      </div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <button class="hint-btn" id="hint-btn" onclick="showHint()">💡 Show Hint</button>
+      <div class="hint-box" id="hint-box"></div>
+      <div class="feedback" id="feedback">
+        <h3 id="fb-title"></h3>
+        <div class="solution" id="fb-solution"></div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="prevQ()">← Previous</button>
+      <button class="btn btn-primary" id="next-btn" onclick="nextQ()">Next →</button>
+      <button class="btn btn-secondary btn-sm" onclick="finishQuiz()">Finish Quiz</button>
+    </div>
+    <div class="reset-row">
+      <button class="btn btn-secondary btn-sm" onclick="resetAnswers()">↺ Reset Answers</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetOriginal()">⟳ Reset to Original 20</button>
+    </div>
+  </div>
+
+  <!-- Results screen -->
+  <div id="results-screen">
+    <h2>Quiz Complete! 🎉</h2>
+    <div class="grade" id="grade-emoji"></div>
+    <p id="grade-msg" style="color:var(--muted);margin-bottom:1rem;"></p>
+    <div class="results-grid">
+      <div class="res-box"><div class="big" style="color:var(--correct)" id="r-correct">0</div><div class="small">Correct</div></div>
+      <div class="res-box"><div class="big" style="color:var(--wrong)" id="r-wrong">0</div><div class="small">Wrong</div></div>
+      <div class="res-box"><div class="big" style="color:var(--accent)" id="r-pct">0%</div><div class="small">Score</div></div>
+    </div>
+    <div class="nav-row" style="justify-content:center">
+      <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+      <button class="btn btn-secondary" onclick="resetOriginal()">Reset to Original 20</button>
+      <a href="hub.html" class="btn btn-secondary">← Back to Hub</a>
+    </div>
+  </div>
+
+  <!-- AI Panel -->
+  <div class="ai-panel">
+    <h3>🤖 Generate More Questions</h3>
+    <p>Mr. Euler will write new Number questions, then CheckerBot will verify them before they're added.</p>
+    <div class="ai-key-row">
+      <input type="password" id="api-key" placeholder="Paste your Anthropic API key here…">
+      <button class="btn btn-primary" onclick="generateAI()">Generate 5 More</button>
+    </div>
+    <div class="ai-status" id="ai-status"></div>
+  </div>
+</div>
+
+<script>
+const SEED_QUESTIONS = [
+  // ── EASY (1-7) ──
+  {
+    q: "What is the Highest Common Factor (HCF) of 12 and 18?",
+    opts: ["3","4","6","9"],
+    ans: 2,
+    hint: "List the factors of each number and find the largest one they share.",
+    solution: "<strong>Step 1:</strong> Factors of 12: 1, 2, 3, 4, <strong>6</strong>, 12<br><strong>Step 2:</strong> Factors of 18: 1, 2, 3, <strong>6</strong>, 9, 18<br><strong>Step 3:</strong> Common factors: 1, 2, 3, 6. The largest is <strong>6</strong>.",
+    diff: "easy"
+  },
+  {
+    q: "What is the Lowest Common Multiple (LCM) of 4 and 6?",
+    opts: ["8","10","12","24"],
+    ans: 2,
+    hint: "List multiples of each number until you find the first one they share.",
+    solution: "<strong>Step 1:</strong> Multiples of 4: 4, 8, <strong>12</strong>, 16…<br><strong>Step 2:</strong> Multiples of 6: 6, <strong>12</strong>, 18…<br><strong>Step 3:</strong> The first common multiple is <strong>12</strong>.",
+    diff: "easy"
+  },
+  {
+    q: "Calculate: ¾ + ⅕",
+    opts: ["8/20","15/20","19/20","4/9"],
+    ans: 2,
+    hint: "Find a common denominator first. The LCM of 4 and 5 is 20.",
+    solution: "<strong>Step 1:</strong> Common denominator = 20<br><strong>Step 2:</strong> ¾ = 15/20<br><strong>Step 3:</strong> ⅕ = 4/20<br><strong>Step 4:</strong> 15/20 + 4/20 = <strong>19/20</strong>",
+    diff: "easy"
+  },
+  {
+    q: "What is 0.375 as a fraction in its simplest form?",
+    opts: ["3/8","375/100","3/4","1/3"],
+    ans: 0,
+    hint: "Write 0.375 as 375/1000, then simplify by dividing by common factors.",
+    solution: "<strong>Step 1:</strong> 0.375 = 375/1000<br><strong>Step 2:</strong> Divide top and bottom by 125: 375÷125 = 3, 1000÷125 = 8<br><strong>Answer: 3/8</strong>",
+    diff: "easy"
+  },
+  {
+    q: "Increase £80 by 15%.",
+    opts: ["£88","£92","£95","£96"],
+    ans: 1,
+    hint: "Find 15% of £80, then add it to £80. Or multiply £80 by 1.15.",
+    solution: "<strong>Step 1:</strong> 15% of £80 = 0.15 × 80 = £12<br><strong>Step 2:</strong> £80 + £12 = <strong>£92</strong><br><em>Check: 80 × 1.15 = 92 ✓</em>",
+    diff: "easy"
+  },
+  {
+    q: "Round 0.06753 to 3 significant figures.",
+    opts: ["0.068","0.067","0.0675","0.06753"],
+    ans: 2,
+    hint: "Count significant figures from the first non-zero digit.",
+    solution: "<strong>Step 1:</strong> First significant figure is 6 (ignore leading zeros)<br><strong>Step 2:</strong> 3 sig figs: 6, 7, 5<br><strong>Step 3:</strong> Next digit is 3, so round down<br><strong>Answer: 0.0675</strong>",
+    diff: "easy"
+  },
+  {
+    q: "What is 40% of 250?",
+    opts: ["80","90","100","110"],
+    ans: 2,
+    hint: "40% = 40/100. Multiply 250 by 0.4.",
+    solution: "<strong>Step 1:</strong> 40% = 0.4<br><strong>Step 2:</strong> 0.4 × 250 = <strong>100</strong><br><em>Or: 10% of 250 = 25, so 40% = 4 × 25 = 100 ✓</em>",
+    diff: "easy"
+  },
+  // ── MEDIUM (8-14) ──
+  {
+    q: "Express 84 as a product of its prime factors.",
+    opts: ["2² × 3 × 7","2 × 3² × 7","2³ × 3 × 7","2 × 3 × 7²"],
+    ans: 0,
+    hint: "Use a factor tree. Start by dividing by the smallest prime (2).",
+    solution: "<strong>Step 1:</strong> 84 ÷ 2 = 42<br><strong>Step 2:</strong> 42 ÷ 2 = 21<br><strong>Step 3:</strong> 21 ÷ 3 = 7 (prime)<br><strong>Answer: 2² × 3 × 7</strong>",
+    diff: "medium"
+  },
+  {
+    q: "Calculate: 2⅓ × 1¾",
+    opts: ["3½","4 1/12","3 11/12","4⅙"],
+    ans: 1,
+    hint: "Convert both mixed numbers to improper fractions first.",
+    solution: "<strong>Step 1:</strong> 2⅓ = 7/3<br><strong>Step 2:</strong> 1¾ = 7/4<br><strong>Step 3:</strong> 7/3 × 7/4 = 49/12<br><strong>Step 4:</strong> 49 ÷ 12 = 4 remainder 1 = <strong>4 1/12</strong>",
+    diff: "medium"
+  },
+  {
+    q: "Convert the recurring decimal 0.̄3̄6̄ (0.363636…) to a fraction.",
+    opts: ["36/99","4/11","36/100","9/25"],
+    ans: 1,
+    hint: "Let x = 0.363636… Multiply by 100, then subtract the original.",
+    solution: "<strong>Step 1:</strong> Let x = 0.363636…<br><strong>Step 2:</strong> 100x = 36.363636…<br><strong>Step 3:</strong> 100x − x = 36, so 99x = 36<br><strong>Step 4:</strong> x = 36/99 = <strong>4/11</strong> (divide by 9)",
+    diff: "medium"
+  },
+  {
+    q: "A jacket costs £65 after a 35% reduction. What was the original price?",
+    opts: ["£87.75","£95","£100","£87.50"],
+    ans: 2,
+    hint: "If 35% off means you pay 65%, then £65 = 65% of original. Divide by 0.65.",
+    solution: "<strong>Step 1:</strong> After 35% off, you pay 100% − 35% = 65%<br><strong>Step 2:</strong> 65% of original = £65<br><strong>Step 3:</strong> 1% = £65 ÷ 65 = £1<br><strong>Step 4:</strong> 100% = £1 × 100 = <strong>£100</strong>",
+    diff: "medium"
+  },
+  {
+    q: "Simplify: 3⁵ ÷ 3²",
+    opts: ["3²","3³","3⁷","9³"],
+    ans: 1,
+    hint: "When dividing powers with the same base, subtract the exponents.",
+    solution: "<strong>Index Law:</strong> aᵐ ÷ aⁿ = aᵐ⁻ⁿ<br><strong>Step 1:</strong> 3⁵ ÷ 3² = 3^(5−2) = <strong>3³</strong><br><em>Check: 3⁵ = 243, 3² = 9, 243 ÷ 9 = 27 = 3³ ✓</em>",
+    diff: "medium"
+  },
+  {
+    q: "What is the effect of multiplying 0.4 by 0.3?",
+    opts: ["Makes it larger (0.7)","Makes it the same (0.4)","Makes it smaller (0.12)","Makes it negative"],
+    ans: 2,
+    hint: "Try it: 0.4 × 0.3 = ? Is the result bigger or smaller than 0.4?",
+    solution: "<strong>Step 1:</strong> 0.4 × 0.3 = 0.12<br><strong>Step 2:</strong> 0.12 < 0.4 — it got <strong>smaller</strong><br><em>Key rule: multiplying by a number less than 1 makes the result smaller.</em>",
+    diff: "medium"
+  },
+  {
+    q: "What is 3.846 rounded to 2 decimal places?",
+    opts: ["3.84","3.85","3.9","4.00"],
+    ans: 1,
+    hint: "Look at the third decimal place to decide whether to round up or down.",
+    solution: "<strong>Step 1:</strong> 3.846 — look at the 3rd decimal: 6<br><strong>Step 2:</strong> 6 ≥ 5, so round up the 4 to 5<br><strong>Answer: 3.85</strong>",
+    diff: "medium"
+  },
+  // ── HARD (15-20) ──
+  {
+    q: "Find the HCF of 180 and 252 using prime factorisation.",
+    opts: ["12","18","36","72"],
+    ans: 2,
+    hint: "Write both as products of prime factors, then multiply the shared primes.",
+    solution: "<strong>180:</strong> 2² × 3² × 5<br><strong>252:</strong> 2² × 3² × 7<br><strong>Shared primes:</strong> 2² × 3² = 4 × 9 = <strong>36</strong>",
+    diff: "hard"
+  },
+  {
+    q: "Calculate: (2.4 × 10⁵) ÷ (6 × 10²). Give your answer in standard form.",
+    opts: ["4 × 10²","4 × 10³","0.4 × 10³","4 × 10⁷"],
+    ans: 0,
+    hint: "Divide the numbers and subtract the powers of 10 separately.",
+    solution: "<strong>Step 1:</strong> 2.4 ÷ 6 = 0.4<br><strong>Step 2:</strong> 10⁵ ÷ 10² = 10³<br><strong>Step 3:</strong> 0.4 × 10³ = 4 × 10² (standard form needs 1 ≤ n < 10)<br><strong>Answer: 4 × 10²</strong>",
+    diff: "hard"
+  },
+  {
+    q: "A price increases from £240 to £288. What is the percentage increase?",
+    opts: ["15%","18%","20%","25%"],
+    ans: 2,
+    hint: "% increase = (increase ÷ original) × 100",
+    solution: "<strong>Step 1:</strong> Increase = £288 − £240 = £48<br><strong>Step 2:</strong> % increase = (48 ÷ 240) × 100<br><strong>Step 3:</strong> = 0.2 × 100 = <strong>20%</strong>",
+    diff: "hard"
+  },
+  {
+    q: "Evaluate: (2³)² × 2⁻¹",
+    opts: ["16","32","64","128"],
+    ans: 1,
+    hint: "Use the power of a power rule first: (aᵐ)ⁿ = aᵐⁿ. Then handle the negative index.",
+    solution: "<strong>Step 1:</strong> (2³)² = 2^(3×2) = 2⁶ = 64<br><strong>Step 2:</strong> 2⁻¹ = 1/2<br><strong>Step 3:</strong> 64 × ½ = <strong>32</strong>",
+    diff: "hard"
+  },
+  {
+    q: "Use estimation to approximate 47.3 × 19.8 ÷ 9.7. Show your working.",
+    opts: ["About 48","About 72","About 96","About 100"],
+    ans: 2,
+    hint: "Round each number to 1 significant figure first.",
+    solution: "<strong>Step 1:</strong> Round: 47.3 ≈ 50, 19.8 ≈ 20, 9.7 ≈ 10<br><strong>Step 2:</strong> 50 × 20 = 1000<br><strong>Step 3:</strong> 1000 ÷ 10 = <strong>100</strong>... but our answer ≈ 96.5<br><em>Closest option: <strong>96</strong></em>",
+    diff: "hard"
+  },
+];
+
+let questions = [...SEED_QUESTIONS];
+let current = 0;
+let answers = new Array(questions.length).fill(null);
+let hintShown = false;
+
+function buildDots() {
+  const wrap = document.getElementById('dots');
+  wrap.innerHTML = '';
+  questions.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === current ? ' current' : '') + (answers[i] === 'correct' ? ' correct' : answers[i] === 'wrong' ? ' wrong' : '');
+    d.textContent = i + 1;
+    d.onclick = () => { current = i; render(); };
+    wrap.appendChild(d);
+  });
+}
+
+function updateScore() {
+  const correct = answers.filter(a => a === 'correct').length;
+  const wrong = answers.filter(a => a === 'wrong').length;
+  const answered = correct + wrong;
+  const pct = answered ? Math.round(correct / answered * 100) : 0;
+  document.getElementById('sc-correct').textContent = correct;
+  document.getElementById('sc-wrong').textContent = wrong;
+  document.getElementById('sc-remain').textContent = questions.length - answered;
+  document.getElementById('sc-pct').textContent = pct + '%';
+  document.getElementById('header-score').textContent = correct + ' / ' + questions.length;
+}
+
+function render() {
+  const q = questions[current];
+  document.getElementById('q-num').textContent = `Question ${current + 1} of ${questions.length}`;
+  const diffs = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
+  const diffEl = document.getElementById('q-diff');
+  diffEl.textContent = diffs[q.diff];
+  diffEl.className = 'difficulty ' + q.diff;
+  document.getElementById('q-text').innerHTML = q.q;
+  hintShown = false;
+  document.getElementById('hint-box').style.display = 'none';
+  document.getElementById('hint-box').textContent = q.hint;
+  const feedback = document.getElementById('feedback');
+  feedback.style.display = 'none';
+  feedback.className = 'feedback';
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span> ${opt}`;
+    if (answers[current] !== null) {
+      btn.disabled = true;
+      if (i === q.ans) btn.classList.add('reveal-correct');
+      if (answers[current] !== null) {
+        if (i === q.ans) btn.classList.add('reveal-correct');
+      }
+    }
+    btn.onclick = () => checkAnswer(i);
+    opts.appendChild(btn);
+  });
+
+  if (answers[current] !== null) {
+    showFeedback(answers[current] === 'correct');
+  }
+  buildDots();
+  updateScore();
+}
+
+function checkAnswer(i) {
+  if (answers[current] !== null) return;
+  const q = questions[current];
+  const correct = i === q.ans;
+  answers[current] = correct ? 'correct' : 'wrong';
+  const optBtns = document.getElementById('options').querySelectorAll('.opt');
+  optBtns.forEach((btn, idx) => {
+    btn.disabled = true;
+    if (idx === q.ans) btn.classList.add('reveal-correct');
+    if (idx === i && !correct) btn.classList.add('selected-wrong');
+  });
+  showFeedback(correct);
+  buildDots();
+  updateScore();
+}
+
+function showFeedback(correct) {
+  const q = questions[current];
+  const fb = document.getElementById('feedback');
+  fb.style.display = 'block';
+  fb.className = 'feedback ' + (correct ? 'correct' : 'wrong');
+  document.getElementById('fb-title').textContent = correct ? '✅ Correct! Well done!' : '❌ Not quite — here\'s how to do it:';
+  document.getElementById('fb-solution').innerHTML = q.solution;
+}
+
+function showHint() {
+  const box = document.getElementById('hint-box');
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+
+function prevQ() { if (current > 0) { current--; render(); } }
+function nextQ() {
+  if (current < questions.length - 1) { current++; render(); }
+  else finishQuiz();
+}
+
+function finishQuiz() {
+  const correct = answers.filter(a => a === 'correct').length;
+  const wrong = answers.filter(a => a === 'wrong').length;
+  const pct = Math.round(correct / questions.length * 100);
+  document.getElementById('r-correct').textContent = correct;
+  document.getElementById('r-wrong').textContent = wrong;
+  document.getElementById('r-pct').textContent = pct + '%';
+  const grade = pct >= 90 ? '🏆' : pct >= 70 ? '⭐' : pct >= 50 ? '👍' : '📚';
+  const msg = pct >= 90 ? 'Outstanding! You\'ve mastered Number!' : pct >= 70 ? 'Great work — keep practising the tricky ones.' : pct >= 50 ? 'Good effort — review the questions you missed.' : 'Keep going — every mistake is a learning opportunity!';
+  document.getElementById('grade-emoji').textContent = grade;
+  document.getElementById('grade-msg').textContent = msg;
+  document.getElementById('quiz-area').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+}
+
+function restartQuiz() {
+  answers = new Array(questions.length).fill(null);
+  current = 0;
+  document.getElementById('quiz-area').style.display = 'block';
+  document.getElementById('results-screen').style.display = 'none';
+  render();
+}
+
+function resetAnswers() {
+  answers = new Array(questions.length).fill(null);
+  document.getElementById('quiz-area').style.display = 'block';
+  document.getElementById('results-screen').style.display = 'none';
+  render();
+}
+
+function resetOriginal() {
+  questions = [...SEED_QUESTIONS];
+  answers = new Array(questions.length).fill(null);
+  current = 0;
+  document.getElementById('quiz-area').style.display = 'block';
+  document.getElementById('results-screen').style.display = 'none';
+  render();
+}
+
+// ── AI Generation ──
+async function generateAI() {
+  const key = document.getElementById('api-key').value.trim();
+  if (!key) { document.getElementById('ai-status').textContent = '⚠️ Please enter your Anthropic API key.'; return; }
+  const status = document.getElementById('ai-status');
+  status.textContent = '🧑‍🏫 Mr. Euler is writing 5 new questions…';
+
+  const eulerPrompt = `You are Mr. Euler, an expert Year 8 UK Maths teacher. Generate exactly 5 multiple-choice quiz questions on the topic of NUMBER (covering: prime factors, HCF, LCM, fractions, decimals, percentages, standard form, index laws, rounding, recurring decimals). 
+
+Rules:
+- Each question must have exactly 4 options (A, B, C, D)
+- Exactly ONE option is correct
+- Include a one-sentence hint
+- Include a clear step-by-step worked solution
+- Double-check all arithmetic before responding
+- Mix difficulty: 1-2 easy, 2 medium, 1-2 hard
+- Use British English
+
+Respond ONLY with a valid JSON array of 5 objects with this exact structure:
+[{"q":"question text","opts":["A","B","C","D"],"ans":0,"hint":"hint text","solution":"step-by-step HTML solution using <strong> tags","diff":"easy|medium|hard"}]
+where "ans" is the 0-based index of the correct option.`;
+
+  try {
+    const r1 = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 2000, messages: [{ role: 'user', content: eulerPrompt }] })
+    });
+    const d1 = await r1.json();
+    const raw = d1.content[0].text.trim().replace(/```json|```/g, '');
+    const newQs = JSON.parse(raw);
+
+    status.textContent = '🔍 CheckerBot is verifying arithmetic and quality…';
+
+    const checkerPrompt = `You are CheckerBot, a strict senior Maths examiner. Review these 5 questions and verify:
+1. All arithmetic is correct
+2. Exactly one answer is unambiguously correct
+3. KS3 Year 8 appropriate difficulty
+4. Topic is Number (fractions, decimals, percentages, indices, etc.)
+5. Step-by-step solution is clear and correct
+
+Questions to check: ${JSON.stringify(newQs)}
+
+If ALL questions pass, respond with: APPROVED: then the original JSON array unchanged.
+If any question has errors, fix them and respond with: APPROVED: then the corrected JSON array.
+Respond ONLY with APPROVED: followed by the JSON array.`;
+
+    const r2 = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 2000, messages: [{ role: 'user', content: checkerPrompt }] })
+    });
+    const d2 = await r2.json();
+    const checkedRaw = d2.content[0].text.trim();
+    if (!checkedRaw.startsWith('APPROVED:')) { status.textContent = '❌ CheckerBot rejected the questions. Please try again.'; return; }
+    const checked = JSON.parse(checkedRaw.replace('APPROVED:', '').trim().replace(/```json|```/g, ''));
+    questions = [...questions, ...checked];
+    answers = new Array(questions.length).fill(null);
+    buildDots();
+    status.textContent = `✅ 5 new questions added! Now ${questions.length} questions total.`;
+    updateScore();
+  } catch(e) {
+    status.textContent = '❌ Error: ' + e.message;
+  }
+}
+
+// Init
+render();
+</script>
+</body>
+</html>

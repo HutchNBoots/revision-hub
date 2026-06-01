@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algebra Quiz — Year 8 Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--accent:#a78bfa;--accent2:#c4b5fd;--correct:#10b981;--wrong:#ef4444;--text:#e2e8f0;--muted:#94a3b8;--border:#2d3748;--hint:#f59e0b; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#4c1d95,#a78bfa);padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem}
+  header .back{color:#fff;text-decoration:none;font-size:1.4rem}
+  header h1{font-family:'Fredoka One',cursive;font-size:1.8rem;color:#fff}
+  header .badge{margin-left:auto;background:rgba(0,0,0,0.3);border-radius:20px;padding:0.3rem 1rem;font-weight:700;color:#fff}
+  .container{max-width:860px;margin:0 auto;padding:2rem 1rem}
+  .dots-wrap{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:1.5rem}
+  .dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:var(--card);cursor:pointer;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all 0.2s}
+  .dot.current{border-color:var(--accent);color:var(--accent)}
+  .dot.correct{background:var(--correct);border-color:var(--correct);color:#fff}
+  .dot.wrong{background:var(--wrong);border-color:var(--wrong);color:#fff}
+  .q-card{background:var(--card);border-radius:16px;padding:2rem;margin-bottom:1.5rem;border:1px solid var(--border)}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+  .q-num{font-size:0.85rem;color:var(--muted);font-weight:700}
+  .difficulty{font-size:0.75rem;padding:0.2rem 0.7rem;border-radius:20px;font-weight:700}
+  .easy{background:#064e3b;color:#6ee7b7}.medium{background:#78350f;color:#fcd34d}.hard{background:#7f1d1d;color:#fca5a5}
+  .q-text{font-size:1.15rem;font-weight:700;line-height:1.5;margin-bottom:1.5rem}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
+  @media(max-width:560px){.options{grid-template-columns:1fr}}
+  .opt{background:var(--card2);border:2px solid var(--border);border-radius:12px;padding:0.85rem 1rem;cursor:pointer;font-size:1rem;font-weight:600;text-align:left;color:var(--text);transition:all 0.2s;display:flex;align-items:center;gap:0.6rem}
+  .opt:hover:not(:disabled){border-color:var(--accent);background:#1e1e3a}
+  .opt.selected-correct{border-color:var(--correct);background:#064e3b;color:#6ee7b7}
+  .opt.selected-wrong{border-color:var(--wrong);background:#450a0a;color:#fca5a5}
+  .opt.reveal-correct{border-color:var(--correct);background:#064e3b;color:#6ee7b7}
+  .opt:disabled{cursor:default}
+  .opt-letter{width:26px;height:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;flex-shrink:0}
+  .hint-btn{margin-top:1rem;background:none;border:1px dashed var(--hint);color:var(--hint);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:600}
+  .hint-box{margin-top:0.75rem;background:#451a03;border-left:3px solid var(--hint);padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:0.95rem;display:none}
+  .feedback{margin-top:1.2rem;border-radius:12px;padding:1.2rem;display:none}
+  .feedback.correct{background:#064e3b;border:1px solid var(--correct)}
+  .feedback.wrong{background:#450a0a;border:1px solid var(--wrong)}
+  .feedback h3{font-family:'Fredoka One',cursive;font-size:1.1rem;margin-bottom:0.5rem}
+  .feedback.correct h3{color:#6ee7b7}.feedback.wrong h3{color:#fca5a5}
+  .solution{margin-top:0.75rem;background:rgba(0,0,0,0.3);border-radius:8px;padding:1rem;font-size:0.95rem;line-height:1.7}
+  .solution strong{color:var(--accent2)}
+  .nav-row{display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap}
+  .btn{padding:0.75rem 1.5rem;border-radius:10px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;transition:all 0.2s}
+  .btn-primary{background:var(--accent);color:#000}
+  .btn-primary:hover{background:var(--accent2)}
+  .btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}
+  .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+  .btn-sm{font-size:0.85rem;padding:0.5rem 1rem}
+  .score-bar{background:var(--card);border-radius:12px;padding:1rem 1.5rem;display:flex;gap:2rem;align-items:center;margin-bottom:1.5rem;border:1px solid var(--border);flex-wrap:wrap}
+  .score-item{text-align:center}
+  .score-item .val{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--accent)}
+  .score-item .lbl{font-size:0.75rem;color:var(--muted)}
+  #results-screen{display:none;background:var(--card);border-radius:16px;padding:2rem;text-align:center;border:1px solid var(--border)}
+  #results-screen h2{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--accent);margin-bottom:0.5rem}
+  .results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}
+  .res-box{background:var(--card2);border-radius:12px;padding:1rem}
+  .res-box .big{font-family:'Fredoka One',cursive;font-size:2rem}
+  .res-box .small{font-size:0.8rem;color:var(--muted)}
+  .grade{font-family:'Fredoka One',cursive;font-size:3rem;margin:1rem 0}
+  .ai-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:2rem}
+  .ai-panel h3{font-family:'Fredoka One',cursive;color:var(--accent);margin-bottom:0.5rem;font-size:1.3rem}
+  .ai-panel p{color:var(--muted);font-size:0.9rem;margin-bottom:1rem}
+  .ai-status{font-size:0.9rem;color:var(--muted);margin-top:0.75rem;min-height:1.2em;font-style:italic}
+  .ai-key-row{display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap}
+  .ai-key-row input{flex:1;min-width:200px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.9rem}
+  .ai-key-row input:focus{outline:none;border-color:var(--accent)}
+  .reset-row{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem}
+</style>
+</head>
+<body>
+<header>
+  <a href="hub.html" class="back">⬅</a>
+  <h1>🔣 Algebra</h1>
+  <div class="badge" id="header-score">0 / 0</div>
+</header>
+<div class="container">
+  <div class="score-bar">
+    <div class="score-item"><div class="val" id="sc-correct">0</div><div class="lbl">Correct</div></div>
+    <div class="score-item"><div class="val" id="sc-wrong">0</div><div class="lbl">Wrong</div></div>
+    <div class="score-item"><div class="val" id="sc-remain">20</div><div class="lbl">Remaining</div></div>
+    <div class="score-item"><div class="val" id="sc-pct">0%</div><div class="lbl">Score</div></div>
+  </div>
+  <div class="dots-wrap" id="dots"></div>
+  <div id="quiz-area">
+    <div class="q-card" id="q-card">
+      <div class="q-meta"><span class="q-num" id="q-num">Question 1 of 20</span><span class="difficulty" id="q-diff">Easy</span></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <button class="hint-btn" onclick="showHint()">💡 Show Hint</button>
+      <div class="hint-box" id="hint-box"></div>
+      <div class="feedback" id="feedback"><h3 id="fb-title"></h3><div class="solution" id="fb-solution"></div></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="prevQ()">← Previous</button>
+      <button class="btn btn-primary" onclick="nextQ()">Next →</button>
+      <button class="btn btn-secondary btn-sm" onclick="finishQuiz()">Finish Quiz</button>
+    </div>
+    <div class="reset-row">
+      <button class="btn btn-secondary btn-sm" onclick="resetAnswers()">↺ Reset Answers</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetOriginal()">⟳ Reset to Original 20</button>
+    </div>
+  </div>
+  <div id="results-screen">
+    <h2>Quiz Complete! 🎉</h2>
+    <div class="grade" id="grade-emoji"></div>
+    <p id="grade-msg" style="color:var(--muted);margin-bottom:1rem;"></p>
+    <div class="results-grid">
+      <div class="res-box"><div class="big" style="color:var(--correct)" id="r-correct">0</div><div class="small">Correct</div></div>
+      <div class="res-box"><div class="big" style="color:var(--wrong)" id="r-wrong">0</div><div class="small">Wrong</div></div>
+      <div class="res-box"><div class="big" style="color:var(--accent)" id="r-pct">0%</div><div class="small">Score</div></div>
+    </div>
+    <div class="nav-row" style="justify-content:center">
+      <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+      <button class="btn btn-secondary" onclick="resetOriginal()">Reset to Original 20</button>
+      <a href="hub.html" class="btn btn-secondary">← Back to Hub</a>
+    </div>
+  </div>
+  <div class="ai-panel">
+    <h3>🤖 Generate More Questions</h3>
+    <p>Mr. Euler will write new Algebra questions, then CheckerBot will verify them.</p>
+    <div class="ai-key-row">
+      <input type="password" id="api-key" placeholder="Paste your Anthropic API key here…">
+      <button class="btn btn-primary" onclick="generateAI()">Generate 5 More</button>
+    </div>
+    <div class="ai-status" id="ai-status"></div>
+  </div>
+</div>
+<script>
+const SEED_QUESTIONS = [
+  {q:"Simplify: 3x + 5y − x + 2y",opts:["2x + 7y","4x + 3y","2x + 3y","4x + 7y"],ans:0,hint:"Collect like terms: group the x terms together and the y terms together.",solution:"<strong>x terms:</strong> 3x − x = 2x<br><strong>y terms:</strong> 5y + 2y = 7y<br><strong>Answer: 2x + 7y</strong>",diff:"easy"},
+  {q:"Expand: 4(3x − 2)",opts:["12x − 2","7x − 6","12x − 8","12x + 8"],ans:2,hint:"Multiply everything inside the bracket by 4.",solution:"<strong>Step 1:</strong> 4 × 3x = 12x<br><strong>Step 2:</strong> 4 × (−2) = −8<br><strong>Answer: 12x − 8</strong>",diff:"easy"},
+  {q:"Factorise: 6x + 9",opts:["2(3x + 9)","3(2x + 3)","6(x + 3)","3(2x + 9)"],ans:1,hint:"Find the highest common factor of 6 and 9.",solution:"<strong>Step 1:</strong> HCF of 6 and 9 is 3<br><strong>Step 2:</strong> Take 3 outside: 3(2x + 3)<br><strong>Check:</strong> 3 × 2x = 6x ✓, 3 × 3 = 9 ✓",diff:"easy"},
+  {q:"If n = 4, find the value of 3n² − 5",opts:["43","43","43","43"].map((_,i)=>["43","91","43","11"][i]),opts:["43","91","11","53"],ans:0,hint:"Substitute n = 4 into the expression. Remember: work out the power before multiplying.",solution:"<strong>Step 1:</strong> n² = 4² = 16<br><strong>Step 2:</strong> 3 × 16 = 48<br><strong>Step 3:</strong> 48 − 5 = <strong>43</strong>",diff:"easy"},
+  {q:"Solve: 5x + 3 = 23",opts:["x = 4","x = 5","x = 26/5","x = 3"],ans:0,hint:"Subtract 3 from both sides first, then divide by 5.",solution:"<strong>Step 1:</strong> 5x + 3 = 23<br><strong>Step 2:</strong> 5x = 23 − 3 = 20<br><strong>Step 3:</strong> x = 20 ÷ 5 = <strong>4</strong><br><em>Check: 5(4) + 3 = 23 ✓</em>",diff:"easy"},
+  {q:"Find the nth term of the sequence: 5, 8, 11, 14, 17…",opts:["3n + 2","3n + 5","5n + 3","n + 3"],ans:0,hint:"Find the common difference (the amount it goes up each time). The nth term starts with that number × n.",solution:"<strong>Step 1:</strong> Common difference = 3 (goes up by 3 each time)<br><strong>Step 2:</strong> nth term = 3n + ?<br><strong>Step 3:</strong> When n=1: 3(1) + ? = 5, so ? = 2<br><strong>Answer: 3n + 2</strong><br><em>Check n=2: 3(2)+2=8 ✓</em>",diff:"easy"},
+  {q:"What is the gradient of the line y = 4x − 7?",opts:["−7","7","4","−4"],ans:2,hint:"The equation is in the form y = mx + c. The gradient is m.",solution:"<strong>y = mx + c</strong><br><strong>Step 1:</strong> Compare y = 4x − 7 with y = mx + c<br><strong>Step 2:</strong> m = <strong>4</strong>, c = −7<br>The gradient is 4.",diff:"easy"},
+  {q:"Expand and simplify: (x + 3)(x + 5)",opts:["x² + 8x + 15","x² + 15","x² + 8x + 8","2x + 8"],ans:0,hint:"Use FOIL: First, Outer, Inner, Last — then collect like terms.",solution:"<strong>F:</strong> x × x = x²<br><strong>O:</strong> x × 5 = 5x<br><strong>I:</strong> 3 × x = 3x<br><strong>L:</strong> 3 × 5 = 15<br><strong>Collect:</strong> x² + 5x + 3x + 15 = <strong>x² + 8x + 15</strong>",diff:"medium"},
+  {q:"Solve: 7x − 4 = 3x + 12",opts:["x = 2","x = 4","x = 8","x = 16"],ans:1,hint:"Get all x terms on one side and all numbers on the other.",solution:"<strong>Step 1:</strong> 7x − 3x = 12 + 4<br><strong>Step 2:</strong> 4x = 16<br><strong>Step 3:</strong> x = 16 ÷ 4 = <strong>4</strong><br><em>Check: 7(4)−4 = 24, 3(4)+12 = 24 ✓</em>",diff:"medium"},
+  {q:"Factorise: x² + 7x + 12",opts:["(x + 3)(x + 4)","(x + 6)(x + 2)","(x + 12)(x + 1)","(x + 4)(x + 3)"],ans:0,hint:"Find two numbers that multiply to 12 and add to 7.",solution:"<strong>Step 1:</strong> Find pairs that multiply to 12: (1,12), (2,6), (3,4)<br><strong>Step 2:</strong> Which pair adds to 7? 3 + 4 = 7 ✓<br><strong>Answer: (x + 3)(x + 4)</strong><br><em>Check: (x+3)(x+4) = x²+4x+3x+12 = x²+7x+12 ✓</em>",diff:"medium"},
+  {q:"The nth term of a sequence is 4n − 3. What is the 15th term?",opts:["57","60","63","72"],ans:0,hint:"Substitute n = 15 into the formula 4n − 3.",solution:"<strong>Step 1:</strong> Substitute n = 15<br><strong>Step 2:</strong> 4(15) − 3 = 60 − 3 = <strong>57</strong>",diff:"medium"},
+  {q:"Solve: (x + 2)/3 = 5",opts:["x = 7","x = 13","x = 17","x = 15"],ans:1,hint:"Multiply both sides by 3 first to remove the fraction.",solution:"<strong>Step 1:</strong> Multiply both sides by 3: x + 2 = 15<br><strong>Step 2:</strong> x = 15 − 2 = <strong>13</strong><br><em>Check: (13+2)/3 = 15/3 = 5 ✓</em>",diff:"medium"},
+  {q:"A line passes through (0, 3) with gradient 2. What is its equation?",opts:["y = 3x + 2","y = 2x − 3","y = 2x + 3","y = 3x − 2"],ans:2,hint:"Use y = mx + c. You're given m (gradient) and c (y-intercept).",solution:"<strong>Step 1:</strong> m = 2 (gradient), c = 3 (y-intercept, where line crosses y-axis)<br><strong>Step 2:</strong> y = mx + c = <strong>y = 2x + 3</strong>",diff:"medium"},
+  {q:"Expand: (2x − 3)²",opts:["4x² − 9","4x² − 6x + 9","4x² − 12x + 9","2x² − 12x + 9"],ans:2,hint:"(2x − 3)² means (2x − 3)(2x − 3). Use FOIL.",solution:"<strong>F:</strong> 2x × 2x = 4x²<br><strong>O:</strong> 2x × (−3) = −6x<br><strong>I:</strong> −3 × 2x = −6x<br><strong>L:</strong> −3 × −3 = +9<br><strong>Collect:</strong> 4x² − 6x − 6x + 9 = <strong>4x² − 12x + 9</strong>",diff:"medium"},
+  {q:"Plot y = 2x + 1. What are the coordinates when x = −2?",opts:["(−2, 5)","(−2, −3)","(−2, −2)","(−2, 3)"],ans:1,hint:"Substitute x = −2 into y = 2x + 1.",solution:"<strong>Step 1:</strong> y = 2(−2) + 1<br><strong>Step 2:</strong> y = −4 + 1 = −3<br><strong>Answer: (−2, −3)</strong>",diff:"medium"},
+  {q:"Solve: 3(2x − 1) = 2(x + 5)",opts:["x = 2","x = 13/4","x = 2.5","x = 3"],ans:1,hint:"Expand both brackets first, then collect like terms.",solution:"<strong>Step 1:</strong> 6x − 3 = 2x + 10<br><strong>Step 2:</strong> 6x − 2x = 10 + 3<br><strong>Step 3:</strong> 4x = 13<br><strong>Step 4:</strong> x = 13/4 = <strong>3.25</strong>",diff:"hard"},
+  {q:"Factorise fully: 2x² + 8x",opts:["2(x² + 4x)","x(2x + 8)","2x(x + 4)","2(x + 4)"],ans:2,hint:"Find the HCF of all terms — look for both a number and an x factor.",solution:"<strong>Step 1:</strong> HCF of 2x² and 8x is 2x<br><strong>Step 2:</strong> 2x² ÷ 2x = x<br><strong>Step 3:</strong> 8x ÷ 2x = 4<br><strong>Answer: 2x(x + 4)</strong><br><em>Check: 2x × x = 2x², 2x × 4 = 8x ✓</em>",diff:"hard"},
+  {q:"Find the equation of the line parallel to y = 3x + 1 passing through (0, −4).",opts:["y = 3x − 4","y = −3x − 4","y = 3x + 4","y = ⅓x − 4"],ans:0,hint:"Parallel lines have the same gradient. Only the y-intercept changes.",solution:"<strong>Step 1:</strong> Parallel to y = 3x + 1, so gradient = 3<br><strong>Step 2:</strong> Passes through (0, −4), so c = −4<br><strong>Answer: y = 3x − 4</strong>",diff:"hard"},
+  {q:"Solve the equation: x² − 5x + 6 = 0",opts:["x = 2 or x = 3","x = 1 or x = 6","x = −2 or x = −3","x = 6 or x = −1"],ans:0,hint:"Factorise the quadratic first. Find two numbers that multiply to 6 and add to −5.",solution:"<strong>Step 1:</strong> x² − 5x + 6 = (x − 2)(x − 3)<br><strong>Step 2:</strong> (x − 2) = 0 → x = 2<br><strong>Step 3:</strong> (x − 3) = 0 → x = 3<br><strong>Answer: x = 2 or x = 3</strong>",diff:"hard"},
+  {q:"A sequence has nth term n² + 3. What is the sum of the 4th and 5th terms?",opts:["44","47","48","50"],ans:0,hint:"Find the 4th term (n=4) and 5th term (n=5) separately, then add them.",solution:"<strong>4th term:</strong> 4² + 3 = 16 + 3 = 19<br><strong>5th term:</strong> 5² + 3 = 25 + 3 = 28<br><strong>Sum:</strong> 19 + 28 = <strong>47</strong>",diff:"hard"},
+];
+
+// Fix the opts for Q4
+SEED_QUESTIONS[3].opts = ["43","91","11","53"];
+
+let questions = [...SEED_QUESTIONS];
+let current = 0;
+let answers = new Array(questions.length).fill(null);
+
+function buildDots(){const wrap=document.getElementById('dots');wrap.innerHTML='';questions.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===current?' current':'')+(answers[i]==='correct'?' correct':answers[i]==='wrong'?' wrong':'');d.textContent=i+1;d.onclick=()=>{current=i;render()};wrap.appendChild(d)})}
+function updateScore(){const correct=answers.filter(a=>a==='correct').length;const wrong=answers.filter(a=>a==='wrong').length;const answered=correct+wrong;const pct=answered?Math.round(correct/answered*100):0;document.getElementById('sc-correct').textContent=correct;document.getElementById('sc-wrong').textContent=wrong;document.getElementById('sc-remain').textContent=questions.length-answered;document.getElementById('sc-pct').textContent=pct+'%';document.getElementById('header-score').textContent=correct+' / '+questions.length}
+function render(){const q=questions[current];document.getElementById('q-num').textContent=`Question ${current+1} of ${questions.length}`;const diffs={easy:'Easy',medium:'Medium',hard:'Hard'};const diffEl=document.getElementById('q-diff');diffEl.textContent=diffs[q.diff];diffEl.className='difficulty '+q.diff;document.getElementById('q-text').innerHTML=q.q;document.getElementById('hint-box').style.display='none';document.getElementById('hint-box').textContent=q.hint;const feedback=document.getElementById('feedback');feedback.style.display='none';feedback.className='feedback';const opts=document.getElementById('options');opts.innerHTML='';const letters=['A','B','C','D'];q.opts.forEach((opt,i)=>{const btn=document.createElement('button');btn.className='opt';btn.innerHTML=`<span class="opt-letter">${letters[i]}</span> ${opt}`;if(answers[current]!==null){btn.disabled=true;if(i===q.ans)btn.classList.add('reveal-correct')};btn.onclick=()=>checkAnswer(i);opts.appendChild(btn)});if(answers[current]!==null)showFeedback(answers[current]==='correct');buildDots();updateScore()}
+function checkAnswer(i){if(answers[current]!==null)return;const q=questions[current];const correct=i===q.ans;answers[current]=correct?'correct':'wrong';const optBtns=document.getElementById('options').querySelectorAll('.opt');optBtns.forEach((btn,idx)=>{btn.disabled=true;if(idx===q.ans)btn.classList.add('reveal-correct');if(idx===i&&!correct)btn.classList.add('selected-wrong')});showFeedback(correct);buildDots();updateScore()}
+function showFeedback(correct){const q=questions[current];const fb=document.getElementById('feedback');fb.style.display='block';fb.className='feedback '+(correct?'correct':'wrong');document.getElementById('fb-title').textContent=correct?'✅ Correct! Well done!':'❌ Not quite — here\'s how to do it:';document.getElementById('fb-solution').innerHTML=q.solution}
+function showHint(){const box=document.getElementById('hint-box');box.style.display=box.style.display==='none'?'block':'none'}
+function prevQ(){if(current>0){current--;render()}}
+function nextQ(){if(current<questions.length-1){current++;render()}else finishQuiz()}
+function finishQuiz(){const correct=answers.filter(a=>a==='correct').length;const wrong=answers.filter(a=>a==='wrong').length;const pct=Math.round(correct/questions.length*100);document.getElementById('r-correct').textContent=correct;document.getElementById('r-wrong').textContent=wrong;document.getElementById('r-pct').textContent=pct+'%';const grade=pct>=90?'🏆':pct>=70?'⭐':pct>=50?'👍':'📚';const msg=pct>=90?'Outstanding! Algebra master!':pct>=70?'Great work — keep practising!':pct>=50?'Good effort — review missed questions.':'Keep going — practice makes perfect!';document.getElementById('grade-emoji').textContent=grade;document.getElementById('grade-msg').textContent=msg;document.getElementById('quiz-area').style.display='none';document.getElementById('results-screen').style.display='block'}
+function restartQuiz(){answers=new Array(questions.length).fill(null);current=0;document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+function resetAnswers(){answers=new Array(questions.length).fill(null);document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+function resetOriginal(){questions=[...SEED_QUESTIONS];answers=new Array(questions.length).fill(null);current=0;document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+async function generateAI(){const key=document.getElementById('api-key').value.trim();if(!key){document.getElementById('ai-status').textContent='⚠️ Please enter your Anthropic API key.';return}const status=document.getElementById('ai-status');status.textContent='🧑‍🏫 Mr. Euler is writing 5 new Algebra questions…';const eulerPrompt=`You are Mr. Euler, an expert Year 8 UK Maths teacher. Generate exactly 5 multiple-choice questions on ALGEBRA (covering: expanding brackets, factorising, solving equations with unknowns on both sides/with brackets/fractions, sequences nth term, straight line graphs y=mx+c, quadratic factorising). Rules: 4 options, exactly ONE correct, include hint and step-by-step solution, double-check arithmetic, mix difficulty, British English. Respond ONLY with valid JSON array: [{"q":"","opts":["","","",""],"ans":0,"hint":"","solution":"HTML with <strong> tags","diff":"easy|medium|hard"}]`;try{const r1=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:eulerPrompt}]})});const d1=await r1.json();const raw=d1.content[0].text.trim().replace(/```json|```/g,'');const newQs=JSON.parse(raw);status.textContent='🔍 CheckerBot is verifying…';const checkerPrompt=`You are CheckerBot, a strict Maths examiner. Verify these 5 Algebra questions: all arithmetic correct, one unambiguous answer, KS3 Year 8 level, clear solution. Questions: ${JSON.stringify(newQs)}. Respond with APPROVED: followed by the JSON array (corrected if needed).`;const r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:checkerPrompt}]})});const d2=await r2.json();const checkedRaw=d2.content[0].text.trim();if(!checkedRaw.startsWith('APPROVED:')){status.textContent='❌ CheckerBot rejected questions. Try again.';return}const checked=JSON.parse(checkedRaw.replace('APPROVED:','').trim().replace(/```json|```/g,''));questions=[...questions,...checked];answers=new Array(questions.length).fill(null);buildDots();status.textContent=`✅ 5 new questions added! Now ${questions.length} total.`;updateScore()}catch(e){status.textContent='❌ Error: '+e.message}}
+render();
+</script>
+</body>
+</html>
