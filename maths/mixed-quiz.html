@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mixed Topic Quiz — Year 8 Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--accent:#a78bfa;--accent2:#c4b5fd;--correct:#10b981;--wrong:#ef4444;--text:#e2e8f0;--muted:#94a3b8;--border:#2d3748}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh}
+header{background:linear-gradient(135deg,#1e1b4b,#4f46e5);padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem}
+header .back{color:#fff;text-decoration:none;font-size:1.4rem}
+header h1{font-family:'Fredoka One',cursive;font-size:1.8rem;color:#fff}
+.container{max-width:860px;margin:0 auto;padding:2rem 1rem}
+
+/* Setup screen */
+#setup-screen h2{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--accent);margin-bottom:0.5rem}
+#setup-screen p{color:var(--muted);margin-bottom:1.5rem}
+.setup-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.2rem}
+.setup-section h3{font-family:'Fredoka One',cursive;font-size:1.1rem;margin-bottom:1rem;color:var(--text)}
+.topic-checks{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.6rem}
+.topic-check{display:flex;align-items:center;gap:0.6rem;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.9rem;cursor:pointer;transition:all 0.2s;user-select:none}
+.topic-check.selected{border-color:var(--accent);background:#1e1a3a}
+.topic-check input{display:none}
+.topic-check .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem}
+.topic-check.selected .dot{background:var(--accent);border-color:var(--accent);color:#000}
+.topic-check .label{font-size:0.9rem;font-weight:700}
+.count-row{display:flex;gap:0.75rem;flex-wrap:wrap}
+.count-btn{background:var(--card2);border:2px solid var(--border);border-radius:8px;padding:0.5rem 1.1rem;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.95rem;color:var(--text);transition:all 0.2s}
+.count-btn.active{border-color:var(--accent);color:var(--accent);background:#1e1a3a}
+.mode-row{display:flex;gap:0.75rem;flex-wrap:wrap}
+.mode-btn{background:var(--card2);border:2px solid var(--border);border-radius:10px;padding:0.75rem 1.4rem;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.95rem;color:var(--text);transition:all 0.2s;text-align:left}
+.mode-btn.active{border-color:var(--accent);color:var(--accent);background:#1e1a3a}
+.mode-btn small{display:block;color:var(--muted);font-weight:600;font-size:0.78rem;margin-top:0.2rem}
+
+/* Quiz screen */
+#quiz-screen{display:none}
+.score-bar{background:var(--card);border-radius:12px;padding:1rem 1.5rem;display:flex;gap:1.5rem;align-items:center;margin-bottom:1.5rem;border:1px solid var(--border);flex-wrap:wrap}
+.score-item{text-align:center}.score-item .val{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--accent)}.score-item .lbl{font-size:0.72rem;color:var(--muted)}
+.topic-tag{display:inline-block;padding:0.2rem 0.7rem;border-radius:12px;font-size:0.75rem;font-weight:700;margin-bottom:0.5rem}
+.dots-wrap{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:1.5rem}
+.dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:var(--card);cursor:pointer;font-size:0.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all 0.2s}
+.dot.current{border-color:var(--accent);color:var(--accent)}.dot.correct{background:var(--correct);border-color:var(--correct);color:#fff}.dot.wrong{background:var(--wrong);border-color:var(--wrong);color:#fff}
+.q-card{background:var(--card);border-radius:16px;padding:2rem;margin-bottom:1.5rem;border:1px solid var(--border)}
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.q-num{font-size:0.85rem;color:var(--muted);font-weight:700}
+.difficulty{font-size:0.75rem;padding:0.2rem 0.7rem;border-radius:20px;font-weight:700}
+.easy{background:#064e3b;color:#6ee7b7}.medium{background:#78350f;color:#fcd34d}.hard{background:#7f1d1d;color:#fca5a5}
+.q-text{font-size:1.15rem;font-weight:700;line-height:1.5;margin-bottom:1.5rem}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
+@media(max-width:560px){.options{grid-template-columns:1fr}}
+.opt{background:var(--card2);border:2px solid var(--border);border-radius:12px;padding:0.85rem 1rem;cursor:pointer;font-size:1rem;font-weight:600;text-align:left;color:var(--text);transition:all 0.2s;display:flex;align-items:center;gap:0.6rem}
+.opt:hover:not(:disabled){border-color:var(--accent);background:#1e1e3a}
+.opt.selected-wrong{border-color:var(--wrong);background:#450a0a;color:#fca5a5}.opt.reveal-correct{border-color:var(--correct);background:#064e3b;color:#6ee7b7}.opt:disabled{cursor:default}
+.opt-letter{width:26px;height:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;flex-shrink:0}
+.hint-btn{margin-top:1rem;background:none;border:1px dashed #a78bfa;color:#a78bfa;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:600}
+.hint-box{margin-top:0.75rem;background:#2e1065;border-left:3px solid #a78bfa;padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:0.95rem;display:none}
+.feedback{margin-top:1.2rem;border-radius:12px;padding:1.2rem;display:none}
+.feedback.correct{background:#064e3b;border:1px solid var(--correct)}.feedback.wrong{background:#450a0a;border:1px solid var(--wrong)}
+.feedback h3{font-family:'Fredoka One',cursive;font-size:1.1rem;margin-bottom:0.5rem}
+.feedback.correct h3{color:#6ee7b7}.feedback.wrong h3{color:#fca5a5}
+.solution{margin-top:0.75rem;background:rgba(0,0,0,0.3);border-radius:8px;padding:1rem;font-size:0.95rem;line-height:1.7}
+.solution strong{color:var(--accent2)}
+.nav-row{display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap}
+.btn{padding:0.75rem 1.5rem;border-radius:10px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;transition:all 0.2s}
+.btn-primary{background:var(--accent);color:#000}.btn-primary:hover{background:var(--accent2)}
+.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}.btn-sm{font-size:0.85rem;padding:0.5rem 1rem}
+
+/* Results screen */
+#results-screen{display:none;background:var(--card);border-radius:16px;padding:2rem;border:1px solid var(--border)}
+#results-screen h2{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--accent);margin-bottom:0.5rem;text-align:center}
+.res-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}
+.res-box{background:var(--card2);border-radius:12px;padding:1rem;text-align:center}
+.res-box .big{font-family:'Fredoka One',cursive;font-size:2rem}.res-box .small{font-size:0.8rem;color:var(--muted)}
+.topic-breakdown{margin-top:1.5rem}
+.topic-breakdown h3{font-family:'Fredoka One',cursive;margin-bottom:1rem;color:var(--muted)}
+.breakdown-row{display:flex;align-items:center;gap:1rem;margin-bottom:0.6rem;background:var(--card2);border-radius:8px;padding:0.6rem 1rem}
+.breakdown-row .t-name{flex:1;font-weight:700;font-size:0.9rem}
+.breakdown-row .t-score{font-family:'Fredoka One',cursive;font-size:1.1rem}
+.breakdown-bar{flex:2;background:var(--border);border-radius:99px;height:6px;overflow:hidden}
+.breakdown-bar-fill{height:100%;border-radius:99px;background:var(--accent)}
+
+/* AI Panel */
+.ai-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:2rem}
+.ai-panel h3{font-family:'Fredoka One',cursive;color:var(--accent);margin-bottom:0.5rem;font-size:1.3rem}
+.ai-panel p{color:var(--muted);font-size:0.9rem;margin-bottom:1rem}
+.ai-status{font-size:0.9rem;color:var(--muted);margin-top:0.75rem;min-height:1.2em;font-style:italic}
+.ai-key-row{display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap}
+.ai-key-row input{flex:1;min-width:200px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.9rem}
+.ai-key-row input:focus{outline:none;border-color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <a href="hub.html" class="back">&#8678;</a>
+  <h1>&#127922; Mixed Topic Quiz</h1>
+</header>
+<div class="container">
+
+<!-- SETUP SCREEN -->
+<div id="setup-screen">
+  <h2>Set Up Your Quiz</h2>
+  <p>Choose your topics, number of questions, and mode.</p>
+
+  <div class="setup-section">
+    <h3>&#128218; Select Topics</h3>
+    <div class="topic-checks" id="topic-checks">
+      <label class="topic-check selected" data-topic="Number">
+        <div class="dot">&#10003;</div><div class="label">&#128290; Number</div>
+      </label>
+      <label class="topic-check selected" data-topic="Algebra">
+        <div class="dot">&#10003;</div><div class="label">&#128290; Algebra</div>
+      </label>
+      <label class="topic-check selected" data-topic="Ratio">
+        <div class="dot">&#10003;</div><div class="label">&#9878; Ratio &amp; Proportion</div>
+      </label>
+      <label class="topic-check selected" data-topic="Shapes">
+        <div class="dot">&#10003;</div><div class="label">&#128208; Geometry: Shapes</div>
+      </label>
+      <label class="topic-check selected" data-topic="Angles">
+        <div class="dot">&#10003;</div><div class="label">&#128208; Geometry: Angles</div>
+      </label>
+      <label class="topic-check selected" data-topic="Statistics">
+        <div class="dot">&#10003;</div><div class="label">&#128202; Statistics</div>
+      </label>
+      <label class="topic-check selected" data-topic="Probability">
+        <div class="dot">&#10003;</div><div class="label">&#127922; Probability</div>
+      </label>
+      <label class="topic-check selected" data-topic="Measures">
+        <div class="dot">&#10003;</div><div class="label">&#9201; Measures</div>
+      </label>
+    </div>
+    <div style="margin-top:0.75rem;display:flex;gap:0.5rem">
+      <button class="btn btn-sm btn-secondary" onclick="selectAllTopics()">Select All</button>
+      <button class="btn btn-sm btn-secondary" onclick="selectNoneTopics()">Clear All</button>
+    </div>
+  </div>
+
+  <div class="setup-section">
+    <h3>&#128290; Number of Questions</h3>
+    <div class="count-row" id="count-row">
+      <button class="count-btn" data-count="10" onclick="setCount(10)">10</button>
+      <button class="count-btn active" data-count="20" onclick="setCount(20)">20</button>
+      <button class="count-btn" data-count="30" onclick="setCount(30)">30</button>
+      <button class="count-btn" data-count="40" onclick="setCount(40)">40</button>
+    </div>
+  </div>
+
+  <div class="setup-section">
+    <h3>&#127891; Mode</h3>
+    <div class="mode-row">
+      <button class="mode-btn active" data-mode="practice" onclick="setMode('practice')">
+        &#128218; Practice Mode
+        <small>Hints, worked solutions &amp; instant feedback</small>
+      </button>
+      <button class="mode-btn" data-mode="exam" onclick="setMode('exam')">
+        &#128196; Exam Mode
+        <small>No hints or solutions until the end</small>
+      </button>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="startQuiz()" style="font-size:1.1rem;padding:0.9rem 2rem">
+    &#9654; Start Quiz
+  </button>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="quiz-screen">
+  <div class="score-bar">
+    <div class="score-item"><div class="val" id="sc-correct">0</div><div class="lbl">Correct</div></div>
+    <div class="score-item"><div class="val" id="sc-wrong">0</div><div class="lbl">Wrong</div></div>
+    <div class="score-item"><div class="val" id="sc-remain">0</div><div class="lbl">Remaining</div></div>
+    <div class="score-item"><div class="val" id="sc-pct">0%</div><div class="lbl">Score</div></div>
+    <button class="btn btn-sm btn-secondary" style="margin-left:auto" onclick="finishQuiz()">Finish</button>
+  </div>
+  <div class="dots-wrap" id="dots"></div>
+  <div class="q-card">
+    <div class="q-meta">
+      <span class="q-num" id="q-num">Q1</span>
+      <span class="topic-tag" id="q-topic-tag" style="background:#2e1065;color:#a78bfa"></span>
+      <span class="difficulty" id="q-diff">Easy</span>
+    </div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="options"></div>
+    <button class="hint-btn" id="hint-btn" onclick="showHint()">&#128161; Show Hint</button>
+    <div class="hint-box" id="hint-box"></div>
+    <div class="feedback" id="feedback"><h3 id="fb-title"></h3><div class="solution" id="fb-solution"></div></div>
+  </div>
+  <div class="nav-row">
+    <button class="btn btn-secondary" onclick="prevQ()">&#8592; Previous</button>
+    <button class="btn btn-primary" onclick="nextQ()">Next &#8594;</button>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div id="results-screen">
+  <h2>Quiz Complete! &#127881;</h2>
+  <div style="text-align:center;font-size:3rem;margin:0.5rem 0" id="grade-emoji"></div>
+  <p id="grade-msg" style="text-align:center;color:var(--muted);margin-bottom:1rem"></p>
+  <div class="res-summary">
+    <div class="res-box"><div class="big" style="color:var(--correct)" id="r-correct">0</div><div class="small">Correct</div></div>
+    <div class="res-box"><div class="big" style="color:var(--wrong)" id="r-wrong">0</div><div class="small">Wrong</div></div>
+    <div class="res-box"><div class="big" style="color:var(--accent)" id="r-pct">0%</div><div class="small">Score</div></div>
+  </div>
+  <div class="topic-breakdown">
+    <h3>Per-Topic Breakdown</h3>
+    <div id="breakdown-list"></div>
+  </div>
+  <div class="nav-row" style="justify-content:center;margin-top:1.5rem">
+    <button class="btn btn-primary" onclick="restartWithSetup()">New Quiz</button>
+    <a href="hub.html" class="btn btn-secondary">&#8592; Back to Hub</a>
+  </div>
+</div>
+
+<!-- AI PANEL -->
+<div class="ai-panel" id="ai-panel" style="display:none">
+  <h3>&#129302; Generate More Questions</h3>
+  <p>Mr. Euler will write new mixed questions for your selected topics, then CheckerBot verifies them.</p>
+  <div class="ai-key-row">
+    <input type="password" id="api-key" placeholder="Paste your Anthropic API key here...">
+    <button class="btn btn-primary" onclick="generateAI()">Generate 5 More</button>
+  </div>
+  <div class="ai-status" id="ai-status"></div>
+</div>
+
+</div>
+
+<script>
+// ── Question bank (one per topic, drawn from seed questions in individual quizzes) ──
+const QUESTION_BANK = {
+  Number:[
+    {q:"What is the HCF of 12 and 18?",opts:["3","4","6","9"],ans:2,hint:"List all factors of each number.",solution:"<strong>Factors of 12:</strong> 1,2,3,4,6,12<br><strong>Factors of 18:</strong> 1,2,3,6,9,18<br><strong>HCF = 6</strong>",diff:"easy"},
+    {q:"Calculate: 3/4 + 1/5",opts:["4/9","15/20","19/20","8/20"],ans:2,hint:"Find a common denominator (LCM of 4 and 5 = 20).",solution:"<strong>3/4 = 15/20</strong>, <strong>1/5 = 4/20</strong><br>15/20 + 4/20 = <strong>19/20</strong>",diff:"easy"},
+    {q:"Increase &pound;80 by 15%.",opts:["&pound;88","&pound;92","&pound;95","&pound;96"],ans:1,hint:"Multiplier = 1.15. Multiply &pound;80 by 1.15.",solution:"80 &times; 1.15 = <strong>&pound;92</strong>",diff:"easy"},
+    {q:"Express 84 as a product of prime factors.",opts:["2&sup2;&times;3&times;7","2&times;3&sup2;&times;7","2&sup3;&times;3&times;7","2&times;3&times;7&sup2;"],ans:0,hint:"Use a factor tree. 84 &divide; 2 = 42...",solution:"84 = 2&times;42 = 2&times;2&times;21 = 2&times;2&times;3&times;7 = <strong>2&sup2;&times;3&times;7</strong>",diff:"medium"},
+    {q:"A jacket costs &pound;65 after a 35% reduction. What was the original price?",opts:["&pound;87.75","&pound;95","&pound;100","&pound;87.50"],ans:2,hint:"65% of original = &pound;65. Divide by 0.65.",solution:"0.65 &times; original = 65<br>Original = 65 &divide; 0.65 = <strong>&pound;100</strong>",diff:"medium"},
+    {q:"Evaluate: (2&sup3;)&sup2; &times; 2&sup2;",opts:["64","128","256","512"],ans:2,hint:"(2&sup3;)&sup2; = 2&sup6;. Then multiply by 2&sup2;.",solution:"2&sup6; = 64<br>64 &times; 4 = <strong>256</strong>... Wait: (2&sup3;)&sup2; = 2&sup6; = 64, &times; 2&sup2; = &times;4 = <strong>256</strong>",diff:"hard"},
+    {q:"Convert 0.363636... to a fraction.",opts:["36/99","4/11","36/100","9/25"],ans:1,hint:"Let x = 0.3636..., multiply by 100.",solution:"100x &minus; x = 36<br>99x = 36<br>x = 36/99 = <strong>4/11</strong>",diff:"hard"},
+  ],
+  Algebra:[
+    {q:"Expand: 4(3x &minus; 2)",opts:["12x &minus; 2","7x &minus; 6","12x &minus; 8","12x + 8"],ans:2,hint:"Multiply 4 by each term inside.",solution:"4&times;3x = 12x, 4&times;(&minus;2) = &minus;8<br><strong>12x &minus; 8</strong>",diff:"easy"},
+    {q:"Solve: 5x + 3 = 23",opts:["x=4","x=5","x=26/5","x=3"],ans:0,hint:"Subtract 3 first, then divide by 5.",solution:"5x = 20<br>x = <strong>4</strong>",diff:"easy"},
+    {q:"Find the nth term of: 5, 8, 11, 14...",opts:["3n+2","3n+5","5n+3","n+3"],ans:0,hint:"Common difference = 3. nth term = 3n + ?",solution:"3(1)+? = 5, ?=2<br><strong>3n + 2</strong>",diff:"easy"},
+    {q:"Expand and simplify: (x+3)(x+5)",opts:["x&sup2;+8x+15","x&sup2;+15","x&sup2;+8x+8","2x+8"],ans:0,hint:"FOIL: First, Outer, Inner, Last.",solution:"x&sup2;+5x+3x+15 = <strong>x&sup2;+8x+15</strong>",diff:"medium"},
+    {q:"Solve: 7x &minus; 4 = 3x + 12",opts:["x=2","x=4","x=8","x=16"],ans:1,hint:"Collect x terms on one side.",solution:"4x = 16<br>x = <strong>4</strong>",diff:"medium"},
+    {q:"Factorise: x&sup2; + 7x + 12",opts:["(x+3)(x+4)","(x+6)(x+2)","(x+12)(x+1)","(x+2)(x+6)"],ans:0,hint:"Find two numbers multiplying to 12 adding to 7.",solution:"3&times;4=12, 3+4=7<br><strong>(x+3)(x+4)</strong>",diff:"medium"},
+    {q:"Solve: 3(2x&minus;1) = 2(x+5)",opts:["x=2","x=13/4","x=2.5","x=3"],ans:1,hint:"Expand both brackets first.",solution:"6x&minus;3 = 2x+10<br>4x=13<br>x = <strong>13/4</strong>",diff:"hard"},
+  ],
+  Ratio:[
+    {q:"Simplify the ratio 24:36.",opts:["4:6","2:3","6:9","3:4"],ans:1,hint:"HCF of 24 and 36 = 12.",solution:"24&divide;12 : 36&divide;12 = <strong>2:3</strong>",diff:"easy"},
+    {q:"Share &pound;60 in ratio 2:3.",opts:["&pound;20 and &pound;40","&pound;24 and &pound;36","&pound;30 and &pound;30","&pound;15 and &pound;45"],ans:1,hint:"5 parts total. One part = &pound;12.",solution:"2&times;&pound;12=&pound;24, 3&times;&pound;12=&pound;36<br><strong>&pound;24 and &pound;36</strong>",diff:"easy"},
+    {q:"A recipe for 4 needs 300g flour. Amount for 6 people?",opts:["400g","420g","450g","500g"],ans:2,hint:"75g per person. 75&times;6 = ?",solution:"300&divide;4=75g, 75&times;6 = <strong>450g</strong>",diff:"easy"},
+    {q:"y is directly proportional to x. y=12 when x=4. Find y when x=7.",opts:["16","21","28","3"],ans:1,hint:"k = y&divide;x. Then y = kx.",solution:"k=3, y=3&times;7 = <strong>21</strong>",diff:"medium"},
+    {q:"Map scale 1:50,000. Map distance = 4cm. Real distance in km?",opts:["0.2 km","2 km","20 km","200 km"],ans:1,hint:"4&times;50,000 = 200,000 cm. Convert.",solution:"200,000cm = 2,000m = <strong>2 km</strong>",diff:"medium"},
+    {q:"Three workers take 4 days. How long for 2 workers?",opts:["3 days","6 days","8 days","12 days"],ans:1,hint:"Inverse proportion: workers&times;days = constant.",solution:"Constant = 12. 2 workers: 12&divide;2 = <strong>6 days</strong>",diff:"hard"},
+  ],
+  Shapes:[
+    {q:"Area of a triangle: base 10cm, height 6cm.",opts:["30 cm&sup2;","60 cm&sup2;","16 cm&sup2;","32 cm&sup2;"],ans:0,hint:"Area = &frac12; &times; base &times; height.",solution:"&frac12;&times;10&times;6 = <strong>30 cm&sup2;</strong>",diff:"easy"},
+    {q:"Circumference of a circle with diameter 10cm. Use &pi;&asymp;3.14.",opts:["31.4 cm","62.8 cm","15.7 cm","78.5 cm"],ans:0,hint:"C = &pi;d.",solution:"3.14&times;10 = <strong>31.4 cm</strong>",diff:"easy"},
+    {q:"Find the hypotenuse of a right triangle with legs 6cm and 8cm.",opts:["10 cm","12 cm","14 cm","100 cm"],ans:0,hint:"a&sup2;+b&sup2;=c&sup2;.",solution:"36+64=100, c=&radic;100 = <strong>10 cm</strong>",diff:"medium"},
+    {q:"Volume of a cylinder: radius 4cm, height 10cm. Give in terms of &pi;.",opts:["40&pi; cm&sup3;","80&pi; cm&sup3;","160&pi; cm&sup3;","320&pi; cm&sup3;"],ans:2,hint:"V=&pi;r&sup2;h.",solution:"&pi;&times;16&times;10 = <strong>160&pi; cm&sup3;</strong>",diff:"medium"},
+    {q:"Area of a trapezium: parallel sides 8cm and 12cm, height 5cm.",opts:["50 cm&sup2;","75 cm&sup2;","100 cm&sup2;","40 cm&sup2;"],ans:0,hint:"A=&frac12;(a+b)h.",solution:"&frac12;(8+12)&times;5 = <strong>50 cm&sup2;</strong>",diff:"medium"},
+    {q:"A ladder 10m leans against a wall, foot 4m from base. How high up the wall?",opts:["9.17 m","8.00 m","9.80 m","6.00 m"],ans:0,hint:"h&sup2;=10&sup2;&minus;4&sup2;.",solution:"h&sup2;=100&minus;16=84<br>h=&radic;84 &asymp; <strong>9.17 m</strong>",diff:"hard"},
+  ],
+  Angles:[
+    {q:"Angles in a triangle sum to?",opts:["90&deg;","180&deg;","270&deg;","360&deg;"],ans:1,hint:"One of the most important angle facts.",solution:"<strong>180&deg;</strong>",diff:"easy"},
+    {q:"Interior angle sum of a pentagon?",opts:["360&deg;","450&deg;","540&deg;","720&deg;"],ans:2,hint:"(n&minus;2)&times;180&deg;, n=5.",solution:"(5&minus;2)&times;180 = <strong>540&deg;</strong>",diff:"easy"},
+    {q:"Exterior angle of a regular octagon?",opts:["40&deg;","45&deg;","50&deg;","135&deg;"],ans:1,hint:"360&deg;&divide;n.",solution:"360&divide;8 = <strong>45&deg;</strong>",diff:"medium"},
+    {q:"Bearing from A to B = 130&deg;. Bearing from B to A?",opts:["040&deg;","130&deg;","310&deg;","230&deg;"],ans:2,hint:"Add 180&deg; to original bearing.",solution:"130+180 = <strong>310&deg;</strong>",diff:"medium"},
+    {q:"Rotate (2,4) by 90&deg; clockwise about origin.",opts:["(&minus;4,2)","(4,&minus;2)","(&minus;2,&minus;4)","(4,2)"],ans:1,hint:"Rule: (x,y)&rarr;(y,&minus;x).",solution:"(2,4) &rarr; (4,&minus;2) = <strong>(4,&minus;2)</strong>",diff:"medium"},
+    {q:"Regular polygon with interior angles of 156&deg;. How many sides?",opts:["12","15","16","18"],ans:1,hint:"Exterior = 180&minus;156. Sides = 360&divide;exterior.",solution:"Exterior=24&deg;, 360&divide;24 = <strong>15</strong>",diff:"hard"},
+  ],
+  Statistics:[
+    {q:"Mean of: 3, 7, 8, 2, 10",opts:["6","7","8","10"],ans:0,hint:"Sum all values, divide by count.",solution:"30&divide;5 = <strong>6</strong>",diff:"easy"},
+    {q:"Median of: 4,1,7,3,9,2,6",opts:["3","4","6","7"],ans:1,hint:"Sort first, find middle value.",solution:"Sorted: 1,2,3,<strong>4</strong>,6,7,9. Median = <strong>4</strong>",diff:"easy"},
+    {q:"A student needs mean 70 from 5 tests. Four scores: 65,70,72,68. Fifth score needed?",opts:["70","72","75","80"],ans:2,hint:"Total needed = 70&times;5. Subtract known sum.",solution:"350&minus;275 = <strong>75</strong>",diff:"medium"},
+    {q:"Pie chart sector for 15 out of 60 students. Angle?",opts:["60&deg;","75&deg;","90&deg;","100&deg;"],ans:2,hint:"(15&divide;60)&times;360&deg;.",solution:"0.25&times;360 = <strong>90&deg;</strong>",diff:"medium"},
+    {q:"Scatter graph line of best fit: y=2x+5. Predict y when x=13.",opts:["18","21","31","36"],ans:2,hint:"Substitute x=13 into the equation.",solution:"y=2(13)+5 = <strong>31</strong>",diff:"hard"},
+    {q:"Mean of 6 numbers = 9. Five are: 7,11,8,6,12. Sixth number?",opts:["6","8","10","12"],ans:2,hint:"Total = 9&times;6. Subtract known sum.",solution:"54&minus;44 = <strong>10</strong>",diff:"hard"},
+  ],
+  Probability:[
+    {q:"Bag: 3 red, 5 blue, 2 green. P(blue)?",opts:["1/2","3/10","5/10","2/5"],ans:2,hint:"P = favourable&divide;total.",solution:"5/10 = <strong>1/2</strong>",diff:"easy"},
+    {q:"P(rain)=0.35. P(no rain)?",opts:["0.35","0.55","0.65","0.75"],ans:2,hint:"P(not A) = 1&minus;P(A).",solution:"1&minus;0.35 = <strong>0.65</strong>",diff:"easy"},
+    {q:"Two fair coins flipped. P(exactly one head)?",opts:["1/4","1/2","3/4","1"],ans:1,hint:"Sample space: HH,HT,TH,TT.",solution:"2/4 = <strong>1/2</strong>",diff:"medium"},
+    {q:"Die rolled twice. P(both show 3)?",opts:["1/6","1/12","1/36","2/6"],ans:2,hint:"Independent events: multiply.",solution:"1/6&times;1/6 = <strong>1/36</strong>",diff:"medium"},
+    {q:"4R, 6B counters. One red removed (no replace). P(next is blue)?",opts:["6/9","6/10","2/3","3/5"],ans:2,hint:"After removal: 9 remain.",solution:"6/9 = <strong>2/3</strong>",diff:"medium"},
+    {q:"P(Pass)=0.7, P(Merit|Pass)=0.5, P(Merit|Fail)=0.2. Find P(Merit).",opts:["0.35","0.41","0.50","0.06"],ans:1,hint:"Use tree diagram: add both Merit branches.",solution:"0.7&times;0.5 + 0.3&times;0.2 = 0.35+0.06 = <strong>0.41</strong>",diff:"hard"},
+  ],
+  Measures:[
+    {q:"Car travels 120 km in 2 hours. Average speed?",opts:["60 km/h","80 km/h","240 km/h","0.6 km/h"],ans:0,hint:"Speed = Distance&divide;Time.",solution:"120&divide;2 = <strong>60 km/h</strong>",diff:"easy"},
+    {q:"Convert 2500g to kg.",opts:["0.25 kg","2.5 kg","25 kg","250 kg"],ans:1,hint:"1 kg = 1000 g.",solution:"2500&divide;1000 = <strong>2.5 kg</strong>",diff:"easy"},
+    {q:"Density = 8 g/cm&sup3;, Volume = 25 cm&sup3;. Mass?",opts:["0.32 g","33 g","200 g","2000 g"],ans:2,hint:"Mass = Density&times;Volume.",solution:"8&times;25 = <strong>200 g</strong>",diff:"medium"},
+    {q:"Journey of 180 km takes 2h 30min. Average speed?",opts:["60 km/h","72 km/h","80 km/h","90 km/h"],ans:1,hint:"Convert 2h30m to 2.5 hours.",solution:"180&divide;2.5 = <strong>72 km/h</strong>",diff:"medium"},
+    {q:"Car at 54 km/h. Convert to m/s.",opts:["15 m/s","0.015 m/s","54 m/s","9 m/s"],ans:0,hint:"Divide by 3.6.",solution:"54&divide;3.6 = <strong>15 m/s</strong>",diff:"medium"},
+    {q:"Two substances mixed. A: 300g, density 2g/cm&sup3;. B: 400g, density 5g/cm&sup3;. Total volume?",opts:["150 cm&sup3;","230 cm&sup3;","270 cm&sup3;","350 cm&sup3;"],ans:1,hint:"Volume = Mass&divide;Density for each, then add.",solution:"150+80 = <strong>230 cm&sup3;</strong>",diff:"hard"},
+  ]
+};
+
+const TOPIC_COLORS = {
+  Number:'#f59e0b',Algebra:'#a78bfa',Ratio:'#34d399',
+  Shapes:'#fb923c',Angles:'#38bdf8',Statistics:'#e879f9',
+  Probability:'#f87171',Measures:'#fbbf24'
+};
+
+// State
+let selectedTopics = ['Number','Algebra','Ratio','Shapes','Angles','Statistics','Probability','Measures'];
+let questionCount = 20;
+let mode = 'practice';
+let questions = [];
+let answers = [];
+let current = 0;
+
+// Setup
+document.querySelectorAll('.topic-check').forEach(function(el){
+  el.onclick = function(){
+    el.classList.toggle('selected');
+    const topic = el.dataset.topic;
+    if(el.classList.contains('selected')){
+      el.querySelector('.dot').textContent = '✓';
+      if(!selectedTopics.includes(topic)) selectedTopics.push(topic);
+    } else {
+      el.querySelector('.dot').textContent = '';
+      selectedTopics = selectedTopics.filter(function(t){return t!==topic});
+    }
+  }
+});
+
+function selectAllTopics(){
+  document.querySelectorAll('.topic-check').forEach(function(el){
+    el.classList.add('selected');
+    el.querySelector('.dot').textContent='✓';
+    const t=el.dataset.topic;
+    if(!selectedTopics.includes(t))selectedTopics.push(t);
+  });
+}
+function selectNoneTopics(){
+  document.querySelectorAll('.topic-check').forEach(function(el){
+    el.classList.remove('selected');
+    el.querySelector('.dot').textContent='';
+  });
+  selectedTopics=[];
+}
+function setCount(n){
+  questionCount=n;
+  document.querySelectorAll('.count-btn').forEach(function(b){b.classList.toggle('active',parseInt(b.dataset.count)===n)});
+}
+function setMode(m){
+  mode=m;
+  document.querySelectorAll('.mode-btn').forEach(function(b){b.classList.toggle('active',b.dataset.mode===m)});
+}
+
+function startQuiz(){
+  if(!selectedTopics.length){alert('Please select at least one topic!');return}
+  // Build question pool from selected topics
+  let pool = [];
+  selectedTopics.forEach(function(t){
+    if(QUESTION_BANK[t]) pool = pool.concat(QUESTION_BANK[t].map(function(q){return Object.assign({},q,{topic:t})}));
+  });
+  // Shuffle pool
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  questions = pool.slice(0,Math.min(questionCount,pool.length));
+  answers = new Array(questions.length).fill(null);
+  current = 0;
+  document.getElementById('setup-screen').style.display='none';
+  document.getElementById('quiz-screen').style.display='block';
+  document.getElementById('ai-panel').style.display='block';
+  render();
+}
+
+function buildDots(){
+  const w=document.getElementById('dots');w.innerHTML='';
+  questions.forEach(function(_,i){
+    const d=document.createElement('div');
+    d.className='dot'+(i===current?' current':'')+(answers[i]==='correct'?' correct':answers[i]==='wrong'?' wrong':'');
+    d.textContent=i+1;d.onclick=function(){current=i;render()};w.appendChild(d);
+  });
+}
+
+function updateScore(){
+  const c=answers.filter(function(a){return a==='correct'}).length;
+  const w=answers.filter(function(a){return a==='wrong'}).length;
+  const ans=c+w,pct=ans?Math.round(c/ans*100):0;
+  document.getElementById('sc-correct').textContent=c;
+  document.getElementById('sc-wrong').textContent=w;
+  document.getElementById('sc-remain').textContent=questions.length-ans;
+  document.getElementById('sc-pct').textContent=pct+'%';
+}
+
+function render(){
+  const q=questions[current];
+  document.getElementById('q-num').textContent='Q'+(current+1)+' of '+questions.length;
+  const tag=document.getElementById('q-topic-tag');
+  tag.textContent=q.topic;
+  tag.style.background=TOPIC_COLORS[q.topic]+'33';
+  tag.style.color=TOPIC_COLORS[q.topic];
+  const de=document.getElementById('q-diff');
+  de.textContent={easy:'Easy',medium:'Medium',hard:'Hard'}[q.diff];
+  de.className='difficulty '+q.diff;
+  document.getElementById('q-text').innerHTML=q.q;
+  document.getElementById('hint-box').style.display='none';
+  document.getElementById('hint-box').textContent=q.hint;
+  document.getElementById('hint-btn').style.display=mode==='exam'?'none':'inline-block';
+  const fb=document.getElementById('feedback');fb.style.display='none';fb.className='feedback';
+  const opts=document.getElementById('options');opts.innerHTML='';
+  ['A','B','C','D'].forEach(function(l,i){
+    const btn=document.createElement('button');btn.className='opt';
+    btn.innerHTML='<span class="opt-letter">'+l+'</span> '+q.opts[i];
+    if(answers[current]!==null){btn.disabled=true;if(i===q.ans)btn.classList.add('reveal-correct')}
+    btn.onclick=function(){checkAnswer(i)};opts.appendChild(btn);
+  });
+  if(answers[current]!==null)showFeedback(answers[current]==='correct');
+  buildDots();updateScore();
+}
+
+function checkAnswer(i){
+  if(answers[current]!==null)return;
+  const q=questions[current],ok=i===q.ans;
+  answers[current]=ok?'correct':'wrong';
+  document.getElementById('options').querySelectorAll('.opt').forEach(function(b,idx){
+    b.disabled=true;
+    if(idx===q.ans)b.classList.add('reveal-correct');
+    if(idx===i&&!ok)b.classList.add('selected-wrong');
+  });
+  if(mode==='practice')showFeedback(ok);
+  buildDots();updateScore();
+}
+
+function showFeedback(ok){
+  const q=questions[current],fb=document.getElementById('feedback');
+  fb.style.display='block';fb.className='feedback '+(ok?'correct':'wrong');
+  document.getElementById('fb-title').textContent=ok?'Correct! Well done!':'Not quite \u2014 here\'s the solution:';
+  document.getElementById('fb-solution').innerHTML=q.solution;
+}
+
+function showHint(){const b=document.getElementById('hint-box');b.style.display=b.style.display==='none'?'block':'none'}
+function prevQ(){if(current>0){current--;render()}}
+function nextQ(){if(current<questions.length-1){current++;render()}else finishQuiz()}
+
+function finishQuiz(){
+  const c=answers.filter(function(a){return a==='correct'}).length;
+  const w=answers.filter(function(a){return a==='wrong'}).length;
+  const pct=Math.round(c/questions.length*100);
+  document.getElementById('r-correct').textContent=c;
+  document.getElementById('r-wrong').textContent=w;
+  document.getElementById('r-pct').textContent=pct+'%';
+  document.getElementById('grade-emoji').textContent=pct>=90?'🏆':pct>=70?'⭐':pct>=50?'👍':'📚';
+  document.getElementById('grade-msg').textContent=pct>=90?'Outstanding performance!':pct>=70?'Great work!':pct>=50?'Good effort — review the topics you struggled with.':'Keep practising — check the individual topic quizzes.';
+
+  // Per-topic breakdown
+  const topicStats={};
+  questions.forEach(function(q,i){
+    if(!topicStats[q.topic])topicStats[q.topic]={correct:0,total:0};
+    topicStats[q.topic].total++;
+    if(answers[i]==='correct')topicStats[q.topic].correct++;
+  });
+  const blist=document.getElementById('breakdown-list');blist.innerHTML='';
+  Object.keys(topicStats).forEach(function(t){
+    const s=topicStats[t];
+    const pct=Math.round(s.correct/s.total*100);
+    const color=TOPIC_COLORS[t]||'#a78bfa';
+    blist.innerHTML+='<div class="breakdown-row"><div class="t-name" style="color:'+color+'">'+t+'</div><div class="breakdown-bar"><div class="breakdown-bar-fill" style="width:'+pct+'%;background:'+color+'"></div></div><div class="t-score" style="color:'+color+'">'+s.correct+'/'+s.total+'</div></div>';
+  });
+
+  document.getElementById('quiz-screen').style.display='none';
+  document.getElementById('results-screen').style.display='block';
+}
+
+function restartWithSetup(){
+  document.getElementById('results-screen').style.display='none';
+  document.getElementById('quiz-screen').style.display='none';
+  document.getElementById('ai-panel').style.display='none';
+  document.getElementById('setup-screen').style.display='block';
+}
+
+async function generateAI(){
+  const key=document.getElementById('api-key').value.trim();
+  if(!key){document.getElementById('ai-status').textContent='Please enter your API key.';return}
+  const s=document.getElementById('ai-status');
+  const topicList=selectedTopics.join(', ');
+  s.textContent='Mr. Euler is writing 5 new mixed questions on: '+topicList+'...';
+  const p='You are Mr. Euler, expert Year 8 UK Maths teacher. Generate 5 mixed MCQ covering these topics: '+topicList+'. Include the topic name in a "topic" field matching exactly one of: Number, Algebra, Ratio, Shapes, Angles, Statistics, Probability, Measures. 4 options, ONE correct, hint, solution, difficulty. JSON only: [{"q":"","opts":["","","",""],"ans":0,"hint":"","solution":"","diff":"easy|medium|hard","topic":""}]';
+  try{
+    const r1=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:p}]})});
+    const d1=await r1.json();
+    const newQs=JSON.parse(d1.content[0].text.trim().replace(/```json|```/g,''));
+    s.textContent='CheckerBot verifying...';
+    const cp='You are CheckerBot. Verify 5 mixed Maths questions: arithmetic correct, one answer, KS3 level, topic field is correct. '+JSON.stringify(newQs)+'. Respond: APPROVED: [json]';
+    const r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:cp}]})});
+    const d2=await r2.json();const cr=d2.content[0].text.trim();
+    if(!cr.startsWith('APPROVED:')){s.textContent='CheckerBot rejected. Try again.';return}
+    const checked=JSON.parse(cr.replace('APPROVED:','').trim().replace(/```json|```/g,''));
+    questions=[...questions,...checked];answers=[...answers,...new Array(checked.length).fill(null)];
+    buildDots();s.textContent='5 questions added! Now '+questions.length+' total.';updateScore();
+  }catch(e){s.textContent='Error: '+e.message}
+}
+</script>
+</body>
+</html>

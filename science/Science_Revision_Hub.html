@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Year 8 Science Revision Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0e17;
+    --surface: #1a1927;
+    --surface2: #22213a;
+    --border: rgba(255,255,255,0.07);
+    --text: #fffffe;
+    --text-muted: #a7a9be;
+    --radius: 18px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 48px 20px 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse at 30% 0%, rgba(99,153,34,0.18) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 100%, rgba(127,119,221,0.18) 0%, transparent 60%);
+  }
+  .hero-dots {
+    position: absolute; inset: 0; z-index: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--text-muted);
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 42px;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #fffffe 0%, #a7a9be 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero h1 span {
+    background: linear-gradient(135deg, #639922 0%, #7F77DD 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 15px;
+    color: var(--text-muted);
+    max-width: 320px;
+    margin: 0 auto 28px;
+    line-height: 1.6;
+  }
+
+  /* ── OVERALL PROGRESS ── */
+  .overall-card {
+    margin: 0 16px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .overall-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .overall-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .overall-pct {
+    font-family: 'Fredoka One', cursive;
+    font-size: 28px;
+    color: var(--text);
+  }
+  .mega-bar {
+    height: 10px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .mega-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #639922, #7F77DD);
+    border-radius: 10px;
+    transition: width 0.8s ease;
+  }
+  .overall-stats {
+    display: flex;
+    gap: 10px;
+  }
+  .overall-stat {
+    flex: 1;
+    text-align: center;
+    background: rgba(255,255,255,0.04);
+    border-radius: var(--radius-sm);
+    padding: 8px 4px;
+  }
+  .overall-stat-num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    line-height: 1;
+  }
+  .overall-stat-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  /* ── SECTION HEADINGS ── */
+  .section-head {
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-head::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── TOPIC CARDS ── */
+  .topics-grid {
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .topic-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    animation: fadeUp 0.4s ease both;
+  }
+  .topic-card:nth-child(1){animation-delay:0.05s}
+  .topic-card:nth-child(2){animation-delay:0.1s}
+  .topic-card:nth-child(3){animation-delay:0.15s}
+  .topic-card:nth-child(4){animation-delay:0.2s}
+  .topic-card:nth-child(5){animation-delay:0.25s}
+  .topic-card:nth-child(6){animation-delay:0.3s}
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(16px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  .topic-stripe {
+    height: 4px;
+    width: 100%;
+  }
+  .topic-body {
+    padding: 16px 16px 14px;
+  }
+  .topic-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .topic-emoji {
+    font-size: 32px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .topic-info { flex: 1; }
+  .topic-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+  }
+  .topic-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .topic-bar-wrap {
+    margin-bottom: 12px;
+  }
+  .topic-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  .topic-bar-bg {
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .topic-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.6s ease;
+  }
+  .topic-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    transition: all 0.18s;
+  }
+  .action-btn.quiz {
+    background: rgba(255,255,255,0.06);
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .action-btn.quiz:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.2);
+    transform: translateY(-1px);
+  }
+  .action-btn.cards {
+    background: rgba(255,255,255,0.06);
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .action-btn.cards:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.2);
+    transform: translateY(-1px);
+  }
+
+  /* topic-specific accent colours on the stripe + bar */
+  .t-green  .topic-stripe { background: linear-gradient(90deg,#27500A,#639922); }
+  .t-green  .topic-bar-fill { background: linear-gradient(90deg,#27500A,#639922); }
+  .t-green  .action-btn.quiz  { border-color: rgba(99,153,34,0.4); }
+  .t-green  .action-btn.quiz:hover  { background: rgba(99,153,34,0.15); border-color:rgba(99,153,34,0.6); }
+  .t-green  .action-btn.cards { border-color: rgba(39,80,10,0.4); }
+  .t-green  .action-btn.cards:hover { background: rgba(39,80,10,0.2); border-color:rgba(39,80,10,0.6); }
+
+  .t-blue   .topic-stripe { background: linear-gradient(90deg,#0C447C,#378ADD); }
+  .t-blue   .topic-bar-fill { background: linear-gradient(90deg,#0C447C,#378ADD); }
+  .t-blue   .action-btn.quiz:hover  { background: rgba(56,138,221,0.15); border-color:rgba(56,138,221,0.5); }
+  .t-blue   .action-btn.cards:hover { background: rgba(12,68,124,0.2); border-color:rgba(12,68,124,0.5); }
+
+  .t-purple .topic-stripe { background: linear-gradient(90deg,#3C3489,#7F77DD); }
+  .t-purple .topic-bar-fill { background: linear-gradient(90deg,#3C3489,#7F77DD); }
+  .t-purple .action-btn.quiz:hover  { background: rgba(127,119,221,0.15); border-color:rgba(127,119,221,0.5); }
+  .t-purple .action-btn.cards:hover { background: rgba(60,52,137,0.2); border-color:rgba(60,52,137,0.5); }
+
+  .t-amber  .topic-stripe { background: linear-gradient(90deg,#633806,#EF9F27); }
+  .t-amber  .topic-bar-fill { background: linear-gradient(90deg,#633806,#EF9F27); }
+  .t-amber  .action-btn.quiz:hover  { background: rgba(239,159,39,0.15); border-color:rgba(239,159,39,0.5); }
+  .t-amber  .action-btn.cards:hover { background: rgba(99,56,6,0.2); border-color:rgba(99,56,6,0.5); }
+
+  .t-pink   .topic-stripe { background: linear-gradient(90deg,#72243E,#D4537E); }
+  .t-pink   .topic-bar-fill { background: linear-gradient(90deg,#72243E,#D4537E); }
+  .t-pink   .action-btn.quiz:hover  { background: rgba(212,83,126,0.15); border-color:rgba(212,83,126,0.5); }
+  .t-pink   .action-btn.cards:hover { background: rgba(114,36,62,0.2); border-color:rgba(114,36,62,0.5); }
+
+  .t-teal   .topic-stripe { background: linear-gradient(90deg,#085041,#1D9E75); }
+  .t-teal   .topic-bar-fill { background: linear-gradient(90deg,#085041,#1D9E75); }
+  .t-teal   .action-btn.quiz:hover  { background: rgba(29,158,117,0.15); border-color:rgba(29,158,117,0.5); }
+  .t-teal   .action-btn.cards:hover { background: rgba(8,80,65,0.2); border-color:rgba(8,80,65,0.5); }
+
+  /* ── EXAM TIPS CARD ── */
+  .tips-card {
+    margin: 0 16px 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .tips-stripe { height: 4px; background: linear-gradient(90deg, #639922, #7F77DD, #D4537E, #EF9F27); }
+  .tips-body { padding: 18px 16px; }
+  .tips-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+  .command-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .command-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.04);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .command-word {
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text);
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+  .command-def {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ── REVISION TIPS ── */
+  .rev-tips {
+    margin: 0 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .rev-tip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .rev-tip-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .rev-tip-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .rev-tip-body {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .footer strong { color: var(--text); }
+
+  /* ── COMPLETED BADGE ── */
+  .completed-badge {
+    display: none;
+    background: rgba(99,153,34,0.2);
+    border: 1px solid rgba(99,153,34,0.4);
+    color: #97C459;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Year 8 · UK National Curriculum</div>
+    <h1>Science<br><span>Revision Hub</span></h1>
+    <p>All your quizzes and flashcards in one place. Pick a topic and get started!</p>
+  </div>
+</div>
+
+<!-- OVERALL PROGRESS -->
+<div class="overall-card">
+  <div class="overall-header">
+    <div class="overall-title">Overall Progress</div>
+    <div class="overall-pct" id="overall-pct">0%</div>
+  </div>
+  <div class="mega-bar">
+    <div class="mega-bar-fill" id="mega-fill" style="width:0%"></div>
+  </div>
+  <div class="overall-stats">
+    <div class="overall-stat">
+      <div class="overall-stat-num" id="ov-quizzes" style="color:#378ADD">0</div>
+      <div class="overall-stat-label">Quizzes done</div>
+    </div>
+    <div class="overall-stat">
+      <div class="overall-stat-num" id="ov-cards" style="color:#7F77DD">0</div>
+      <div class="overall-stat-label">Card decks done</div>
+    </div>
+    <div class="overall-stat">
+      <div class="overall-stat-num" id="ov-topics" style="color:#639922">0</div>
+      <div class="overall-stat-label">Topics complete</div>
+    </div>
+  </div>
+</div>
+
+<!-- TOPICS -->
+<div class="section-head">Topics</div>
+<div class="topics-grid" id="topics-grid"></div>
+
+<!-- EXAM TECHNIQUE -->
+<div class="section-head">Exam Technique</div>
+<div class="tips-card">
+  <div class="tips-stripe"></div>
+  <div class="tips-body">
+    <div class="tips-title">📋 Command Word Guide</div>
+    <div class="command-grid">
+      <div class="command-row"><div class="command-word">State / Name</div><div class="command-def">Write a simple fact or statement — no explanation needed.</div></div>
+      <div class="command-row"><div class="command-word">Describe</div><div class="command-def">Say what something is like or give an account of what happens.</div></div>
+      <div class="command-row"><div class="command-word">Explain</div><div class="command-def">Give a reason WHY. Use the word "because" to link cause and effect.</div></div>
+      <div class="command-row"><div class="command-word">Compare</div><div class="command-def">Point out similarities AND differences between two things.</div></div>
+      <div class="command-row"><div class="command-word">Calculate</div><div class="command-def">Work out a numerical answer. Always show your working!</div></div>
+      <div class="command-row"><div class="command-word">Evaluate</div><div class="command-def">Give good points AND bad points, then make a justified overall judgement.</div></div>
+      <div class="command-row"><div class="command-word">Suggest</div><div class="command-def">Use your scientific knowledge to propose an idea — there may be more than one correct answer.</div></div>
+      <div class="command-row"><div class="command-word">Write a word equation</div><div class="command-def">Reactants → Products. Use an arrow, not an equals sign.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- REVISION TIPS -->
+<div class="section-head">Revision Tips</div>
+<div class="rev-tips">
+  <div class="rev-tip">
+    <div class="rev-tip-icon">🧠</div>
+    <div>
+      <div class="rev-tip-title">Space your revision out</div>
+      <div class="rev-tip-body">Do a little every day rather than cramming. Revisiting a topic after a day or two moves it from short-term to long-term memory.</div>
+    </div>
+  </div>
+  <div class="rev-tip">
+    <div class="rev-tip-icon">⏱️</div>
+    <div>
+      <div class="rev-tip-title">Work in 20–40 minute chunks</div>
+      <div class="rev-tip-body">Your brain works best in short bursts. Take a 5–10 minute break between sessions — get up and move around.</div>
+    </div>
+  </div>
+  <div class="rev-tip">
+    <div class="rev-tip-icon">📋</div>
+    <div>
+      <div class="rev-tip-title">Use the "Not Yet" deck</div>
+      <div class="rev-tip-body">After going through a flashcard deck, use the "Study Not Yet" button to drill only the cards you struggled with. Focused repetition beats re-reading everything.</div>
+    </div>
+  </div>
+  <div class="rev-tip">
+    <div class="rev-tip-icon">✏️</div>
+    <div>
+      <div class="rev-tip-title">Write it out, don't just read it</div>
+      <div class="rev-tip-body">After each topic, close your notes and try to write down everything you remember. This is called the retrieval practice effect — it's one of the most powerful revision techniques.</div>
+    </div>
+  </div>
+  <div class="rev-tip">
+    <div class="rev-tip-icon">🔄</div>
+    <div>
+      <div class="rev-tip-title">Generate more questions when ready</div>
+      <div class="rev-tip-body">Once you've mastered the 20 seed questions in a quiz, hit "Generate 5 New Questions" and pick a subtopic you find tricky. Fresh questions stop you just memorising the answers.</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <strong>Year 8 Science Revision Hub</strong><br>
+  UK National Curriculum · All files work offline · Open each file in any browser
+</div>
+
+<script>
+const TOPICS = [
+  {
+    id: 'food',
+    tag: 'Unit 8A',
+    name: 'Food & Nutrition',
+    emoji: '🥦',
+    color: 't-green',
+    quiz: '8A_Food_Nutrition_Quiz.html',
+    cards: '8A_Food_Nutrition_Flashcards.html',
+    subtopics: ['Nutrients', 'Digestion', 'Food Tests', 'Enzymes', 'Malnutrition'],
+  },
+  {
+    id: 'periodic',
+    tag: 'Unit 8F',
+    name: 'The Periodic Table',
+    emoji: '⚗️',
+    color: 't-blue',
+    quiz: '8F_Periodic_Table_Quiz.html',
+    cards: '8F_Periodic_Table_Flashcards.html',
+    subtopics: ['Elements & Atoms', 'Compounds & Mixtures', 'Metals & Non-metals', 'Groups & Periods', 'Chemical Reactions'],
+  },
+  {
+    id: 'fluids',
+    tag: 'Unit 8I',
+    name: 'Fluids',
+    emoji: '💧',
+    color: 't-purple',
+    quiz: '8I_Fluids_Quiz.html',
+    cards: '8I_Fluids_Flashcards.html',
+    subtopics: ['States of Matter', 'Density', 'Forces', 'Pressure in Fluids', 'Floating & Upthrust'],
+  },
+  {
+    id: 'combustion',
+    tag: 'Unit 8E',
+    name: 'Combustion',
+    emoji: '🔥',
+    color: 't-amber',
+    quiz: '8E_Combustion_Quiz.html',
+    cards: '8E_Combustion_Flashcards.html',
+    subtopics: ['Combustion Reactions', 'Fire Triangle', 'Fossil Fuels', 'Pollutants', 'Greenhouse Effect'],
+  },
+  {
+    id: 'breathing',
+    tag: 'Unit 8C',
+    name: 'Breathing & Respiration',
+    emoji: '🫁',
+    color: 't-pink',
+    quiz: '8C_Breathing_Respiration_Quiz.html',
+    cards: '8C_Breathing_Respiration_Flashcards.html',
+    subtopics: ['Aerobic Respiration', 'Anaerobic Respiration', 'Breathing & Ventilation', 'Gas Exchange', 'Exercise'],
+  },
+  {
+    id: 'practical',
+    tag: 'Practical Skills',
+    name: 'Practical Skills',
+    emoji: '🔬',
+    color: 't-teal',
+    quiz: 'Practical_Skills_Quiz.html',
+    cards: 'Practical_Skills_Flashcards.html',
+    subtopics: ['Variables', 'Graphs & Data', 'Lab Safety', 'Bunsen Burner', 'Conclusions'],
+  },
+];
+
+// Simple localStorage-based progress tracker
+function getProgress() {
+  try {
+    return JSON.parse(localStorage.getItem('s8_progress') || '{}');
+  } catch(e) { return {}; }
+}
+
+function saveProgress(p) {
+  try { localStorage.setItem('s8_progress', JSON.stringify(p)); } catch(e){}
+}
+
+function markDone(id, type) {
+  const p = getProgress();
+  if (!p[id]) p[id] = {};
+  p[id][type] = true;
+  saveProgress(p);
+  renderAll();
+}
+
+function getTopicProgress(id) {
+  const p = getProgress();
+  return p[id] || {};
+}
+
+function renderTopics() {
+  const grid = document.getElementById('topics-grid');
+  grid.innerHTML = '';
+
+  TOPICS.forEach(t => {
+    const prog = getTopicProgress(t.id);
+    const quizDone = !!prog.quiz;
+    const cardsDone = !!prog.cards;
+    const bothDone = quizDone && cardsDone;
+    const barPct = (quizDone ? 50 : 0) + (cardsDone ? 50 : 0);
+
+    const card = document.createElement('div');
+    card.className = `topic-card ${t.color}`;
+    card.innerHTML = `
+      <div class="topic-stripe"></div>
+      <div class="topic-body">
+        <div class="topic-top">
+          <div class="topic-emoji">${t.emoji}</div>
+          <div class="topic-info">
+            <div class="topic-tag">${t.tag}</div>
+            <div class="topic-name">${t.name}${bothDone ? ' <span class="completed-badge" style="display:inline">✓ Done</span>' : ''}</div>
+          </div>
+        </div>
+        <div class="topic-bar-wrap">
+          <div class="topic-bar-label">
+            <span>${t.subtopics.slice(0,3).join(' · ')}</span>
+            <span>${barPct}%</span>
+          </div>
+          <div class="topic-bar-bg">
+            <div class="topic-bar-fill" style="width:${barPct}%"></div>
+          </div>
+        </div>
+        <div class="topic-actions">
+          <a href="${t.quiz}" class="action-btn quiz" onclick="markOnClick('${t.id}','quiz')">
+            ${quizDone ? '✓' : '📝'} Quiz ${quizDone ? '(done)' : ''}
+          </a>
+          <a href="${t.cards}" class="action-btn cards" onclick="markOnClick('${t.id}','cards')">
+            ${cardsDone ? '✓' : '🃏'} Flashcards ${cardsDone ? '(done)' : ''}
+          </a>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function markOnClick(id, type) {
+  // Mark as done when clicked (will open the file, but we record intent)
+  setTimeout(() => { markDone(id, type); }, 300);
+}
+
+function renderOverall() {
+  const p = getProgress();
+  let quizzesDone = 0, cardsDone = 0, topicsDone = 0;
+
+  TOPICS.forEach(t => {
+    const prog = p[t.id] || {};
+    if (prog.quiz) quizzesDone++;
+    if (prog.cards) cardsDone++;
+    if (prog.quiz && prog.cards) topicsDone++;
+  });
+
+  const total = TOPICS.length * 2;
+  const done = quizzesDone + cardsDone;
+  const pct = Math.round((done / total) * 100);
+
+  document.getElementById('overall-pct').textContent = pct + '%';
+  document.getElementById('mega-fill').style.width = pct + '%';
+  document.getElementById('ov-quizzes').textContent = quizzesDone + '/' + TOPICS.length;
+  document.getElementById('ov-cards').textContent = cardsDone + '/' + TOPICS.length;
+  document.getElementById('ov-topics').textContent = topicsDone + '/' + TOPICS.length;
+}
+
+function renderAll() {
+  renderTopics();
+  renderOverall();
+}
+
+// Manual mark buttons — let user manually tick off topics
+function resetAllProgress() {
+  if (confirm('Reset all your progress tracking? This won\'t affect your quiz scores.')) {
+    localStorage.removeItem('s8_progress');
+    renderAll();
+  }
+}
+
+renderAll();
+</script>
+
+</body>
+</html>

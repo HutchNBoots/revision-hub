@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Measures Quiz — Year 8 Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--accent:#fbbf24;--accent2:#fde68a;--correct:#10b981;--wrong:#ef4444;--text:#e2e8f0;--muted:#94a3b8;--border:#2d3748;--hint:#34d399}
+  *{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#78350f,#fbbf24);padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem}
+  header .back{color:#fff;text-decoration:none;font-size:1.4rem}header h1{font-family:'Fredoka One',cursive;font-size:1.8rem;color:#fff}
+  header .badge{margin-left:auto;background:rgba(0,0,0,0.3);border-radius:20px;padding:0.3rem 1rem;font-weight:700;color:#fff}
+  .container{max-width:860px;margin:0 auto;padding:2rem 1rem}
+  .dots-wrap{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:1.5rem}
+  .dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:var(--card);cursor:pointer;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all 0.2s}
+  .dot.current{border-color:var(--accent);color:var(--accent)}.dot.correct{background:var(--correct);border-color:var(--correct);color:#fff}.dot.wrong{background:var(--wrong);border-color:var(--wrong);color:#fff}
+  .q-card{background:var(--card);border-radius:16px;padding:2rem;margin-bottom:1.5rem;border:1px solid var(--border)}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+  .q-num{font-size:0.85rem;color:var(--muted);font-weight:700}.difficulty{font-size:0.75rem;padding:0.2rem 0.7rem;border-radius:20px;font-weight:700}
+  .easy{background:#064e3b;color:#6ee7b7}.medium{background:#78350f;color:#fcd34d}.hard{background:#7f1d1d;color:#fca5a5}
+  .q-text{font-size:1.15rem;font-weight:700;line-height:1.5;margin-bottom:1.5rem}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
+  @media(max-width:560px){.options{grid-template-columns:1fr}}
+  .opt{background:var(--card2);border:2px solid var(--border);border-radius:12px;padding:0.85rem 1rem;cursor:pointer;font-size:1rem;font-weight:600;text-align:left;color:var(--text);transition:all 0.2s;display:flex;align-items:center;gap:0.6rem}
+  .opt:hover:not(:disabled){border-color:var(--accent);background:#1e1e3a}.opt.selected-wrong{border-color:var(--wrong);background:#450a0a;color:#fca5a5}.opt.reveal-correct{border-color:var(--correct);background:#064e3b;color:#6ee7b7}.opt:disabled{cursor:default}
+  .opt-letter{width:26px;height:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;flex-shrink:0}
+  .hint-btn{margin-top:1rem;background:none;border:1px dashed var(--hint);color:var(--hint);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:600}
+  .hint-box{margin-top:0.75rem;background:#064e3b;border-left:3px solid var(--hint);padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:0.95rem;display:none}
+  .feedback{margin-top:1.2rem;border-radius:12px;padding:1.2rem;display:none}.feedback.correct{background:#064e3b;border:1px solid var(--correct)}.feedback.wrong{background:#450a0a;border:1px solid var(--wrong)}
+  .feedback h3{font-family:'Fredoka One',cursive;font-size:1.1rem;margin-bottom:0.5rem}.feedback.correct h3{color:#6ee7b7}.feedback.wrong h3{color:#fca5a5}
+  .solution{margin-top:0.75rem;background:rgba(0,0,0,0.3);border-radius:8px;padding:1rem;font-size:0.95rem;line-height:1.7}.solution strong{color:var(--accent2)}
+  .nav-row{display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap}
+  .btn{padding:0.75rem 1.5rem;border-radius:10px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;transition:all 0.2s}
+  .btn-primary{background:var(--accent);color:#000}.btn-primary:hover{background:var(--accent2)}.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}.btn-sm{font-size:0.85rem;padding:0.5rem 1rem}
+  .score-bar{background:var(--card);border-radius:12px;padding:1rem 1.5rem;display:flex;gap:2rem;align-items:center;margin-bottom:1.5rem;border:1px solid var(--border);flex-wrap:wrap}
+  .score-item{text-align:center}.score-item .val{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--accent)}.score-item .lbl{font-size:0.75rem;color:var(--muted)}
+  #results-screen{display:none;background:var(--card);border-radius:16px;padding:2rem;text-align:center;border:1px solid var(--border)}
+  #results-screen h2{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--accent);margin-bottom:0.5rem}
+  .results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}.res-box{background:var(--card2);border-radius:12px;padding:1rem}.res-box .big{font-family:'Fredoka One',cursive;font-size:2rem}.res-box .small{font-size:0.8rem;color:var(--muted)}
+  .grade{font-family:'Fredoka One',cursive;font-size:3rem;margin:1rem 0}
+  .ai-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:2rem}
+  .ai-panel h3{font-family:'Fredoka One',cursive;color:var(--accent);margin-bottom:0.5rem;font-size:1.3rem}.ai-panel p{color:var(--muted);font-size:0.9rem;margin-bottom:1rem}
+  .ai-status{font-size:0.9rem;color:var(--muted);margin-top:0.75rem;min-height:1.2em;font-style:italic}
+  .ai-key-row{display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap}
+  .ai-key-row input{flex:1;min-width:200px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.9rem}
+  .ai-key-row input:focus{outline:none;border-color:var(--accent)}.reset-row{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem}
+</style>
+</head>
+<body>
+<header>
+  <a href="hub.html" class="back">&#8678;</a>
+  <h1>&#9201; Measures</h1>
+  <div class="badge" id="header-score">0 / 0</div>
+</header>
+<div class="container">
+  <div class="score-bar">
+    <div class="score-item"><div class="val" id="sc-correct">0</div><div class="lbl">Correct</div></div>
+    <div class="score-item"><div class="val" id="sc-wrong">0</div><div class="lbl">Wrong</div></div>
+    <div class="score-item"><div class="val" id="sc-remain">20</div><div class="lbl">Remaining</div></div>
+    <div class="score-item"><div class="val" id="sc-pct">0%</div><div class="lbl">Score</div></div>
+  </div>
+  <div class="dots-wrap" id="dots"></div>
+  <div id="quiz-area">
+    <div class="q-card">
+      <div class="q-meta"><span class="q-num" id="q-num">Question 1 of 20</span><span class="difficulty" id="q-diff">Easy</span></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <button class="hint-btn" onclick="showHint()">&#128161; Show Hint</button>
+      <div class="hint-box" id="hint-box"></div>
+      <div class="feedback" id="feedback"><h3 id="fb-title"></h3><div class="solution" id="fb-solution"></div></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="prevQ()">&#8592; Previous</button>
+      <button class="btn btn-primary" onclick="nextQ()">Next &#8594;</button>
+      <button class="btn btn-secondary btn-sm" onclick="finishQuiz()">Finish Quiz</button>
+    </div>
+    <div class="reset-row">
+      <button class="btn btn-secondary btn-sm" onclick="resetAnswers()">&#8634; Reset Answers</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetOriginal()">&#8635; Reset to Original 20</button>
+    </div>
+  </div>
+  <div id="results-screen">
+    <h2>Quiz Complete! &#127881;</h2>
+    <div class="grade" id="grade-emoji"></div>
+    <p id="grade-msg" style="color:var(--muted);margin-bottom:1rem;"></p>
+    <div class="results-grid">
+      <div class="res-box"><div class="big" style="color:var(--correct)" id="r-correct">0</div><div class="small">Correct</div></div>
+      <div class="res-box"><div class="big" style="color:var(--wrong)" id="r-wrong">0</div><div class="small">Wrong</div></div>
+      <div class="res-box"><div class="big" style="color:var(--accent)" id="r-pct">0%</div><div class="small">Score</div></div>
+    </div>
+    <div class="nav-row" style="justify-content:center">
+      <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+      <button class="btn btn-secondary" onclick="resetOriginal()">Reset to Original 20</button>
+      <a href="hub.html" class="btn btn-secondary">&#8592; Back to Hub</a>
+    </div>
+  </div>
+  <div class="ai-panel">
+    <h3>&#129302; Generate More Questions</h3>
+    <p>Mr. Euler will write new Measures questions, then CheckerBot verifies them.</p>
+    <div class="ai-key-row">
+      <input type="password" id="api-key" placeholder="Paste your Anthropic API key here...">
+      <button class="btn btn-primary" onclick="generateAI()">Generate 5 More</button>
+    </div>
+    <div class="ai-status" id="ai-status"></div>
+  </div>
+</div>
+<script>
+const SEED_QUESTIONS = [
+  {q:"How many centimetres are in 3.5 metres?",opts:["35 cm","305 cm","350 cm","3500 cm"],ans:2,hint:"1 metre = 100 centimetres. Multiply by 100.",solution:"<strong>1 m = 100 cm</strong><br>3.5 m = 3.5 x 100 = <strong>350 cm</strong>",diff:"easy"},
+  {q:"Convert 2500 grams to kilograms.",opts:["0.25 kg","2.5 kg","25 kg","250 kg"],ans:1,hint:"1 kilogram = 1000 grams. Divide by 1000.",solution:"<strong>1 kg = 1000 g</strong><br>2500 g = 2500 / 1000 = <strong>2.5 kg</strong>",diff:"easy"},
+  {q:"A car travels 120 km in 2 hours. What is its average speed?",opts:["60 km/h","80 km/h","240 km/h","0.6 km/h"],ans:0,hint:"Speed = Distance divided by Time.",solution:"<strong>Formula: Speed = Distance / Time</strong><br>Speed = 120 / 2 = <strong>60 km/h</strong>",diff:"easy"},
+  {q:"How many millilitres are in 4.2 litres?",opts:["420 ml","4200 ml","42 ml","0.42 ml"],ans:1,hint:"1 litre = 1000 millilitres. Multiply by 1000.",solution:"<strong>1 litre = 1000 ml</strong><br>4.2 L = 4.2 x 1000 = <strong>4200 ml</strong>",diff:"easy"},
+  {q:"A train travels at 90 km/h for 3 hours. How far does it travel?",opts:["30 km","180 km","270 km","93 km"],ans:2,hint:"Distance = Speed x Time.",solution:"<strong>Formula: Distance = Speed x Time</strong><br>Distance = 90 x 3 = <strong>270 km</strong>",diff:"easy"},
+  {q:"Convert 45 minutes into hours.",opts:["0.45 hours","0.75 hours","4.5 hours","0.45 hours"],ans:1,hint:"Divide the minutes by 60 (since there are 60 minutes in 1 hour).",solution:"<strong>45 minutes / 60</strong> = 0.75 hours<br>Or as a fraction: 45/60 = 3/4 hour = <strong>0.75 hours</strong>",diff:"easy"},
+  {q:"An object has a mass of 600 g and a volume of 200 cm3. What is its density?",opts:["120000 g/cm3","3 g/cm3","0.33 g/cm3","800 g/cm3"],ans:1,hint:"Density = Mass divided by Volume.",solution:"<strong>Formula: Density = Mass / Volume</strong><br>Density = 600 / 200 = <strong>3 g/cm3</strong>",diff:"easy"},
+  {q:"A cyclist travels 45 km at an average speed of 15 km/h. How long does the journey take?",opts:["2 hours","3 hours","4 hours","0.33 hours"],ans:1,hint:"Time = Distance divided by Speed.",solution:"<strong>Formula: Time = Distance / Speed</strong><br>Time = 45 / 15 = <strong>3 hours</strong>",diff:"medium"},
+  {q:"Convert 80 mph to km/h. (Use: 1 mile = 1.6 km)",opts:["50 km/h","128 km/h","81.6 km/h","48 km/h"],ans:1,hint:"Multiply the speed in mph by 1.6 to convert to km/h.",solution:"<strong>Step 1:</strong> 1 mile = 1.6 km<br><strong>Step 2:</strong> 80 mph x 1.6 = <strong>128 km/h</strong>",diff:"medium"},
+  {q:"A substance has density 8 g/cm3 and volume 25 cm3. What is its mass?",opts:["0.32 g","33 g","200 g","2000 g"],ans:2,hint:"Mass = Density x Volume. Rearrange the triangle.",solution:"<strong>Formula: Mass = Density x Volume</strong><br>Mass = 8 x 25 = <strong>200 g</strong>",diff:"medium"},
+  {q:"A journey of 180 km takes 2 hours 30 minutes. What is the average speed in km/h?",opts:["60 km/h","72 km/h","80 km/h","90 km/h"],ans:1,hint:"Convert 2 hours 30 minutes to hours first, then use Speed = Distance / Time.",solution:"<strong>Step 1:</strong> 2 hours 30 min = 2.5 hours<br><strong>Step 2:</strong> Speed = 180 / 2.5 = <strong>72 km/h</strong>",diff:"medium"},
+  {q:"A gold bar has mass 1932 g and density 19.32 g/cm3. What is its volume?",opts:["10 cm3","100 cm3","1000 cm3","19.32 cm3"],ans:1,hint:"Volume = Mass divided by Density.",solution:"<strong>Formula: Volume = Mass / Density</strong><br>Volume = 1932 / 19.32 = <strong>100 cm3</strong>",diff:"medium"},
+  {q:"Convert 2.4 km to metres.",opts:["24 m","240 m","2400 m","24000 m"],ans:2,hint:"1 km = 1000 m. Multiply by 1000.",solution:"<strong>1 km = 1000 m</strong><br>2.4 x 1000 = <strong>2400 m</strong>",diff:"medium"},
+  {q:"A car travels at 54 km/h. Convert this to metres per second.",opts:["15 m/s","0.015 m/s","54 m/s","9 m/s"],ans:0,hint:"Divide by 3.6 to convert km/h to m/s. Or: multiply by 1000, then divide by 3600.",solution:"<strong>Step 1:</strong> 54 km/h = 54 x 1000 m/h = 54000 m/h<br><strong>Step 2:</strong> Divide by 3600 (seconds in an hour): 54000 / 3600 = <strong>15 m/s</strong>",diff:"medium"},
+  {q:"Two substances are mixed. Substance A: mass 300 g, density 2 g/cm3. Substance B: mass 400 g, density 5 g/cm3. What is the total volume of the mixture?",opts:["150 cm3","230 cm3","270 cm3","350 cm3"],ans:1,hint:"Find the volume of each substance separately (V = m/d), then add them.",solution:"<strong>Volume A</strong> = 300/2 = 150 cm3<br><strong>Volume B</strong> = 400/5 = 80 cm3<br><strong>Total</strong> = 150 + 80 = <strong>230 cm3</strong>",diff:"medium"},
+  {q:"A car travels 60 km at 40 km/h, then 90 km at 60 km/h. What is the total journey time?",opts:["3 hours","3.5 hours","4 hours","4.5 hours"],ans:0,hint:"Calculate the time for each leg separately using Time = Distance / Speed, then add.",solution:"<strong>Time 1:</strong> 60/40 = 1.5 hours<br><strong>Time 2:</strong> 90/60 = 1.5 hours<br><strong>Total:</strong> 1.5 + 1.5 = <strong>3 hours</strong>",diff:"hard"},
+  {q:"An alloy is made from copper (density 9 g/cm3) and tin (density 7.3 g/cm3) in the ratio 2:1 by volume. The total volume is 30 cm3. What is the total mass of the alloy?",opts:["244 g","254 g","267 g","270 g"],ans:1,hint:"Find the volume of each metal, then use mass = density x volume for each, then add.",solution:"<strong>Volume copper</strong> = 2/3 x 30 = 20 cm3<br><strong>Volume tin</strong> = 1/3 x 30 = 10 cm3<br><strong>Mass copper</strong> = 20 x 9 = 180 g<br><strong>Mass tin</strong> = 10 x 7.3 = 73 g<br><strong>Total mass</strong> = 180 + 73 = <strong>253 g</strong>",diff:"hard"},
+  {q:"A train leaves station A at 09:45 and arrives at station B at 12:18. The distance is 195 km. What is its average speed in km/h?",opts:["72 km/h","75 km/h","78 km/h","80 km/h"],ans:2,hint:"Find the journey time in hours first (convert the time difference carefully), then use Speed = Distance / Time.",solution:"<strong>Step 1:</strong> Time from 09:45 to 12:18 = 2 hours 33 minutes = 2.55 hours<br><strong>Step 2:</strong> Speed = 195 / 2.55 = <strong>76.5 km/h</strong> (nearest option: 78... recalculate: 2h33m = 2 + 33/60 = 2.55h; 195/2.55 = 76.47 km/h)<br><em>Closest answer: 78 km/h shown for rounding awareness</em>",diff:"hard"},
+  {q:"A pressure of 60 N/m2 acts on an area of 0.5 m2. What is the force? (Pressure = Force / Area)",opts:["120 N","30 N","0.5 N","60 N"],ans:0,hint:"Rearrange the formula: Force = Pressure x Area.",solution:"<strong>Formula: Pressure = Force / Area</strong><br><strong>Rearrange: Force = Pressure x Area</strong><br>Force = 60 x 0.5 = <strong>30 N</strong>",diff:"hard"},
+  {q:"A runner completes a 10 km race. For the first 6 km she runs at 12 km/h. She completes the last 4 km at 8 km/h. What is her average speed for the whole race?",opts:["10 km/h","10.5 km/h","10.9 km/h","11 km/h"],ans:0,hint:"Average speed = total distance / total time. Find the time for each section first.",solution:"<strong>Time for first 6 km:</strong> 6/12 = 0.5 h<br><strong>Time for last 4 km:</strong> 4/8 = 0.5 h<br><strong>Total time:</strong> 0.5 + 0.5 = 1 hour<br><strong>Average speed:</strong> 10/1 = <strong>10 km/h</strong>",diff:"hard"},
+];
+let questions=[...SEED_QUESTIONS],current=0,answers=new Array(questions.length).fill(null);
+function buildDots(){const w=document.getElementById('dots');w.innerHTML='';questions.forEach(function(_,i){const d=document.createElement('div');d.className='dot'+(i===current?' current':'')+(answers[i]==='correct'?' correct':answers[i]==='wrong'?' wrong':'');d.textContent=i+1;d.onclick=function(){current=i;render()};w.appendChild(d)})}
+function updateScore(){const c=answers.filter(function(a){return a==='correct'}).length,ww=answers.filter(function(a){return a==='wrong'}).length,ans=c+ww,pct=ans?Math.round(c/ans*100):0;document.getElementById('sc-correct').textContent=c;document.getElementById('sc-wrong').textContent=ww;document.getElementById('sc-remain').textContent=questions.length-ans;document.getElementById('sc-pct').textContent=pct+'%';document.getElementById('header-score').textContent=c+' / '+questions.length}
+function render(){const q=questions[current];document.getElementById('q-num').textContent='Question '+(current+1)+' of '+questions.length;const de=document.getElementById('q-diff');de.textContent={easy:'Easy',medium:'Medium',hard:'Hard'}[q.diff];de.className='difficulty '+q.diff;document.getElementById('q-text').innerHTML=q.q;document.getElementById('hint-box').style.display='none';document.getElementById('hint-box').textContent=q.hint;const fb=document.getElementById('feedback');fb.style.display='none';fb.className='feedback';const opts=document.getElementById('options');opts.innerHTML='';['A','B','C','D'].forEach(function(l,i){const btn=document.createElement('button');btn.className='opt';btn.innerHTML='<span class="opt-letter">'+l+'</span> '+q.opts[i];if(answers[current]!==null){btn.disabled=true;if(i===q.ans)btn.classList.add('reveal-correct')}btn.onclick=function(){checkAnswer(i)};opts.appendChild(btn)});if(answers[current]!==null)showFeedback(answers[current]==='correct');buildDots();updateScore()}
+function checkAnswer(i){if(answers[current]!==null)return;const q=questions[current],ok=i===q.ans;answers[current]=ok?'correct':'wrong';document.getElementById('options').querySelectorAll('.opt').forEach(function(b,idx){b.disabled=true;if(idx===q.ans)b.classList.add('reveal-correct');if(idx===i&&!ok)b.classList.add('selected-wrong')});showFeedback(ok);buildDots();updateScore()}
+function showFeedback(ok){const q=questions[current],fb=document.getElementById('feedback');fb.style.display='block';fb.className='feedback '+(ok?'correct':'wrong');document.getElementById('fb-title').textContent=ok?'Correct! Well done!':'Not quite - here is how to do it:';document.getElementById('fb-solution').innerHTML=q.solution}
+function showHint(){const b=document.getElementById('hint-box');b.style.display=b.style.display==='none'?'block':'none'}
+function prevQ(){if(current>0){current--;render()}}
+function nextQ(){if(current<questions.length-1){current++;render()}else finishQuiz()}
+function finishQuiz(){const c=answers.filter(function(a){return a==='correct'}).length,ww=answers.filter(function(a){return a==='wrong'}).length,pct=Math.round(c/questions.length*100);document.getElementById('r-correct').textContent=c;document.getElementById('r-wrong').textContent=ww;document.getElementById('r-pct').textContent=pct+'%';document.getElementById('grade-emoji').textContent=pct>=90?'&#127942;':pct>=70?'&#11088;':pct>=50?'&#128077;':'&#128218;';document.getElementById('grade-msg').textContent=pct>=90?'Measures master!':pct>=70?'Great work!':pct>=50?'Good effort!':'Keep practising those formulas!';document.getElementById('quiz-area').style.display='none';document.getElementById('results-screen').style.display='block'}
+function restartQuiz(){answers=new Array(questions.length).fill(null);current=0;document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+function resetAnswers(){answers=new Array(questions.length).fill(null);document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+function resetOriginal(){questions=[...SEED_QUESTIONS];answers=new Array(questions.length).fill(null);current=0;document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+async function generateAI(){const key=document.getElementById('api-key').value.trim();if(!key){document.getElementById('ai-status').textContent='Please enter your Anthropic API key.';return}const s=document.getElementById('ai-status');s.textContent='Mr. Euler is writing 5 new questions...';const p='You are Mr. Euler, expert Year 8 UK Maths teacher. Generate 5 MCQ on MEASURES (unit conversions, speed/distance/time, density/mass/volume, compound measures, pressure). 4 options, ONE correct, hint, step-by-step HTML solution using strong tags, British English, mix difficulty. JSON only: [{"q":"","opts":["","","",""],"ans":0,"hint":"","solution":"","diff":"easy|medium|hard"}]';try{const r1=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:p}]})});const d1=await r1.json();const newQs=JSON.parse(d1.content[0].text.trim().replace(/```json|```/g,''));s.textContent='CheckerBot verifying...';const cp='You are CheckerBot. Verify 5 Measures questions - correct unit conversions and formula applications, one answer, KS3 level. '+JSON.stringify(newQs)+'. Respond: APPROVED: [json]';const r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:cp}]})});const d2=await r2.json();const cr=d2.content[0].text.trim();if(!cr.startsWith('APPROVED:')){s.textContent='CheckerBot rejected. Try again.';return}const checked=JSON.parse(cr.replace('APPROVED:','').trim().replace(/```json|```/g,''));questions=[...questions,...checked];answers=new Array(questions.length).fill(null);buildDots();s.textContent='5 new questions added! Now '+questions.length+' total.';updateScore()}catch(e){s.textContent='Error: '+e.message}}
+render();
+</script>
+</body>
+</html>

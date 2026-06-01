@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8I Fluids Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #533AB7;
+    --accent-light: #EEEDFE;
+    --accent-mid: #7F77DD;
+    --accent-dark: #3C3489;
+    --amber: #BA7517; --amber-light: #FAEEDA;
+    --red: #A32D2D; --red-light: #FCEBEB;
+    --green: #3B6D11; --green-light: #EAF3DE;
+    --gray-bg: #F5F4FC; --gray-border: #CECBF6;
+    --text: #1a1730; --text-muted: #5a547a;
+    --white: #ffffff; --radius: 14px; --radius-sm: 8px;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Nunito Sans',sans-serif; background:var(--gray-bg); color:var(--text); min-height:100vh; padding:0 0 60px; }
+  .header { background:var(--accent-dark); color:#fff; padding:28px 24px 24px; text-align:center; position:relative; overflow:hidden; }
+  .header::before { content:''; position:absolute; top:-40px; right:-40px; width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,0.05); }
+  .header-tag { display:inline-block; background:rgba(255,255,255,0.15); color:rgba(255,255,255,0.9); font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:4px 14px; border-radius:20px; margin-bottom:10px; }
+  .header h1 { font-family:'Nunito',sans-serif; font-size:28px; font-weight:900; letter-spacing:-0.5px; margin-bottom:6px; }
+  .header p { font-size:14px; opacity:0.8; }
+  .stats-bar { display:flex; gap:10px; padding:16px; background:var(--white); border-bottom:1px solid var(--gray-border); }
+  .stat-pill { flex:1; text-align:center; background:var(--gray-bg); border-radius:10px; padding:10px 6px; }
+  .stat-num { font-family:'Nunito',sans-serif; font-size:22px; font-weight:800; color:var(--accent); line-height:1; }
+  .stat-label { font-size:11px; color:var(--text-muted); margin-top:3px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+  .progress-wrap { padding:12px 16px 0; }
+  .progress-bar-bg { background:var(--gray-border); border-radius:10px; height:8px; overflow:hidden; }
+  .progress-bar-fill { background:linear-gradient(90deg,var(--accent-mid),var(--accent)); height:100%; border-radius:10px; transition:width 0.5s ease; }
+  .progress-label { font-size:12px; color:var(--text-muted); margin-top:6px; text-align:right; }
+  .q-dots { display:flex; flex-wrap:wrap; gap:6px; padding:10px 16px 0; justify-content:center; }
+  .q-dot { width:24px; height:24px; border-radius:50%; background:var(--gray-border); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:var(--text-muted); cursor:pointer; transition:all 0.18s; border:1.5px solid transparent; }
+  .q-dot.current { border-color:var(--accent); color:var(--accent); background:var(--accent-light); }
+  .q-dot.answered-correct { background:var(--green); color:#fff; }
+  .q-dot.answered-wrong { background:var(--red); color:#fff; }
+  .main { padding:16px; }
+  .question-card { background:var(--white); border-radius:var(--radius); border:1px solid var(--gray-border); padding:22px 20px 18px; margin-bottom:14px; animation:fadeUp 0.3s ease; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .q-number { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--accent-mid); margin-bottom:8px; }
+  .q-text { font-family:'Nunito',sans-serif; font-size:17px; font-weight:700; line-height:1.45; color:var(--text); margin-bottom:18px; }
+  .options { display:flex; flex-direction:column; gap:10px; }
+  .option-btn { background:var(--gray-bg); border:1.5px solid var(--gray-border); border-radius:var(--radius-sm); padding:13px 16px; text-align:left; font-family:'Nunito Sans',sans-serif; font-size:15px; font-weight:600; color:var(--text); cursor:pointer; transition:all 0.18s; display:flex; align-items:center; gap:12px; }
+  .option-btn:hover:not(:disabled) { background:var(--accent-light); border-color:var(--accent-mid); color:var(--accent-dark); }
+  .option-letter { width:28px; height:28px; border-radius:50%; background:var(--white); border:1.5px solid var(--gray-border); display:flex; align-items:center; justify-content:center; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; flex-shrink:0; }
+  .option-btn.correct { background:var(--green-light); border-color:var(--green); color:#27500A; }
+  .option-btn.correct .option-letter { background:var(--green); border-color:var(--green); color:#fff; }
+  .option-btn.wrong { background:var(--red-light); border-color:var(--red); color:var(--red); }
+  .option-btn.wrong .option-letter { background:var(--red); border-color:var(--red); color:#fff; }
+  .option-btn.revealed { background:var(--green-light); border-color:#97C459; color:#3B6D11; opacity:0.7; }
+  .option-btn:disabled { cursor:default; }
+  .explanation { margin-top:14px; background:var(--accent-light); border-left:4px solid var(--accent); border-radius:0 var(--radius-sm) var(--radius-sm) 0; padding:12px 14px; font-size:14px; color:var(--accent-dark); font-weight:600; display:none; }
+  .explanation.show { display:block; animation:fadeUp 0.2s ease; }
+  .hint-btn { background:none; border:1px dashed var(--amber); color:var(--amber); border-radius:var(--radius-sm); padding:7px 14px; font-size:13px; font-weight:700; cursor:pointer; margin-top:10px; transition:all 0.18s; }
+  .hint-btn:hover { background:var(--amber-light); }
+  .hint-text { margin-top:8px; font-size:13px; color:var(--amber); background:var(--amber-light); border-radius:var(--radius-sm); padding:10px 12px; display:none; font-weight:600; }
+  .hint-text.show { display:block; }
+  .nav-row { display:flex; gap:10px; margin-top:4px; }
+  .nav-btn { flex:1; padding:13px; border-radius:var(--radius-sm); border:none; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:all 0.18s; }
+  .nav-btn.prev { background:var(--gray-bg); color:var(--text-muted); border:1.5px solid var(--gray-border); }
+  .nav-btn.next { background:var(--accent); color:#fff; }
+  .nav-btn.next:hover { background:var(--accent-dark); }
+  .nav-btn:disabled { opacity:0.4; cursor:default; }
+  .section-title { font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted); margin:18px 0 10px; display:flex; align-items:center; gap:8px; }
+  .section-title::after { content:''; flex:1; height:1px; background:var(--gray-border); }
+  .generate-card { background:var(--accent-dark); border-radius:var(--radius); padding:20px; color:#fff; text-align:center; margin-bottom:14px; }
+  .generate-card h3 { font-family:'Nunito',sans-serif; font-size:17px; font-weight:800; margin-bottom:6px; }
+  .generate-card p { font-size:13px; opacity:0.8; margin-bottom:14px; }
+  .topic-chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:14px; }
+  .chip { padding:6px 14px; border-radius:20px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid rgba(255,255,255,0.3); color:rgba(255,255,255,0.8); background:rgba(255,255,255,0.1); transition:all 0.18s; }
+  .chip.selected,.chip:hover { background:rgba(255,255,255,0.25); border-color:rgba(255,255,255,0.7); color:#fff; }
+  .generate-btn { background:#fff; color:var(--accent-dark); border:none; border-radius:var(--radius-sm); padding:13px 28px; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; width:100%; }
+  .generate-btn:hover:not(:disabled) { background:var(--accent-light); }
+  .generate-btn:disabled { opacity:0.6; cursor:default; }
+  .ai-status { text-align:center; font-size:13px; color:var(--text-muted); padding:10px; display:none; }
+  .ai-status.show { display:block; }
+  .spinner { display:inline-block; width:16px; height:16px; border:2px solid var(--gray-border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; vertical-align:middle; margin-right:6px; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  #result-screen { display:none; text-align:center; padding:20px; }
+  .result-circle { width:120px; height:120px; border-radius:50%; background:var(--accent-light); border:4px solid var(--accent); display:flex; align-items:center; justify-content:center; flex-direction:column; margin:0 auto 20px; }
+  .result-pct { font-family:'Nunito',sans-serif; font-size:34px; font-weight:900; color:var(--accent-dark); line-height:1; }
+  .result-pct-label { font-size:12px; color:var(--accent); font-weight:700; }
+  .result-msg { font-family:'Nunito',sans-serif; font-size:22px; font-weight:800; margin-bottom:8px; }
+  .result-sub { font-size:14px; color:var(--text-muted); margin-bottom:24px; }
+  .restart-btn { background:var(--accent); color:#fff; border:none; border-radius:var(--radius-sm); padding:14px 32px; font-family:'Nunito',sans-serif; font-size:16px; font-weight:800; cursor:pointer; width:100%; max-width:300px; }
+  .restart-btn:hover { background:var(--accent-dark); }
+
+  .reset-bar {
+    display:flex; gap:8px; padding:10px 16px;
+    background:var(--white,#fff); border-bottom:1px solid var(--gray-border,#ddd);
+    justify-content:flex-end;
+  }
+  .reset-btn-sm {
+    background:none; border:1.5px solid var(--gray-border,#ddd);
+    border-radius:20px; padding:5px 14px;
+    font-family:'Nunito',sans-serif; font-size:12px; font-weight:700;
+    cursor:pointer; color:var(--text-muted,#555); transition:all 0.18s;
+  }
+  .reset-btn-sm:hover { background:var(--red-light,#FCEBEB); border-color:var(--red,#A32D2D); color:var(--red,#A32D2D); }
+  .reset-btn-sm.full { border-color:var(--red,#A32D2D); color:var(--red,#A32D2D); }
+  .reset-btn-sm.full:hover { background:var(--red,#A32D2D); color:#fff; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-tag">Year 8 Science · Unit 8I</div>
+  <h1>💧 Fluids Quiz</h1>
+  <p>20 questions · UK National Curriculum</p>
+</div>
+<div id="quiz-screen">
+  <div class="reset-bar">
+    <button class="reset-btn-sm" onclick="resetAnswers()" title="Clear your answers and start from Q1, keeping all questions">↺ Reset Answers</button>
+    <button class="reset-btn-sm full" onclick="resetToOriginal()" title="Remove AI-generated questions and reset to the original 20">⚠ Reset to Original 20</button>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-pill"><div class="stat-num" id="stat-score">0%</div><div class="stat-label">Score</div></div>
+    <div class="stat-pill"><div class="stat-num" id="stat-correct">0</div><div class="stat-label">Correct</div></div>
+    <div class="stat-pill"><div class="stat-num" id="stat-total">20</div><div class="stat-label">Total Qs</div></div>
+  </div>
+  <div class="q-dots" id="q-dots"></div>
+  <div class="progress-wrap">
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-label" id="progress-label">Question 1 of 20</div>
+  </div>
+  <div class="main">
+    <div class="question-card" id="question-card">
+      <div class="q-number" id="q-number">Question 1</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <button class="hint-btn" id="hint-btn" onclick="showHint()">💡 Show Hint</button>
+      <div class="hint-text" id="hint-text"></div>
+      <div class="explanation" id="explanation"></div>
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn prev" id="prev-btn" onclick="goTo(currentQ-1)">← Prev</button>
+      <button class="nav-btn next" id="next-btn" onclick="handleNext()">Next →</button>
+    </div>
+    <div class="section-title">Generate More Questions</div>
+    <div class="generate-card">
+      <h3>🤖 Ask the Science Teacher AI</h3>
+      <p>Pick a subtopic and generate 5 fresh questions, checked against the UK KS3 curriculum.</p>
+      <div class="topic-chips">
+        <div class="chip selected" onclick="selectChip(this)">States of Matter</div>
+        <div class="chip" onclick="selectChip(this)">Density</div>
+        <div class="chip" onclick="selectChip(this)">Forces</div>
+        <div class="chip" onclick="selectChip(this)">Pressure in Fluids</div>
+        <div class="chip" onclick="selectChip(this)">Floating & Upthrust</div>
+        <div class="chip" onclick="selectChip(this)">Drag & Resistance</div>
+      </div>
+      <button class="generate-btn" id="gen-btn" onclick="generateQuestions()">Generate 5 New Questions</button>
+    </div>
+    <div class="ai-status" id="ai-status"><span class="spinner"></span> Mr. Proton is writing your questions...</div>
+  </div>
+</div>
+<div id="result-screen" class="main">
+  <div class="result-circle"><div class="result-pct" id="result-pct">0%</div><div class="result-pct-label">Score</div></div>
+  <div class="result-msg" id="result-msg"></div>
+  <div class="result-sub" id="result-sub"></div>
+  <button class="restart-btn" onclick="restartQuiz()">Try Again</button>
+</div>
+<script>
+const SEED_QUESTIONS = [
+  { q:"Which state of matter has a fixed shape and a fixed volume?", options:["Gas","Liquid","Solid","Plasma"], answer:2, hint:"Think about a block of ice or a rock — does it change shape?", explanation:"Solids have a fixed shape and fixed volume because their particles are held tightly together in a regular arrangement and vibrate in fixed positions." },
+  { q:"What is density?", options:["The weight of an object","The amount of space an object takes up","The mass per unit volume of a substance","The force of gravity on an object"], answer:2, hint:"Density tells you how much 'stuff' is packed into a given space.", explanation:"Density = mass ÷ volume. It tells us how much mass is packed into each unit of volume. Units are g/cm³ or kg/m³." },
+  { q:"A block has a mass of 200 g and a volume of 40 cm³. What is its density?", options:["0.2 g/cm³","5 g/cm³","8000 g/cm³","160 g/cm³"], answer:1, hint:"Use the formula: density = mass ÷ volume.", explanation:"Density = 200 ÷ 40 = 5 g/cm³. Always divide mass by volume to find density." },
+  { q:"What happens to the density of most substances when they are heated?", options:["Density increases","Density stays the same","Density decreases","Density doubles"], answer:2, hint:"When particles move faster, what happens to the space between them?", explanation:"When heated, particles gain energy and move further apart, so the same mass occupies a greater volume. Density = mass/volume, so density decreases." },
+  { q:"Why is ice less dense than liquid water?", options:["Ice has less mass than water","Ice particles are lighter","Ice has an open crystalline structure that takes up more space","Ice is colder so particles move faster"], answer:2, hint:"Water is unusual — most solids sink in their own liquid. Think about the structure of ice.", explanation:"Ice forms an open, hexagonal crystalline lattice structure with molecules further apart than in liquid water. This makes ice less dense than water, which is why ice floats." },
+  { q:"What is the difference between mass and weight?", options:["They are the same thing","Mass is the amount of matter; weight is the gravitational force acting on that mass","Mass is measured in Newtons; weight in kilograms","Weight never changes; mass does"], answer:1, hint:"One is measured in kg, the other in Newtons.", explanation:"Mass is the amount of matter in an object (kg) and stays the same everywhere. Weight is the gravitational force pulling on that mass (Newtons) and varies with gravity." },
+  { q:"Which of the following is a non-contact force?", options:["Friction","Normal contact force","Gravity","Air resistance"], answer:2, hint:"Does gravity need to touch something to pull it down?", explanation:"Gravity is a non-contact force — it acts at a distance without physical contact. Friction, normal contact force, and air resistance all require physical contact." },
+  { q:"An object has two forces acting on it: 15 N to the right and 6 N to the left. What is the resultant force?", options:["21 N to the right","9 N to the left","9 N to the right","21 N to the left"], answer:2, hint:"Subtract the smaller force from the larger. The direction is that of the larger force.", explanation:"Resultant force = 15 − 6 = 9 N to the right (direction of the larger force). When forces act in opposite directions, subtract them." },
+  { q:"How does pressure in a fluid change with depth?", options:["Pressure decreases with depth","Pressure stays constant at all depths","Pressure increases with depth","Pressure is not affected by depth"], answer:2, hint:"Think about why your ears pop when you dive deep underwater.", explanation:"Pressure increases with depth in a fluid because there is more fluid above pushing down. More fluid above = greater weight = greater pressure." },
+  { q:"A ship made of steel floats on water, but a solid steel ball sinks. Why?", options:["Ships are made of a different type of steel","The ship is shaped to displace a large volume of water, making its average density less than water","Ships are lighter than solid steel balls","Water pushes ships upwards but not steel balls"], answer:1, hint:"Think about the overall density of the ship — hull, cargo, and the air inside.", explanation:"The ship is hollow, so its average density (including the air inside) is less than water. It displaces enough water to create an upthrust equal to its weight, so it floats." },
+  { q:"What is upthrust?", options:["The frictional force between an object and water","The downward force of water on an object","The upward force exerted by a fluid on an object submerged in it","The weight of the water displaced"], answer:2, hint:"It's the force that keeps things floating — it acts upwards.", explanation:"Upthrust is the upward force a fluid exerts on any object submerged in it. It is caused by the pressure difference between the top and bottom of the object. An object floats when upthrust equals weight." },
+  { q:"Which of the following correctly describes how particles create pressure in a gas?", options:["Gas particles pull on the container walls creating pressure","Gas particles collide with the container walls, exerting a force","Gas particles melt at the container walls","Gas pressure comes from gravity pulling gas down"], answer:1, hint:"Think about what happens when fast-moving particles hit something.", explanation:"Gas particles move randomly and collide with the walls of their container. Each collision exerts a small force. The total force per unit area from billions of collisions creates gas pressure." },
+  { q:"What are the three types of drag force?", options:["Gravity, friction, upthrust","Air resistance, water resistance, friction","Thrust, weight, friction","Normal force, tension, compression"], answer:1, hint:"Drag opposes motion. Think about moving through air, water, or over a surface.", explanation:"The three types of drag are: air resistance (moving through air), water resistance (moving through water), and friction (surfaces in contact). All three oppose motion." },
+  { q:"A skydiver reaches terminal velocity. What does this mean?", options:["They have stopped moving","Their weight equals their air resistance, so resultant force is zero","They are falling at maximum speed with zero air resistance","They are slowing down rapidly"], answer:1, hint:"Terminal velocity means constant speed — what must be true about the forces?", explanation:"At terminal velocity, air resistance equals the skydiver's weight. The resultant force is zero, so there is no acceleration and speed remains constant." },
+  { q:"How does increasing the surface area of an object affect drag?", options:["Drag decreases","Drag is unaffected","Drag increases","It depends on the material"], answer:2, hint:"Why does a parachute slow you down more than a small ball?", explanation:"A larger surface area means more fluid particles collide with the object per second, creating a greater drag force. This is why parachutes are large — to maximise air resistance." },
+  { q:"What happens to gas pressure if you squeeze the same amount of gas into a smaller volume (at constant temperature)?", options:["Pressure decreases","Pressure stays the same","Pressure increases","The gas becomes a liquid"], answer:2, hint:"Fewer collisions with walls or more? Think about what happens when particles are crammed closer together.", explanation:"Squeezing gas into a smaller volume means particles collide with the container walls more frequently. More collisions per second = higher pressure." },
+  { q:"What happens to particles at a change of state from liquid to gas (evaporation/boiling)?", options:["Particles lose energy and slow down","Particles break apart into atoms","Particles gain enough energy to overcome forces of attraction and move freely","Particles become smaller"], answer:2, hint:"What needs to happen for particles to escape from a liquid?", explanation:"During evaporation or boiling, particles gain enough energy to overcome the attractive forces holding them in the liquid. They then move freely and randomly as a gas." },
+  { q:"How do you measure the volume of an irregularly shaped solid object in the lab?", options:["Use a ruler to measure length × width × height","Weigh it on a balance","Lower it into a measuring cylinder of water and measure the rise in water level","Estimate it by eye"], answer:2, hint:"This method is called water displacement. What volume of water gets pushed aside?", explanation:"An irregular solid is lowered into a known volume of water in a measuring cylinder. The rise in water level equals the volume of the solid. This is water displacement." },
+  { q:"Forces always act in pairs. What does Newton's Third Law tell us about these pairs?", options:["One force is always larger than the other","The forces act in the same direction","The forces are equal in size but act in opposite directions on different objects","The forces cancel each other out"], answer:2, hint:"When you push a wall, does the wall push back?", explanation:"Newton's Third Law states that for every action there is an equal and opposite reaction. The two forces are equal in size, opposite in direction, and act on different objects." },
+  { q:"Which of the following factors affects the size of upthrust on an object?", options:["The colour of the object","The volume of fluid displaced by the object","The speed of the object","The temperature of the object"], answer:1, hint:"Upthrust is related to how much fluid is pushed aside.", explanation:"Upthrust depends on the volume of fluid displaced by the object. A larger volume of fluid displaced means a greater upthrust (Archimedes' principle)." }
+];
+
+let questions = [...SEED_QUESTIONS];
+let currentQ = 0, answers = {}, correctCount = 0, selectedChip = 'States of Matter';
+
+function selectChip(el) { document.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected')); el.classList.add('selected'); selectedChip=el.textContent; }
+
+function renderDots() {
+  const c=document.getElementById('q-dots'); c.innerHTML='';
+  questions.forEach((q,i)=>{ const d=document.createElement('div'); d.className='q-dot'; d.textContent=i+1;
+    if(i===currentQ) d.classList.add('current');
+    else if(answers[i]!==undefined) d.classList.add(answers[i]===questions[i].answer?'answered-correct':'answered-wrong');
+    d.onclick=()=>goTo(i); c.appendChild(d); });
+}
+
+function renderQuestion() {
+  const q=questions[currentQ];
+  document.getElementById('q-number').textContent=`Question ${currentQ+1}`;
+  document.getElementById('q-text').textContent=q.q;
+  const opts=document.getElementById('options'); opts.innerHTML='';
+  ['A','B','C','D'].forEach((l,i)=>{ const btn=document.createElement('button'); btn.className='option-btn'; btn.disabled=answers[currentQ]!==undefined;
+    btn.innerHTML=`<span class="option-letter">${l}</span>${q.options[i]}`;
+    if(answers[currentQ]!==undefined){ if(i===q.answer) btn.classList.add('correct'); else if(i===answers[currentQ]) btn.classList.add('wrong'); else btn.classList.add('revealed'); }
+    btn.onclick=()=>selectAnswer(i); opts.appendChild(btn); });
+  document.getElementById('hint-text').textContent=q.hint; document.getElementById('hint-text').className='hint-text';
+  document.getElementById('hint-btn').style.display=answers[currentQ]!==undefined?'none':'block';
+  document.getElementById('explanation').textContent=q.explanation;
+  document.getElementById('explanation').className='explanation'+(answers[currentQ]!==undefined?' show':'');
+  document.getElementById('prev-btn').disabled=currentQ===0;
+  document.getElementById('next-btn').textContent=currentQ===questions.length-1?'Finish':'Next →';
+  document.getElementById('progress-fill').style.width=Math.round((currentQ/questions.length)*100)+'%';
+  document.getElementById('progress-label').textContent=`Question ${currentQ+1} of ${questions.length}`;
+  updateStats(); renderDots();
+}
+
+function selectAnswer(i) {
+  if(answers[currentQ]!==undefined) return;
+  answers[currentQ]=i; if(i===questions[currentQ].answer) correctCount++;
+  document.getElementById('hint-btn').style.display='none'; document.getElementById('hint-text').className='hint-text';
+  document.querySelectorAll('.option-btn').forEach((b,idx)=>{ b.disabled=true;
+    if(idx===questions[currentQ].answer) b.classList.add('correct'); else if(idx===i) b.classList.add('wrong'); else b.classList.add('revealed'); });
+  document.getElementById('explanation').className='explanation show'; updateStats(); renderDots();
+}
+
+function showHint() { const h=document.getElementById('hint-text'); h.className=h.classList.contains('show')?'hint-text':'hint-text show'; }
+function handleNext() { if(currentQ===questions.length-1) showResult(); else goTo(currentQ+1); }
+function goTo(n) { if(n<0||n>=questions.length) return; currentQ=n; document.getElementById('question-card').style.animation='none'; requestAnimationFrame(()=>{ document.getElementById('question-card').style.animation=''; renderQuestion(); }); }
+function updateStats() { const a=Object.keys(answers).length; document.getElementById('stat-score').textContent=(a>0?Math.round((correctCount/a)*100):0)+'%'; document.getElementById('stat-correct').textContent=correctCount; document.getElementById('stat-total').textContent=questions.length; }
+
+function showResult() {
+  document.getElementById('quiz-screen').style.display='none'; document.getElementById('result-screen').style.display='block';
+  const pct=Math.round((correctCount/questions.length)*100);
+  document.getElementById('result-pct').textContent=pct+'%';
+  const msgs=[[90,'🌟 Outstanding!',`You scored ${correctCount}/${questions.length}. Brilliant — you really understand fluids!`],[70,'👏 Well done!',`You scored ${correctCount}/${questions.length}. Solid work — review the questions you missed.`],[50,'📚 Keep going!',`You scored ${correctCount}/${questions.length}. Good effort — go back over your notes.`],[0,'💪 Keep revising!',`You scored ${correctCount}/${questions.length}. Don't worry — revisit the topic and try again.`]];
+  const [,msg,sub]=msgs.find(([t])=>pct>=t);
+  document.getElementById('result-msg').textContent=msg; document.getElementById('result-sub').textContent=sub;
+}
+
+function restartQuiz() { answers={}; correctCount=0; currentQ=0; document.getElementById('result-screen').style.display='none'; document.getElementById('quiz-screen').style.display='block'; renderQuestion(); }
+
+async function generateQuestions() {
+  const btn=document.getElementById('gen-btn'), status=document.getElementById('ai-status');
+  btn.disabled=true; status.className='ai-status show';
+  const SYS=`You are Mr. Proton, an expert Year 8 UK secondary school science teacher specialising in physics. You write quiz questions precisely aligned to the KS3 UK National Curriculum Unit 8I: Fluids. Questions are clear, age-appropriate for 12-13 year olds, written in British English, and scientifically accurate. You also act as CheckerBot verifying each question for: (1) KS3 factual accuracy, (2) one unambiguous correct answer, (3) age-appropriateness, (4) topic relevance. Return ONLY a raw JSON array.`;
+  const USR=`Generate exactly 5 multiple-choice questions about "${selectedChip}" for Year 8 UK KS3 Physics (Unit 8I: Fluids). Each: {"q":"...","options":["A","B","C","D"],"answer":0,"hint":"...","explanation":"..."}. Answer is zero-based index. JSON array only.`;
+  try {
+    const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,system:SYS,messages:[{role:"user",content:USR}]})});
+    const d=await r.json(); const t=d.content.map(i=>i.text||'').join('');
+    const nq=JSON.parse(t.replace(/```json|```/g,'').trim());
+    if(Array.isArray(nq)&&nq.length>0){ questions=questions.concat(nq); status.innerHTML=`✅ ${nq.length} new questions added!`; setTimeout(()=>{status.className='ai-status';},3000); renderQuestion(); } else throw new Error();
+  } catch(e) { status.innerHTML='⚠️ Could not generate questions. Please try again.'; setTimeout(()=>{status.className='ai-status';},3000); }
+  btn.disabled=false;
+}
+
+renderQuestion();
+
+function resetAnswers() {
+  if (!confirm('Reset all your answers and start from Question 1? (Your AI-generated questions will be kept.)')) return;
+  answers = {}; correctCount = 0; currentQ = 0;
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  renderQuestion();
+}
+function resetToOriginal() {
+  if (!confirm('This will remove all AI-generated questions and clear your answers, returning to the original 20 questions. Continue?')) return;
+  questions = [...SEED_QUESTIONS];
+  answers = {}; correctCount = 0; currentQ = 0;
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  renderQuestion();
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8F Periodic Table Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #185FA5;
+    --accent-light: #E6F1FB;
+    --accent-mid: #378ADD;
+    --accent-dark: #0C447C;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --red: #A32D2D;
+    --red-light: #FCEBEB;
+    --green: #3B6D11;
+    --green-light: #EAF3DE;
+    --gray-bg: #F4F6F9;
+    --gray-border: #C8CDD6;
+    --text: #1a2233;
+    --text-muted: #5a6478;
+    --white: #ffffff;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito Sans', sans-serif; background: var(--gray-bg); color: var(--text); min-height: 100vh; padding: 0 0 60px; }
+  .header { background: var(--accent-dark); color: #fff; padding: 28px 24px 24px; text-align: center; position: relative; overflow: hidden; }
+  .header::before { content:''; position:absolute; top:-40px; right:-40px; width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,0.05); }
+  .header-tag { display:inline-block; background:rgba(255,255,255,0.15); color:rgba(255,255,255,0.9); font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:4px 14px; border-radius:20px; margin-bottom:10px; }
+  .header h1 { font-family:'Nunito',sans-serif; font-size:28px; font-weight:900; letter-spacing:-0.5px; margin-bottom:6px; }
+  .header p { font-size:14px; opacity:0.8; }
+  .stats-bar { display:flex; gap:10px; padding:16px; background:var(--white); border-bottom:1px solid var(--gray-border); }
+  .stat-pill { flex:1; text-align:center; background:var(--gray-bg); border-radius:10px; padding:10px 6px; }
+  .stat-num { font-family:'Nunito',sans-serif; font-size:22px; font-weight:800; color:var(--accent); line-height:1; }
+  .stat-label { font-size:11px; color:var(--text-muted); margin-top:3px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+  .progress-wrap { padding:12px 16px 0; }
+  .progress-bar-bg { background:var(--gray-border); border-radius:10px; height:8px; overflow:hidden; }
+  .progress-bar-fill { background:linear-gradient(90deg,var(--accent-mid),var(--accent)); height:100%; border-radius:10px; transition:width 0.5s ease; }
+  .progress-label { font-size:12px; color:var(--text-muted); margin-top:6px; text-align:right; }
+  .q-dots { display:flex; flex-wrap:wrap; gap:6px; padding:10px 16px 0; justify-content:center; }
+  .q-dot { width:24px; height:24px; border-radius:50%; background:var(--gray-border); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:var(--text-muted); cursor:pointer; transition:all 0.18s; border:1.5px solid transparent; }
+  .q-dot.current { border-color:var(--accent); color:var(--accent); background:var(--accent-light); }
+  .q-dot.answered-correct { background:var(--green); color:#fff; }
+  .q-dot.answered-wrong { background:var(--red); color:#fff; }
+  .main { padding:16px; }
+  .question-card { background:var(--white); border-radius:var(--radius); border:1px solid var(--gray-border); padding:22px 20px 18px; margin-bottom:14px; animation:fadeUp 0.3s ease; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .q-number { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--accent-mid); margin-bottom:8px; }
+  .q-text { font-family:'Nunito',sans-serif; font-size:17px; font-weight:700; line-height:1.45; color:var(--text); margin-bottom:18px; }
+  .options { display:flex; flex-direction:column; gap:10px; }
+  .option-btn { background:var(--gray-bg); border:1.5px solid var(--gray-border); border-radius:var(--radius-sm); padding:13px 16px; text-align:left; font-family:'Nunito Sans',sans-serif; font-size:15px; font-weight:600; color:var(--text); cursor:pointer; transition:all 0.18s; display:flex; align-items:center; gap:12px; }
+  .option-btn:hover:not(:disabled) { background:var(--accent-light); border-color:var(--accent-mid); color:var(--accent-dark); }
+  .option-letter { width:28px; height:28px; border-radius:50%; background:var(--white); border:1.5px solid var(--gray-border); display:flex; align-items:center; justify-content:center; font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; flex-shrink:0; }
+  .option-btn.correct { background:var(--green-light); border-color:var(--green); color:#27500A; }
+  .option-btn.correct .option-letter { background:var(--green); border-color:var(--green); color:#fff; }
+  .option-btn.wrong { background:var(--red-light); border-color:var(--red); color:var(--red); }
+  .option-btn.wrong .option-letter { background:var(--red); border-color:var(--red); color:#fff; }
+  .option-btn.revealed { background:var(--green-light); border-color:#97C459; color:#3B6D11; opacity:0.7; }
+  .option-btn:disabled { cursor:default; }
+  .explanation { margin-top:14px; background:var(--accent-light); border-left:4px solid var(--accent); border-radius:0 var(--radius-sm) var(--radius-sm) 0; padding:12px 14px; font-size:14px; color:var(--accent-dark); font-weight:600; display:none; }
+  .explanation.show { display:block; animation:fadeUp 0.2s ease; }
+  .hint-btn { background:none; border:1px dashed var(--amber); color:var(--amber); border-radius:var(--radius-sm); padding:7px 14px; font-size:13px; font-weight:700; cursor:pointer; margin-top:10px; transition:all 0.18s; }
+  .hint-btn:hover { background:var(--amber-light); }
+  .hint-text { margin-top:8px; font-size:13px; color:var(--amber); background:var(--amber-light); border-radius:var(--radius-sm); padding:10px 12px; display:none; font-weight:600; }
+  .hint-text.show { display:block; }
+  .nav-row { display:flex; gap:10px; margin-top:4px; }
+  .nav-btn { flex:1; padding:13px; border-radius:var(--radius-sm); border:none; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:all 0.18s; }
+  .nav-btn.prev { background:var(--gray-bg); color:var(--text-muted); border:1.5px solid var(--gray-border); }
+  .nav-btn.prev:hover { background:var(--gray-border); }
+  .nav-btn.next { background:var(--accent); color:#fff; }
+  .nav-btn.next:hover { background:var(--accent-dark); }
+  .nav-btn:disabled { opacity:0.4; cursor:default; }
+  .section-title { font-family:'Nunito',sans-serif; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted); margin:18px 0 10px; display:flex; align-items:center; gap:8px; }
+  .section-title::after { content:''; flex:1; height:1px; background:var(--gray-border); }
+  .generate-card { background:var(--accent-dark); border-radius:var(--radius); padding:20px; color:#fff; text-align:center; margin-bottom:14px; }
+  .generate-card h3 { font-family:'Nunito',sans-serif; font-size:17px; font-weight:800; margin-bottom:6px; }
+  .generate-card p { font-size:13px; opacity:0.8; margin-bottom:14px; }
+  .topic-chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:14px; }
+  .chip { padding:6px 14px; border-radius:20px; font-size:12px; font-weight:700; cursor:pointer; border:1.5px solid rgba(255,255,255,0.3); color:rgba(255,255,255,0.8); background:rgba(255,255,255,0.1); transition:all 0.18s; }
+  .chip.selected, .chip:hover { background:rgba(255,255,255,0.25); border-color:rgba(255,255,255,0.7); color:#fff; }
+  .generate-btn { background:#fff; color:var(--accent-dark); border:none; border-radius:var(--radius-sm); padding:13px 28px; font-family:'Nunito',sans-serif; font-size:15px; font-weight:800; cursor:pointer; transition:all 0.18s; width:100%; }
+  .generate-btn:hover:not(:disabled) { background:var(--accent-light); }
+  .generate-btn:disabled { opacity:0.6; cursor:default; }
+  .ai-status { text-align:center; font-size:13px; color:var(--text-muted); padding:10px; display:none; }
+  .ai-status.show { display:block; }
+  .spinner { display:inline-block; width:16px; height:16px; border:2px solid var(--gray-border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; vertical-align:middle; margin-right:6px; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  #result-screen { display:none; text-align:center; padding:20px; }
+  .result-circle { width:120px; height:120px; border-radius:50%; background:var(--accent-light); border:4px solid var(--accent); display:flex; align-items:center; justify-content:center; flex-direction:column; margin:0 auto 20px; }
+  .result-pct { font-family:'Nunito',sans-serif; font-size:34px; font-weight:900; color:var(--accent-dark); line-height:1; }
+  .result-pct-label { font-size:12px; color:var(--accent); font-weight:700; }
+  .result-msg { font-family:'Nunito',sans-serif; font-size:22px; font-weight:800; margin-bottom:8px; }
+  .result-sub { font-size:14px; color:var(--text-muted); margin-bottom:24px; }
+  .restart-btn { background:var(--accent); color:#fff; border:none; border-radius:var(--radius-sm); padding:14px 32px; font-family:'Nunito',sans-serif; font-size:16px; font-weight:800; cursor:pointer; width:100%; max-width:300px; }
+  .restart-btn:hover { background:var(--accent-dark); }
+
+  .reset-bar {
+    display:flex; gap:8px; padding:10px 16px;
+    background:var(--white,#fff); border-bottom:1px solid var(--gray-border,#ddd);
+    justify-content:flex-end;
+  }
+  .reset-btn-sm {
+    background:none; border:1.5px solid var(--gray-border,#ddd);
+    border-radius:20px; padding:5px 14px;
+    font-family:'Nunito',sans-serif; font-size:12px; font-weight:700;
+    cursor:pointer; color:var(--text-muted,#555); transition:all 0.18s;
+  }
+  .reset-btn-sm:hover { background:var(--red-light,#FCEBEB); border-color:var(--red,#A32D2D); color:var(--red,#A32D2D); }
+  .reset-btn-sm.full { border-color:var(--red,#A32D2D); color:var(--red,#A32D2D); }
+  .reset-btn-sm.full:hover { background:var(--red,#A32D2D); color:#fff; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-tag">Year 8 Science · Unit 8F</div>
+  <h1>⚗️ The Periodic Table Quiz</h1>
+  <p>20 questions · UK National Curriculum</p>
+</div>
+<div id="quiz-screen">
+  <div class="reset-bar">
+    <button class="reset-btn-sm" onclick="resetAnswers()" title="Clear your answers and start from Q1, keeping all questions">↺ Reset Answers</button>
+    <button class="reset-btn-sm full" onclick="resetToOriginal()" title="Remove AI-generated questions and reset to the original 20">⚠ Reset to Original 20</button>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-pill"><div class="stat-num" id="stat-score">0%</div><div class="stat-label">Score</div></div>
+    <div class="stat-pill"><div class="stat-num" id="stat-correct">0</div><div class="stat-label">Correct</div></div>
+    <div class="stat-pill"><div class="stat-num" id="stat-total">20</div><div class="stat-label">Total Qs</div></div>
+  </div>
+  <div class="q-dots" id="q-dots"></div>
+  <div class="progress-wrap">
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-label" id="progress-label">Question 1 of 20</div>
+  </div>
+  <div class="main">
+    <div class="question-card" id="question-card">
+      <div class="q-number" id="q-number">Question 1</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <button class="hint-btn" id="hint-btn" onclick="showHint()">💡 Show Hint</button>
+      <div class="hint-text" id="hint-text"></div>
+      <div class="explanation" id="explanation"></div>
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn prev" id="prev-btn" onclick="goTo(currentQ-1)">← Prev</button>
+      <button class="nav-btn next" id="next-btn" onclick="handleNext()">Next →</button>
+    </div>
+    <div class="section-title">Generate More Questions</div>
+    <div class="generate-card">
+      <h3>🤖 Ask the Science Teacher AI</h3>
+      <p>Pick a subtopic and generate 5 fresh questions, checked against the UK KS3 curriculum.</p>
+      <div class="topic-chips" id="topic-chips">
+        <div class="chip selected" onclick="selectChip(this)">Elements & Atoms</div>
+        <div class="chip" onclick="selectChip(this)">Compounds & Mixtures</div>
+        <div class="chip" onclick="selectChip(this)">Metals & Non-metals</div>
+        <div class="chip" onclick="selectChip(this)">Groups & Periods</div>
+        <div class="chip" onclick="selectChip(this)">Chemical Reactions</div>
+        <div class="chip" onclick="selectChip(this)">Word Equations</div>
+      </div>
+      <button class="generate-btn" id="gen-btn" onclick="generateQuestions()">Generate 5 New Questions</button>
+    </div>
+    <div class="ai-status" id="ai-status"><span class="spinner"></span> Mr. Proton is writing your questions...</div>
+  </div>
+</div>
+<div id="result-screen" class="main">
+  <div class="result-circle"><div class="result-pct" id="result-pct">0%</div><div class="result-pct-label">Score</div></div>
+  <div class="result-msg" id="result-msg"></div>
+  <div class="result-sub" id="result-sub"></div>
+  <button class="restart-btn" onclick="restartQuiz()">Try Again</button>
+</div>
+<script>
+const SEED_QUESTIONS = [
+  { q:"What is an element?", options:["A substance made of two or more types of atom bonded together","A pure substance made of only one type of atom","A mixture of different substances","Any substance found in nature"], answer:1, hint:"Think about what makes something 'pure' in chemistry.", explanation:"An element is a pure substance made of only one type of atom. It cannot be broken down into simpler substances by chemical means." },
+  { q:"Which of the following is a compound?", options:["Oxygen (O₂)","Iron (Fe)","Water (H₂O)","Nitrogen (N₂)"], answer:2, hint:"A compound contains more than one type of element bonded together.", explanation:"Water (H₂O) is a compound — it contains hydrogen and oxygen atoms chemically bonded together. The others are elements made of just one type of atom." },
+  { q:"In the Periodic Table, what does a GROUP refer to?", options:["A horizontal row of elements","A vertical column of elements","A block of metals","A set of elements with the same mass"], answer:1, hint:"Think up-down or left-right — which direction is a group?", explanation:"A group is a vertical column in the Periodic Table. Elements in the same group have similar chemical properties because they have the same number of electrons in their outer shell." },
+  { q:"What is the chemical symbol for sodium?", options:["So","S","Na","Sd"], answer:2, hint:"It comes from the Latin word 'Natrium'.", explanation:"The symbol for sodium is Na, from the Latin 'Natrium'. Many symbols come from Latin or Greek names of the elements." },
+  { q:"Which group in the Periodic Table contains the noble gases?", options:["Group 1","Group 7","Group 0","Group 4"], answer:2, hint:"Noble gases are very unreactive. They sit at the far right of the table.", explanation:"Group 0 (also called Group 18) contains the noble gases: helium, neon, argon, krypton, xenon, and radon. They are very unreactive because their outer electron shells are full." },
+  { q:"What is the difference between a physical change and a chemical change?", options:["A physical change produces a new substance; a chemical change does not","A chemical change produces a new substance; a physical change does not","Both produce new substances","Neither produces a new substance"], answer:1, hint:"Think about whether you can easily reverse the change.", explanation:"In a chemical change, a new substance is formed and the change is usually irreversible. In a physical change (e.g. melting, dissolving), no new substance is made." },
+  { q:"Elements in Group 1 are called the alkali metals. Which property do they share?", options:["They are all gases at room temperature","They all react vigorously with water","They all have very high melting points","They are all non-metals"], answer:1, hint:"Drop a small piece of lithium or sodium into water — what happens?", explanation:"All Group 1 alkali metals react with water to produce a metal hydroxide and hydrogen gas. The reaction gets more vigorous as you go down the group." },
+  { q:"What is the correct word equation for the reaction between magnesium and oxygen?", options:["Magnesium + Oxygen → Magnesium oxide","Oxygen + Magnesium → Oxide of magnesium","Magnesium → Magnesium oxide + Oxygen","Magnesium oxide → Magnesium + Oxygen"], answer:0, hint:"Reactants go on the left of the arrow, products on the right.", explanation:"Magnesium + Oxygen → Magnesium oxide. This is a combustion/oxidation reaction. The arrow shows the direction of the reaction from reactants to products." },
+  { q:"Which statement correctly describes a mixture?", options:["A mixture contains two or more elements chemically bonded","A mixture contains two or more substances not chemically bonded, and can be separated","A mixture always contains only one type of atom","A mixture is always a liquid"], answer:1, hint:"In a mixture, the substances keep their own properties.", explanation:"A mixture contains two or more substances that are not chemically bonded. They can be separated by physical methods like filtering, distilling or chromatography." },
+  { q:"Where are metals found in the Periodic Table?", options:["On the right-hand side","In the middle and left-hand side","Only in Group 1","Only at the top"], answer:1, hint:"Non-metals are mostly on the right. Where does that leave metals?", explanation:"Metals are found on the left and in the middle of the Periodic Table (the transition metals). Non-metals are mostly on the right side." },
+  { q:"Which of the following is a property of most non-metals?", options:["Good conductor of electricity","Shiny and malleable","Poor conductor of heat and electricity","High density"], answer:2, hint:"Think about the opposite of what metals are like.", explanation:"Most non-metals are poor conductors of heat and electricity (insulators), dull in appearance, and brittle. These properties contrast with those of metals." },
+  { q:"What does the period number tell you about an element?", options:["The number of electrons in its outer shell","The number of protons in its nucleus","The number of electron shells (energy levels) it has","The number of neutrons"], answer:2, hint:"Period 1 has 1 shell, Period 2 has 2 shells — spot the pattern.", explanation:"The period number tells you how many electron shells (energy levels) the atom has. Period 2 elements have 2 shells, Period 3 elements have 3 shells, and so on." },
+  { q:"Group 7 elements are called the halogens. Which of the following is a halogen?", options:["Neon","Chlorine","Potassium","Calcium"], answer:1, hint:"Look for the element with 7 electrons in its outer shell — it ends in -ine.", explanation:"Chlorine (Cl) is a halogen in Group 7. Halogens are reactive non-metals that form salts when they react with metals. They include fluorine, chlorine, bromine, and iodine." },
+  { q:"A particle diagram shows particles of two different sizes randomly mixed together. What does this most likely represent?", options:["A pure element","A compound","A mixture","A chemical reaction"], answer:2, hint:"Are the particles chemically joined, or just mixed together freely?", explanation:"Two different types of particles randomly mixed (not bonded together) represent a mixture. In a compound, particles would be chemically bonded in fixed ratios." },
+  { q:"Why do elements in the same group have similar chemical properties?", options:["They have the same atomic mass","They have the same number of electrons in their outer shell","They are all the same state at room temperature","They have the same number of neutrons"], answer:1, hint:"It's all about the outer shell — the outermost electrons are involved in chemical reactions.", explanation:"Elements in the same group have the same number of electrons in their outer shell. It is these outer electrons that take part in chemical reactions, giving group members similar properties." },
+  { q:"What is the chemical symbol for potassium?", options:["Po","Pt","K","P"], answer:2, hint:"It comes from the Latin word 'Kalium'.", explanation:"Potassium's symbol is K, from the Latin 'Kalium'. Potassium is a Group 1 alkali metal — soft, reactive, and found in bananas!" },
+  { q:"Which statement about compounds is correct?", options:["A compound can be separated by filtering","A compound has the same properties as the elements it is made from","A compound contains two or more elements chemically bonded in fixed ratios","A compound is always a solid"], answer:2, hint:"Think about what makes a compound different from a mixture.", explanation:"A compound contains two or more elements chemically bonded together in fixed ratios. Its properties are different from those of the elements it contains (e.g. water vs hydrogen and oxygen)." },
+  { q:"Iron rusting is an example of which type of change?", options:["Physical change, because the iron looks different","Chemical change, because a new substance (iron oxide) is formed","Physical change, because it can be reversed easily","Neither — rusting is not a change at all"], answer:1, hint:"Is a new substance formed? Can you easily turn rust back into iron?", explanation:"Rusting is a chemical change. Iron reacts with oxygen and water to form iron oxide (rust), which is a completely new substance. This change is not easily reversed." },
+  { q:"An element has the symbol 'Au'. What is its name?", options:["Aluminium","Silver","Argon","Gold"], answer:3, hint:"Au comes from the Latin word 'Aurum'. It's a very precious metal.", explanation:"Au is the symbol for gold, from the Latin 'Aurum'. Gold is a transition metal known for being unreactive, shiny, and used in jewellery." },
+  { q:"What is meant by the term 'pure substance' in chemistry?", options:["A substance that has been washed","A substance made of only one type of element or compound, with no other substances mixed in","A substance that is safe to eat","A substance that is a liquid"], answer:1, hint:"Pure means only one thing — not a mix of different substances.", explanation:"In chemistry, a pure substance contains only one type of element or compound. It has a fixed melting point and boiling point. A mixture of substances is impure." }
+];
+
+let questions = [...SEED_QUESTIONS];
+let currentQ = 0;
+let answers = {};
+let correctCount = 0;
+let selectedChip = 'Elements & Atoms';
+
+function selectChip(el) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedChip = el.textContent;
+}
+
+function renderDots() {
+  const container = document.getElementById('q-dots');
+  container.innerHTML = '';
+  questions.forEach((q, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'q-dot';
+    dot.textContent = i + 1;
+    if (i === currentQ) dot.classList.add('current');
+    else if (answers[i] !== undefined) dot.classList.add(answers[i] === questions[i].answer ? 'answered-correct' : 'answered-wrong');
+    dot.onclick = () => goTo(i);
+    container.appendChild(dot);
+  });
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('q-number').textContent = `Question ${currentQ + 1}`;
+  document.getElementById('q-text').textContent = q.q;
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.disabled = answers[currentQ] !== undefined;
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span>${opt}`;
+    if (answers[currentQ] !== undefined) {
+      if (i === q.answer) btn.classList.add('correct');
+      else if (i === answers[currentQ] && answers[currentQ] !== q.answer) btn.classList.add('wrong');
+      else btn.classList.add('revealed');
+    }
+    btn.onclick = () => selectAnswer(i);
+    opts.appendChild(btn);
+  });
+  const hintText = document.getElementById('hint-text');
+  hintText.textContent = q.hint;
+  hintText.className = 'hint-text';
+  document.getElementById('hint-btn').style.display = answers[currentQ] !== undefined ? 'none' : 'block';
+  const exp = document.getElementById('explanation');
+  exp.textContent = q.explanation;
+  exp.className = 'explanation' + (answers[currentQ] !== undefined ? ' show' : '');
+  document.getElementById('prev-btn').disabled = currentQ === 0;
+  document.getElementById('next-btn').textContent = currentQ === questions.length - 1 ? 'Finish' : 'Next →';
+  const pct = Math.round((currentQ / questions.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `Question ${currentQ + 1} of ${questions.length}`;
+  updateStats();
+  renderDots();
+}
+
+function selectAnswer(i) {
+  if (answers[currentQ] !== undefined) return;
+  answers[currentQ] = i;
+  if (i === questions[currentQ].answer) correctCount++;
+  document.getElementById('hint-btn').style.display = 'none';
+  document.getElementById('hint-text').className = 'hint-text';
+  document.querySelectorAll('.option-btn').forEach((btn, idx) => {
+    btn.disabled = true;
+    if (idx === questions[currentQ].answer) btn.classList.add('correct');
+    else if (idx === i) btn.classList.add('wrong');
+    else btn.classList.add('revealed');
+  });
+  document.getElementById('explanation').className = 'explanation show';
+  updateStats(); renderDots();
+}
+
+function showHint() {
+  const h = document.getElementById('hint-text');
+  h.className = h.classList.contains('show') ? 'hint-text' : 'hint-text show';
+}
+
+function handleNext() {
+  if (currentQ === questions.length - 1) showResult();
+  else goTo(currentQ + 1);
+}
+
+function goTo(n) {
+  if (n < 0 || n >= questions.length) return;
+  currentQ = n;
+  document.getElementById('question-card').style.animation = 'none';
+  requestAnimationFrame(() => { document.getElementById('question-card').style.animation = ''; renderQuestion(); });
+}
+
+function updateStats() {
+  const answered = Object.keys(answers).length;
+  const pct = answered > 0 ? Math.round((correctCount / answered) * 100) : 0;
+  document.getElementById('stat-score').textContent = pct + '%';
+  document.getElementById('stat-correct').textContent = correctCount;
+  document.getElementById('stat-total').textContent = questions.length;
+}
+
+function showResult() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  const pct = Math.round((correctCount / questions.length) * 100);
+  document.getElementById('result-pct').textContent = pct + '%';
+  let msg, sub;
+  if (pct >= 90) { msg = '🌟 Outstanding!'; sub = `You scored ${correctCount}/${questions.length}. Excellent knowledge of the Periodic Table!`; }
+  else if (pct >= 70) { msg = '👏 Well done!'; sub = `You scored ${correctCount}/${questions.length}. Good work — review any questions you missed.`; }
+  else if (pct >= 50) { msg = '📚 Keep going!'; sub = `You scored ${correctCount}/${questions.length}. Go back over your notes and try again.`; }
+  else { msg = '💪 Keep revising!'; sub = `You scored ${correctCount}/${questions.length}. Don't worry — revisit the topic and have another go.`; }
+  document.getElementById('result-msg').textContent = msg;
+  document.getElementById('result-sub').textContent = sub;
+}
+
+function restartQuiz() {
+  answers = {}; correctCount = 0; currentQ = 0;
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  renderQuestion();
+}
+
+async function generateQuestions() {
+  const btn = document.getElementById('gen-btn');
+  const status = document.getElementById('ai-status');
+  btn.disabled = true;
+  status.className = 'ai-status show';
+  const SYSTEM = `You are Mr. Proton, an expert Year 8 UK secondary school science teacher specialising in chemistry. You write quiz questions precisely aligned to the KS3 UK National Curriculum Unit 8F: The Periodic Table. Questions are clear, age-appropriate for 12-13 year olds, written in British English, and scientifically accurate. You also act as CheckerBot — a strict senior examiner — verifying each question for: (1) factual accuracy at KS3 level, (2) one unambiguous correct answer, (3) age-appropriateness, (4) relevance to the subtopic. Only include questions that pass all checks. Respond ONLY with a raw JSON array, no preamble, no markdown.`;
+  const USER = `Generate exactly 5 multiple-choice questions about "${selectedChip}" for Year 8 UK KS3 Chemistry (Unit 8F: The Periodic Table). Each object: {"q":"...","options":["A","B","C","D"],"answer":0,"hint":"...","explanation":"..."}. Answer is zero-based index. Return only the JSON array.`;
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:1000, system:SYSTEM, messages:[{role:"user",content:USER}] })
+    });
+    const data = await res.json();
+    const text = data.content.map(i=>i.text||'').join('');
+    const newQs = JSON.parse(text.replace(/```json|```/g,'').trim());
+    if (Array.isArray(newQs) && newQs.length > 0) {
+      questions = questions.concat(newQs);
+      status.innerHTML = `✅ ${newQs.length} new questions added!`;
+      setTimeout(()=>{status.className='ai-status';},3000);
+      renderQuestion();
+    } else throw new Error();
+  } catch(e) {
+    status.innerHTML = '⚠️ Could not generate questions. Please try again.';
+    setTimeout(()=>{status.className='ai-status';},3000);
+  }
+  btn.disabled = false;
+}
+
+renderQuestion();
+
+function resetAnswers() {
+  if (!confirm('Reset all your answers and start from Question 1? (Your AI-generated questions will be kept.)')) return;
+  answers = {}; correctCount = 0; currentQ = 0;
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  renderQuestion();
+}
+function resetToOriginal() {
+  if (!confirm('This will remove all AI-generated questions and clear your answers, returning to the original 20 questions. Continue?')) return;
+  questions = [...SEED_QUESTIONS];
+  answers = {}; correctCount = 0; currentQ = 0;
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  renderQuestion();
+}
+
+</script>
+</body>
+</html>

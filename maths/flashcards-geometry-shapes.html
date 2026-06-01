@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geometry: Shapes Flashcards &mdash; Year 8 Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--accent:#fb923c;--accent2:#fdba74;--correct:#10b981;--wrong:#ef4444;--text:#e2e8f0;--muted:#94a3b8;--border:#2d3748}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh}
+header{background:linear-gradient(135deg,#7c2d12,#fb923c);padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem}
+header .back{color:#fff;text-decoration:none;font-size:1.4rem}
+header h1{font-family:'Fredoka One',cursive;font-size:1.5rem;color:#fff}
+header .badge{margin-left:auto;background:rgba(0,0,0,0.3);border-radius:20px;padding:0.3rem 1rem;font-weight:700;color:#fff;font-size:0.9rem}
+.container{max-width:780px;margin:0 auto;padding:2rem 1rem}
+.progress-row{display:flex;gap:1.5rem;background:var(--card);border-radius:12px;padding:1rem 1.5rem;margin-bottom:1.5rem;border:1px solid var(--border);flex-wrap:wrap;align-items:center}
+.prog-item{text-align:center}.prog-item .val{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--accent)}.prog-item .lbl{font-size:0.72rem;color:var(--muted)}
+.prog-bar-wrap{flex:1;min-width:120px;background:var(--border);border-radius:99px;height:8px;overflow:hidden}
+.prog-bar{height:100%;background:var(--accent);border-radius:99px;transition:width 0.4s}
+.card-counter{text-align:center;color:var(--muted);font-size:0.9rem;margin-bottom:0.75rem}
+.scene{width:100%;height:300px;perspective:1000px;margin-bottom:1.2rem;cursor:pointer}
+@media(max-width:560px){.scene{height:260px}}
+.card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.5s ease}
+.scene.flipped .card-inner{transform:rotateY(180deg)}
+.card-face{position:absolute;inset:0;border-radius:20px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;padding:2rem;border:2px solid var(--border)}
+.card-front{background:linear-gradient(135deg,var(--card),var(--card2));flex-direction:column;gap:1rem}
+.card-front .label{font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:800}
+.card-front .term{font-family:'Fredoka One',cursive;font-size:1.4rem;text-align:center;line-height:1.3}
+.card-front .tap-hint{font-size:0.8rem;color:var(--muted)}
+.card-back{background:linear-gradient(135deg,#1e293b,#0f172a);flex-direction:column;gap:0.75rem;transform:rotateY(180deg);overflow-y:auto;align-items:flex-start;padding:1.5rem 2rem}
+.card-back .back-label{font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent2);font-weight:800;align-self:center}
+.card-back .definition{font-size:0.95rem;font-weight:700;line-height:1.5}
+.card-back .example{margin-top:0.5rem;background:rgba(0,0,0,0.4);border-left:3px solid var(--accent);padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:0.88rem;line-height:1.6;color:#cbd5e1}
+.card-back .example strong{color:var(--accent2)}
+.action-row{display:flex;gap:0.75rem;justify-content:center;margin-bottom:1.2rem;flex-wrap:wrap}
+.btn{padding:0.75rem 1.5rem;border-radius:10px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;transition:all 0.2s}
+.btn-gotit{background:var(--correct);color:#fff}.btn-gotit:hover{background:#059669}
+.btn-notyet{background:var(--wrong);color:#fff}.btn-notyet:hover{background:#dc2626}
+.btn-primary{background:var(--accent);color:#000}
+.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}.btn-sm{font-size:0.85rem;padding:0.5rem 1rem}
+.nav-row{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.ctrl-row{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.pile-row{display:flex;gap:1rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap}
+.pile{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.5rem 1rem;font-size:0.85rem;font-weight:700}
+.pile.gotit{border-color:var(--correct);color:var(--correct)}.pile.notyet{border-color:var(--wrong);color:var(--wrong)}
+.mode-banner{background:#1e3a2f;border:1px solid var(--correct);border-radius:10px;padding:0.6rem 1rem;text-align:center;font-size:0.85rem;color:#6ee7b7;margin-bottom:1rem;display:none}
+.ai-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:2rem}
+.ai-panel h3{font-family:'Fredoka One',cursive;color:var(--accent);margin-bottom:0.5rem;font-size:1.3rem}
+.ai-panel p{color:var(--muted);font-size:0.9rem;margin-bottom:1rem}
+.ai-status{font-size:0.9rem;color:var(--muted);margin-top:0.75rem;min-height:1.2em;font-style:italic}
+.ai-key-row{display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap}
+.ai-key-row input{flex:1;min-width:200px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.9rem}
+.ai-key-row input:focus{outline:none;border-color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <a href="hub.html" class="back">&#8678;</a>
+  <h1>&#128208; Geometry: Shapes Flashcards</h1>
+  <div class="badge" id="header-badge">1 / 20</div>
+</header>
+<div class="container">
+  <div class="progress-row">
+    <div class="prog-item"><div class="val" id="p-gotit">0</div><div class="lbl">Got It</div></div>
+    <div class="prog-bar-wrap"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+    <div class="prog-item"><div class="val" id="p-notyet">0</div><div class="lbl">Not Yet</div></div>
+    <div class="prog-item"><div class="val" id="p-unseen">20</div><div class="lbl">Unseen</div></div>
+  </div>
+  <div class="mode-banner" id="mode-banner">&#128218; Study Not Yet Mode &mdash; reviewing cards you haven&apos;t mastered yet</div>
+  <div class="card-counter" id="card-counter">Card 1 of 20</div>
+  <div class="scene" id="scene" onclick="flipCard()">
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <div class="label">Concept / Rule</div>
+        <div class="term" id="card-term"></div>
+        <div class="tap-hint">Tap to reveal</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="back-label">Explanation + Worked Example</div>
+        <div class="definition" id="card-def"></div>
+        <div class="example" id="card-ex"></div>
+      </div>
+    </div>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-notyet" onclick="markCard('notyet')">&#10007; Not Yet</button>
+    <button class="btn btn-gotit" onclick="markCard('gotit')">&#10003; Got It!</button>
+  </div>
+  <div class="nav-row">
+    <button class="btn btn-secondary btn-sm" onclick="prevCard()">&#8592; Prev</button>
+    <button class="btn btn-secondary btn-sm" onclick="nextCard()">Next &#8594;</button>
+  </div>
+  <div class="ctrl-row">
+    <button class="btn btn-secondary btn-sm" onclick="shuffleCards()">&#128256; Shuffle</button>
+    <button class="btn btn-secondary btn-sm" onclick="studyNotYet()">&#128218; Study Not Yet</button>
+    <button class="btn btn-secondary btn-sm" onclick="resetAll()">&#8634; Reset All</button>
+    <button class="btn btn-secondary btn-sm" onclick="resetOriginal()">&#8635; Original 20</button>
+  </div>
+  <div class="pile-row">
+    <div class="pile gotit">Got It: <span id="pile-gotit">0</span></div>
+    <div class="pile notyet">Not Yet: <span id="pile-notyet">0</span></div>
+  </div>
+  <div class="ai-panel">
+    <h3>&#129302; Generate More Cards</h3>
+    <p>Mr. Euler creates new Geometry: flashcards, then CheckerBot verifies them.</p>
+    <div class="ai-key-row">
+      <input type="password" id="api-key" placeholder="Paste your Anthropic API key here...">
+      <button class="btn btn-primary" onclick="generateAI()">Generate 5 More</button>
+    </div>
+    <div class="ai-status" id="ai-status"></div>
+  </div>
+</div>
+<script>
+const SEED_CARDS = [{"term": "Area of a Rectangle", "def": "Area = length &times; width. Units must be squared (cm&sup2;, m&sup2;).", "ex": "<strong>Length 9cm, width 5cm:</strong><br>Area = 9 &times; 5 = <strong>45 cm&sup2;</strong>"}, {"term": "Area of a Triangle", "def": "Area = &frac12; &times; base &times; perpendicular height.", "ex": "<strong>Base 10cm, height 6cm:</strong><br>Area = &frac12; &times; 10 &times; 6 = <strong>30 cm&sup2;</strong>"}, {"term": "Area of a Trapezium", "def": "Area = &frac12;(a + b)h, where a and b are the parallel sides.", "ex": "<strong>Parallel sides 8 and 12cm, height 5cm:</strong><br>&frac12;(8+12)&times;5 = &frac12;&times;20&times;5 = <strong>50 cm&sup2;</strong>"}, {"term": "Circumference of a Circle", "def": "C = &pi;d = 2&pi;r. Diameter = 2 &times; radius. Leave in terms of &pi; if asked.", "ex": "<strong>Radius 7cm:</strong><br>C = 2&pi;&times;7 = 14&pi; &approx; <strong>44.0 cm</strong>"}, {"term": "Area of a Circle", "def": "A = &pi;r&sup2;. Always square the RADIUS (not the diameter)!", "ex": "<strong>Radius 5cm:</strong><br>A = &pi;&times;25 = 25&pi; &approx; <strong>78.5 cm&sup2;</strong>"}, {"term": "Volume of a Cuboid", "def": "V = l &times; w &times; h. Units are cubed (cm&sup3;, m&sup3;).", "ex": "<strong>6cm &times; 4cm &times; 3cm:</strong><br>V = 6&times;4&times;3 = <strong>72 cm&sup3;</strong>"}, {"term": "Volume of a Cylinder", "def": "V = &pi;r&sup2;h. Find the circular area first, then multiply by height.", "ex": "<strong>Radius 3cm, height 10cm:</strong><br>V = &pi;&times;9&times;10 = 90&pi; &approx; <strong>283 cm&sup3;</strong>"}, {"term": "Volume of a Prism", "def": "V = cross-sectional area &times; length. Works for any prism.", "ex": "<strong>Triangular prism: triangle area 12cm&sup2;, length 8cm:</strong><br>V = 12&times;8 = <strong>96 cm&sup3;</strong>"}, {"term": "Pythagoras&apos; Theorem", "def": "a&sup2; + b&sup2; = c&sup2; where c is the hypotenuse (the longest side, opposite the right angle).", "ex": "<strong>Legs 6cm and 8cm:</strong><br>c&sup2; = 36+64 = 100<br>c = &radic;100 = <strong>10 cm</strong>"}, {"term": "Pythagoras &ndash; Shorter Side", "def": "Rearrange to a&sup2; = c&sup2; &minus; b&sup2; when finding a leg.", "ex": "<strong>Hypotenuse 13cm, leg 5cm:</strong><br>a&sup2; = 169&minus;25 = 144<br>a = <strong>12 cm</strong>"}, {"term": "Surface Area of a Cuboid", "def": "SA = 2(lw + lh + wh). Add the areas of all 6 faces.", "ex": "<strong>5cm &times; 4cm &times; 3cm:</strong><br>2(20+15+12) = 2(47) = <strong>94 cm&sup2;</strong>"}, {"term": "Surface Area of a Cylinder", "def": "SA = 2&pi;r&sup2; + 2&pi;rh (two circles + curved surface).", "ex": "<strong>Radius 3cm, height 8cm:</strong><br>= 18&pi; + 48&pi; = 66&pi; &approx; <strong>207 cm&sup2;</strong>"}, {"term": "Area of a Sector", "def": "Area = (&theta;&divide;360) &times; &pi;r&sup2;, where &theta; is the angle in degrees.", "ex": "<strong>Radius 6cm, angle 90&deg;:</strong><br>= (90/360)&times;&pi;&times;36 = 9&pi; &approx; <strong>28.3 cm&sup2;</strong>"}, {"term": "Arc Length", "def": "Arc length = (&theta;&divide;360) &times; 2&pi;r", "ex": "<strong>Radius 10cm, angle 60&deg;:</strong><br>= (60/360)&times;2&pi;&times;10 = (10&pi;)/3 &approx; <strong>10.5 cm</strong>"}, {"term": "Composite Shapes", "def": "Split into simpler shapes. Add (or subtract for cut-outs) individual areas.", "ex": "<strong>Rectangle 10&times;6 plus semicircle r=3:</strong><br>60 + &frac12;&pi;(9) &approx; 60+14.1 = <strong>74.1 cm&sup2;</strong>"}, {"term": "Area of a Parallelogram", "def": "Area = base &times; perpendicular height (same as rectangle formula).", "ex": "<strong>Base 9cm, height 7cm:</strong><br>Area = 9&times;7 = <strong>63 cm&sup2;</strong>"}, {"term": "Perimeter of a Semicircle", "def": "Perimeter = &pi;r + 2r (curved part + straight diameter).", "ex": "<strong>Diameter 12cm (r=6):</strong><br>P = 6&pi; + 12 &approx; 18.85+12 = <strong>30.8 cm</strong>"}, {"term": "Units: Area and Volume", "def": "1 m&sup2; = 10,000 cm&sup2;. 1 m&sup3; = 1,000,000 cm&sup3;. Square or cube the conversion factor!", "ex": "<strong>Convert 3 m&sup2; to cm&sup2;:</strong><br>3 &times; 10,000 = <strong>30,000 cm&sup2;</strong>"}, {"term": "Density = Mass &divide; Volume", "def": "Density = Mass &divide; Volume. Mass = D&times;V. Volume = M&divide;D. Use the formula triangle.", "ex": "<strong>Mass 600g, Volume 200cm&sup3;:</strong><br>Density = 600&divide;200 = <strong>3 g/cm&sup3;</strong>"}, {"term": "Finding the Radius from Area/Circumference", "def": "From area: r = &radic;(A&divide;&pi;). From circumference: r = C&divide;(2&pi;).", "ex": "<strong>Area = 50.27 cm&sup2;:</strong><br>r = &radic;(50.27&divide;&pi;) = &radic;16 = <strong>4 cm</strong>"}];
+const AI_TOPIC = 'GEOMETRY SHAPES (area, perimeter, volume, surface area, circles, Pythagoras, composite shapes, prisms, cylinders, sectors)';
+
+let cards=[...SEED_CARDS],current=0,status=new Array(cards.length).fill(null),studyMode=false,studyQueue=[];
+function getDisplayCards(){return studyMode?studyQueue:cards}
+function render(){const d=getDisplayCards(),c=d[current];if(!c)return;document.getElementById('scene').classList.remove('flipped');document.getElementById('card-term').textContent=c.term;document.getElementById('card-def').innerHTML=c.def;document.getElementById('card-ex').innerHTML=c.ex;document.getElementById('card-counter').textContent='Card '+(current+1)+' of '+d.length;document.getElementById('header-badge').textContent=(current+1)+' / '+d.length;updateProgress()}
+function flipCard(){document.getElementById('scene').classList.toggle('flipped')}
+function prevCard(){if(current>0){current--;render()}}
+function nextCard(){const d=getDisplayCards();if(current<d.length-1){current++;render()}}
+function markCard(r){const d=getDisplayCards(),c=d[current],idx=cards.indexOf(c);if(idx>=0)status[idx]=r;updateProgress();setTimeout(function(){if(current<d.length-1){current++;render()}},300)}
+function updateProgress(){const g=status.filter(function(s){return s==='gotit'}).length,n=status.filter(function(s){return s==='notyet'}).length;document.getElementById('p-gotit').textContent=g;document.getElementById('p-notyet').textContent=n;document.getElementById('p-unseen').textContent=cards.length-g-n;document.getElementById('pile-gotit').textContent=g;document.getElementById('pile-notyet').textContent=n;document.getElementById('prog-bar').style.width=(cards.length?Math.round(g/cards.length*100):0)+'%'}
+function shuffleCards(){for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];[status[i],status[j]]=[status[j],status[i]]}current=0;studyMode=false;document.getElementById('mode-banner').style.display='none';render()}
+function studyNotYet(){studyQueue=cards.filter(function(_,i){return status[i]==='notyet'||status[i]===null});if(!studyQueue.length){alert('No Not Yet cards - great work!');return}studyMode=true;current=0;document.getElementById('mode-banner').style.display='block';render()}
+function resetAll(){status=new Array(cards.length).fill(null);current=0;studyMode=false;document.getElementById('mode-banner').style.display='none';render()}
+function resetOriginal(){cards=[...SEED_CARDS];status=new Array(cards.length).fill(null);current=0;studyMode=false;document.getElementById('mode-banner').style.display='none';render()}
+async function generateAI(){const key=document.getElementById('api-key').value.trim();if(!key){document.getElementById('ai-status').textContent='Please enter your API key.';return}const s=document.getElementById('ai-status');s.textContent='Mr. Euler is creating 5 new flashcards...';const p='You are Mr. Euler, expert Year 8 UK Maths teacher. Create 5 flashcards on '+AI_TOPIC+'. Each card front = a rule/formula/concept name. Back = clear explanation + worked example using <strong> tags. British English. Respond ONLY with valid JSON array: [{"term":"","def":"","ex":""}]';try{const r1=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:p}]})});const d1=await r1.json();const raw=d1.content[0].text.trim().replace(/```json|```/g,'');const newCards=JSON.parse(raw);s.textContent='CheckerBot verifying...';const cp='You are CheckerBot, strict examiner. Verify these 5 flashcards: (1) worked example arithmetic is correct, (2) explanation is clear, (3) KS3 Year 8 appropriate, (4) relevant to topic. Cards: '+JSON.stringify(newCards)+'. If all good respond APPROVED: then the JSON. Fix any errors first.';const r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:cp}]})});const d2=await r2.json();const cr=d2.content[0].text.trim();if(!cr.startsWith('APPROVED:')){s.textContent='CheckerBot rejected. Try again.';return}const checked=JSON.parse(cr.replace('APPROVED:','').trim().replace(/```json|```/g,''));cards=[...cards,...checked];status=[...status,...new Array(checked.length).fill(null)];s.textContent='5 cards added! Now '+cards.length+' total.';updateProgress()}catch(e){s.textContent='Error: '+e.message}}
+render();
+
+</script>
+</body>
+</html>

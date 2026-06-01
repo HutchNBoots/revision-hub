@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exam Technique Guide — Year 8 Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--accent:#a78bfa;--accent2:#c4b5fd;--correct:#10b981;--wrong:#ef4444;--warn:#f59e0b;--text:#e2e8f0;--muted:#94a3b8;--border:#2d3748}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;line-height:1.6}
+header{background:linear-gradient(135deg,#1e1b4b,#4f46e5);padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem}
+header .back{color:#fff;text-decoration:none;font-size:1.4rem}
+header h1{font-family:'Fredoka One',cursive;font-size:1.8rem;color:#fff}
+.container{max-width:900px;margin:0 auto;padding:2rem 1rem}
+.section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.8rem;margin-bottom:1.5rem}
+.section-title{font-family:'Fredoka One',cursive;font-size:1.4rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:0.6rem}
+.section-title .icon{font-size:1.5rem}
+
+/* Command words */
+.cmd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0.9rem}
+.cmd-card{background:var(--card2);border-radius:12px;padding:1rem 1.2rem;border-left:4px solid var(--accent)}
+.cmd-card .cmd-word{font-family:'Fredoka One',cursive;font-size:1.05rem;color:var(--accent2);margin-bottom:0.3rem}
+.cmd-card .cmd-def{font-size:0.88rem;color:var(--text);margin-bottom:0.4rem}
+.cmd-card .cmd-example{font-size:0.82rem;color:var(--muted);font-style:italic}
+
+/* Tips */
+.tips-list{display:flex;flex-direction:column;gap:0.9rem}
+.tip-item{display:flex;gap:1rem;align-items:flex-start;background:var(--card2);border-radius:10px;padding:1rem 1.2rem}
+.tip-num{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--accent);min-width:32px}
+.tip-text h4{font-weight:800;margin-bottom:0.3rem;font-size:0.95rem}
+.tip-text p{font-size:0.88rem;color:var(--muted)}
+
+/* Mark scheme practice */
+.ms-question{background:var(--card2);border-radius:12px;padding:1.2rem;margin-bottom:1rem}
+.ms-question .ms-q{font-weight:700;margin-bottom:0.75rem;font-size:0.95rem}
+.ms-options{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.75rem}
+.ms-opt{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.9rem;cursor:pointer;font-size:0.88rem;transition:all 0.2s}
+.ms-opt:hover{border-color:var(--accent)}
+.ms-opt.correct-mark{border-color:var(--correct);background:#064e3b;color:#6ee7b7}
+.ms-opt.wrong-mark{border-color:var(--wrong);background:#450a0a;color:#fca5a5}
+.ms-explain{font-size:0.85rem;color:var(--muted);padding:0.6rem 0.9rem;background:rgba(0,0,0,0.3);border-radius:6px;display:none;margin-top:0.4rem}
+
+/* Formula table */
+.formula-table{width:100%;border-collapse:collapse}
+.formula-table th{background:var(--card2);padding:0.6rem 0.9rem;text-align:left;font-size:0.85rem;color:var(--muted);border-bottom:1px solid var(--border)}
+.formula-table td{padding:0.6rem 0.9rem;border-bottom:1px solid var(--border);font-size:0.9rem}
+.formula-table tr:last-child td{border-bottom:none}
+.formula-table td:first-child{font-weight:700;color:var(--accent2)}
+.formula-table td:last-child{font-family:monospace;color:#7dd3fc;font-size:0.95rem}
+
+/* Conversion table */
+.conv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.6rem}
+.conv-item{background:var(--card2);border-radius:8px;padding:0.6rem 0.9rem;font-size:0.87rem}
+.conv-item .conv-name{color:var(--muted);font-size:0.78rem;margin-bottom:0.2rem;text-transform:uppercase;letter-spacing:0.5px}
+.conv-item .conv-val{font-weight:700;color:#7dd3fc}
+
+/* Checklist */
+.checklist{display:flex;flex-direction:column;gap:0.5rem}
+.check-item{display:flex;align-items:center;gap:0.75rem;background:var(--card2);border-radius:8px;padding:0.6rem 1rem;cursor:pointer;user-select:none}
+.check-item input[type=checkbox]{accent-color:var(--correct);width:18px;height:18px;cursor:pointer}
+.check-item label{cursor:pointer;font-size:0.9rem;font-weight:600}
+.check-item.done label{text-decoration:line-through;color:var(--muted)}
+
+/* Accordion */
+.accordion{background:var(--card2);border-radius:10px;margin-bottom:0.6rem;overflow:hidden}
+.accordion-head{padding:0.9rem 1.2rem;cursor:pointer;font-weight:700;display:flex;justify-content:space-between;align-items:center;font-size:0.95rem}
+.accordion-head:hover{background:rgba(167,139,250,0.1)}
+.accordion-body{padding:0 1.2rem;max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s}
+.accordion.open .accordion-body{max-height:600px;padding:0 1.2rem 1rem}
+.accordion-arrow{transition:transform 0.3s}
+.accordion.open .accordion-arrow{transform:rotate(180deg)}
+</style>
+</head>
+<body>
+<header>
+  <a href="hub.html" class="back">&#8678;</a>
+  <h1>&#128196; Exam Technique Guide</h1>
+</header>
+<div class="container">
+
+<!-- Before the exam checklist -->
+<div class="section">
+  <div class="section-title"><span class="icon">&#9989;</span> Before-Exam Checklist</div>
+  <div class="checklist" id="checklist">
+    <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"><label>Revision done &mdash; used quizzes and flashcards for all 8 topics</label></div>
+    <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"><label>Pens, pencil, ruler, rubber, compass, protractor &mdash; all packed</label></div>
+    <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"><label>Calculator charged or available (if allowed)</label></div>
+    <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"><label>Know the key formulas: area, volume, Pythagoras, SDT, density</label></div>
+    <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"><label>Practised showing full working for multi-step problems</label></div>
+    <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"><label>Revised weak topics identified in mixed quiz breakdown</label></div>
+    <div class="check-item" onclick="toggleCheck(this)"><input type="checkbox"><label>Good sleep the night before!</label></div>
+  </div>
+</div>
+
+<!-- Command words -->
+<div class="section">
+  <div class="section-title"><span class="icon">&#128278;</span> Maths Command Words</div>
+  <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1rem">These words tell you exactly what the examiner wants. Knowing them earns marks!</p>
+  <div class="cmd-grid">
+    <div class="cmd-card">
+      <div class="cmd-word">Calculate</div>
+      <div class="cmd-def">Work out the numerical answer. Show all working steps.</div>
+      <div class="cmd-example">e.g. &ldquo;Calculate the area of the circle.&rdquo;</div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-word">Show that</div>
+      <div class="cmd-def">Prove the given result using full mathematical working. The answer is given &mdash; you need to get there.</div>
+      <div class="cmd-example">e.g. &ldquo;Show that x = 4.&rdquo;</div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-word">Estimate</div>
+      <div class="cmd-def">Round to 1 significant figure first, then calculate. Don&apos;t give an exact answer!</div>
+      <div class="cmd-example">e.g. &ldquo;Estimate 48.3 &times; 19.7&rdquo; &rarr; 50 &times; 20 = 1000</div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-word">Simplify</div>
+      <div class="cmd-def">Write in the simplest form (collect like terms, cancel fractions, simplify ratio).</div>
+      <div class="cmd-example">e.g. &ldquo;Simplify 3x + 5x &minus; x&rdquo; &rarr; 7x</div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-word">Solve</div>
+      <div class="cmd-def">Find the value of the unknown. Always check your answer by substituting back.</div>
+      <div class="cmd-example">e.g. &ldquo;Solve 3x + 2 = 14&rdquo; &rarr; x = 4</div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-word">Expand</div>
+      <div class="cmd-def">Multiply out the brackets and collect like terms.</div>
+      <div class="cmd-example">e.g. &ldquo;Expand 3(2x &minus; 5)&rdquo; &rarr; 6x &minus; 15</div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-word">Factorise</div>
+      <div class="cmd-def">Write as a product using brackets. Take out the HCF or factorise the quadratic.</div>
+      <div class="cmd-example">e.g. &ldquo;Factorise x&sup2; + 5x + 6&rdquo; &rarr; (x+2)(x+3)</div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-word">Prove</div>
+      <div class="cmd-def">Demonstrate using algebra or geometry that something is always true. Use general variables.</div>
+      <div class="cmd-example">e.g. &ldquo;Prove that the sum of two consecutive integers is odd.&rdquo;</div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-word">Write down / State</div>
+      <div class="cmd-def">No working needed &mdash; just give the answer directly.</div>
+      <div class="cmd-example">e.g. &ldquo;Write down the gradient of y = 3x + 1&rdquo; &rarr; 3</div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-word">Describe</div>
+      <div class="cmd-def">State all key features in words. For transformations: type, direction, amount, centre.</div>
+      <div class="cmd-example">e.g. &ldquo;Describe fully the transformation.&rdquo;</div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-word">Sketch / Draw</div>
+      <div class="cmd-def">Sketch: approximate shape with key features labelled. Draw: accurate diagram using instruments.</div>
+      <div class="cmd-example">e.g. &ldquo;Sketch y = x&sup2; &minus; 4&rdquo;</div>
+    </div>
+    <div class="cmd-card">
+      <div class="cmd-word">Give a reason / Explain</div>
+      <div class="cmd-def">State the mathematical rule or theorem (e.g. &ldquo;alternate angles are equal&rdquo;).</div>
+      <div class="cmd-example">e.g. &ldquo;Give a reason for your answer.&rdquo;</div>
+    </div>
+  </div>
+</div>
+
+<!-- Top tips -->
+<div class="section">
+  <div class="section-title"><span class="icon">&#128161;</span> Top 10 Exam Tips</div>
+  <div class="tips-list">
+    <div class="tip-item">
+      <div class="tip-num">1</div>
+      <div class="tip-text"><h4>Always show your working</h4><p>Even a wrong final answer can earn method marks if your working is clear. Write every step.</p></div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">2</div>
+      <div class="tip-text"><h4>Check with the inverse</h4><p>Finished an equation? Substitute your answer back in. After multiplication, divide to check.</p></div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">3</div>
+      <div class="tip-text"><h4>Use estimation to sense-check</h4><p>Round to 1 sig fig before calculating. If your answer is wildly different, you&apos;ve made an error.</p></div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">4</div>
+      <div class="tip-text"><h4>Draw diagrams for geometry</h4><p>Always sketch the situation for geometry, bearings, and word problems. Label everything.</p></div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">5</div>
+      <div class="tip-text"><h4>Check your units throughout</h4><p>Area in cm&sup2;, volume in cm&sup3;. Convert to consistent units before calculating speed, density, etc.</p></div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">6</div>
+      <div class="tip-text"><h4>Read the question twice</h4><p>Underline what you&apos;re being asked to find. So many marks are lost by answering a different question.</p></div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">7</div>
+      <div class="tip-text"><h4>Don&apos;t round too early</h4><p>Keep full decimal values until the final answer. Only round at the end, to the precision asked.</p></div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">8</div>
+      <div class="tip-text"><h4>Look at the marks available</h4><p>A 4-mark question needs 4 steps of working. A 1-mark question just needs the answer.</p></div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">9</div>
+      <div class="tip-text"><h4>For &ldquo;Show that&rdquo; questions</h4><p>Work from one side to reach the given answer. Never start with the answer &mdash; work towards it.</p></div>
+    </div>
+    <div class="tip-item">
+      <div class="tip-num">10</div>
+      <div class="tip-text"><h4>Attempt every question</h4><p>Even if you&apos;re unsure, write down a relevant formula or method. You might earn a mark.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- Mark scheme practice -->
+<div class="section">
+  <div class="section-title"><span class="icon">&#127775;</span> Mark Scheme Practice</div>
+  <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.2rem">Choose which student working deserves full marks. Think like an examiner!</p>
+
+  <div class="ms-question">
+    <div class="ms-q">&#128196; <strong>Question:</strong> Solve 3x + 5 = 20. [2 marks]<br>Which student gets full marks?</div>
+    <div class="ms-options">
+      <div class="ms-opt" onclick="checkMark(this,false,'Student A just wrote the answer. No method marks awarded for unexplained answers on 2-mark questions.')">Student A: &ldquo;x = 5&rdquo;</div>
+      <div class="ms-opt" onclick="checkMark(this,true,'Student B shows the two steps clearly: subtract 5, then divide by 3. Both method marks awarded.')">Student B: &ldquo;3x = 20 &minus; 5 = 15, so x = 5&rdquo;</div>
+      <div class="ms-opt" onclick="checkMark(this,false,'Student C made an arithmetic error (20+5=25 is wrong). No marks for wrong method.')">Student C: &ldquo;3x = 25, x = 8.3&rdquo;</div>
+    </div>
+  </div>
+
+  <div class="ms-question">
+    <div class="ms-q">&#128196; <strong>Question:</strong> A triangle has base 8cm and perpendicular height 6cm. Find the area. [2 marks]<br>Which student gets full marks?</div>
+    <div class="ms-options">
+      <div class="ms-opt" onclick="checkMark(this,false,'Student A used base &times; height without halving. Incorrect formula = 0 marks.')">Student A: &ldquo;Area = 8 &times; 6 = 48 cm&sup2;&rdquo;</div>
+      <div class="ms-opt" onclick="checkMark(this,true,'Student B correctly applies the formula with the &frac12;. Both marks awarded.')">Student B: &ldquo;Area = &frac12; &times; 8 &times; 6 = 24 cm&sup2;&rdquo;</div>
+      <div class="ms-opt" onclick="checkMark(this,false,'Student C got the right numbers but forgot the &frac12;. 1 mark for method, 0 for answer.')">Student C: &ldquo;A = &frac12; &times; 8 + 6 = 10 cm&sup2;&rdquo;</div>
+    </div>
+  </div>
+
+  <div class="ms-question">
+    <div class="ms-q">&#128196; <strong>Question:</strong> Give a reason why angle ABC = angle DEF. [1 mark]<br>Which answer gets the mark?</div>
+    <div class="ms-options">
+      <div class="ms-opt" onclick="checkMark(this,false,'Too vague. The examiner needs the specific angle rule used.')">Student A: &ldquo;Because they look the same size&rdquo;</div>
+      <div class="ms-opt" onclick="checkMark(this,true,'Correct geometric reason, clearly stated. Full mark.')">Student B: &ldquo;Alternate angles are equal (Z-angles between parallel lines)&rdquo;</div>
+      <div class="ms-opt" onclick="checkMark(this,false,'Corresponding is incorrect here; the student has used the wrong rule.')">Student C: &ldquo;Corresponding angles (F-angles)&rdquo;</div>
+    </div>
+  </div>
+
+  <div class="ms-question">
+    <div class="ms-q">&#128196; <strong>Question:</strong> A sale reduces a price by 30%. The sale price is &pound;56. Find the original price. [3 marks]<br>Which student gets full marks?</div>
+    <div class="ms-options">
+      <div class="ms-opt" onclick="checkMark(this,false,'Student A added 30% back on instead of reversing the multiplier. Incorrect method.')">Student A: &ldquo;56 + 30% = 56 + 16.80 = &pound;72.80&rdquo;</div>
+      <div class="ms-opt" onclick="checkMark(this,false,'Student B has the right idea (multiplier) but made an arithmetic error dividing.')">Student B: &ldquo;Multiplier = 0.7, original = 56 &times; 0.7 = &pound;39.20&rdquo;</div>
+      <div class="ms-opt" onclick="checkMark(this,true,'Correct: identifies 70% = &pound;56, divides correctly, gets the right original price.')">Student C: &ldquo;70% = &pound;56, so 1% = &pound;0.80, original = 100% = &pound;80&rdquo;</div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Reference Formulas -->
+<div class="section">
+  <div class="section-title"><span class="icon">&#128196;</span> Quick Reference &mdash; Key Formulas</div>
+
+  <div class="accordion open" onclick="toggleAcc(this)">
+    <div class="accordion-head">&#128208; Geometry &mdash; Area &amp; Perimeter <span class="accordion-arrow">&#8964;</span></div>
+    <div class="accordion-body">
+      <table class="formula-table">
+        <tr><th>Shape</th><th>Area</th><th>Perimeter / Circumference</th></tr>
+        <tr><td>Rectangle</td><td>l &times; w</td><td>2(l + w)</td></tr>
+        <tr><td>Triangle</td><td>&frac12; &times; b &times; h</td><td>a + b + c</td></tr>
+        <tr><td>Parallelogram</td><td>b &times; h</td><td>2(a + b)</td></tr>
+        <tr><td>Trapezium</td><td>&frac12;(a+b)h</td><td>sum of all sides</td></tr>
+        <tr><td>Circle</td><td>&pi;r&sup2;</td><td>2&pi;r = &pi;d</td></tr>
+        <tr><td>Sector</td><td>(&theta;/360)&pi;r&sup2;</td><td>Arc: (&theta;/360)2&pi;r</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="accordion-head">&#128208; Geometry &mdash; Volume &amp; Surface Area <span class="accordion-arrow">&#8964;</span></div>
+    <div class="accordion-body">
+      <table class="formula-table">
+        <tr><th>Shape</th><th>Volume</th><th>Surface Area</th></tr>
+        <tr><td>Cuboid</td><td>l &times; w &times; h</td><td>2(lw + lh + wh)</td></tr>
+        <tr><td>Cylinder</td><td>&pi;r&sup2;h</td><td>2&pi;r&sup2; + 2&pi;rh</td></tr>
+        <tr><td>Any Prism</td><td>Area &times; length</td><td>2 ends + curved/flat sides</td></tr>
+        <tr><td>Sphere</td><td>(4/3)&pi;r&sup3;</td><td>4&pi;r&sup2;</td></tr>
+        <tr><td>Cone</td><td>(1/3)&pi;r&sup2;h</td><td>&pi;r&sup2; + &pi;rl</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="accordion-head">&#9201; Compound Measures <span class="accordion-arrow">&#8964;</span></div>
+    <div class="accordion-body">
+      <table class="formula-table">
+        <tr><th>Measure</th><th>Formula</th><th>Rearrangements</th></tr>
+        <tr><td>Speed</td><td>S = D &divide; T</td><td>D = S&times;T &nbsp; T = D&divide;S</td></tr>
+        <tr><td>Density</td><td>D = M &divide; V</td><td>M = D&times;V &nbsp; V = M&divide;D</td></tr>
+        <tr><td>Pressure</td><td>P = F &divide; A</td><td>F = P&times;A &nbsp; A = F&divide;P</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="accordion-head">&#128290; Algebra <span class="accordion-arrow">&#8964;</span></div>
+    <div class="accordion-body">
+      <table class="formula-table">
+        <tr><th>Rule</th><th>Formula</th></tr>
+        <tr><td>Gradient</td><td>m = (y&sub2;&minus;y&sub1;) &divide; (x&sub2;&minus;x&sub1;)</td></tr>
+        <tr><td>Straight line</td><td>y = mx + c</td></tr>
+        <tr><td>Index: multiply</td><td>a&sup2; &times; a&sup3; = a&sup5; (add powers)</td></tr>
+        <tr><td>Index: divide</td><td>a&sup5; &divide; a&sup2; = a&sup3; (subtract powers)</td></tr>
+        <tr><td>Index: power of power</td><td>(a&sup2;)&sup3; = a&sup6; (multiply powers)</td></tr>
+        <tr><td>Quadratic formula</td><td>x = (&minus;b &plusmn; &radic;(b&sup2;&minus;4ac)) &divide; 2a</td></tr>
+        <tr><td>nth term (linear)</td><td>dn + (first term &minus; d)</td></tr>
+        <tr><td>Interior angle sum</td><td>(n&minus;2) &times; 180&deg;</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="accordion-head">&#128270; Pythagoras &amp; Trigonometry <span class="accordion-arrow">&#8964;</span></div>
+    <div class="accordion-body">
+      <table class="formula-table">
+        <tr><th>Rule</th><th>Formula</th></tr>
+        <tr><td>Pythagoras</td><td>a&sup2; + b&sup2; = c&sup2; &nbsp; (c = hypotenuse)</td></tr>
+        <tr><td>sin &theta;</td><td>Opposite &divide; Hypotenuse</td></tr>
+        <tr><td>cos &theta;</td><td>Adjacent &divide; Hypotenuse</td></tr>
+        <tr><td>tan &theta;</td><td>Opposite &divide; Adjacent</td></tr>
+        <tr><td>SOH CAH TOA</td><td>Remember: Sin = O/H, Cos = A/H, Tan = O/A</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Unit Conversions -->
+<div class="section">
+  <div class="section-title"><span class="icon">&#9201;</span> Essential Unit Conversions</div>
+  <div class="conv-grid">
+    <div class="conv-item"><div class="conv-name">Length</div><div class="conv-val">1 km = 1000 m</div></div>
+    <div class="conv-item"><div class="conv-name">Length</div><div class="conv-val">1 m = 100 cm</div></div>
+    <div class="conv-item"><div class="conv-name">Length</div><div class="conv-val">1 cm = 10 mm</div></div>
+    <div class="conv-item"><div class="conv-name">Mass</div><div class="conv-val">1 kg = 1000 g</div></div>
+    <div class="conv-item"><div class="conv-name">Mass</div><div class="conv-val">1 tonne = 1000 kg</div></div>
+    <div class="conv-item"><div class="conv-name">Volume</div><div class="conv-val">1 litre = 1000 ml</div></div>
+    <div class="conv-item"><div class="conv-name">Volume</div><div class="conv-val">1 ml = 1 cm&sup3;</div></div>
+    <div class="conv-item"><div class="conv-name">Speed</div><div class="conv-val">1 m/s = 3.6 km/h</div></div>
+    <div class="conv-item"><div class="conv-name">Miles to km</div><div class="conv-val">1 mile &asymp; 1.6 km</div></div>
+    <div class="conv-item"><div class="conv-name">Area</div><div class="conv-val">1 m&sup2; = 10,000 cm&sup2;</div></div>
+    <div class="conv-item"><div class="conv-name">Volume</div><div class="conv-val">1 m&sup3; = 10&sup6; cm&sup3;</div></div>
+    <div class="conv-item"><div class="conv-name">Time</div><div class="conv-val">1 hour = 60 min = 3600 s</div></div>
+  </div>
+</div>
+
+<!-- Common mistakes -->
+<div class="section">
+  <div class="section-title"><span class="icon">&#9888;</span> Common Mistakes to Avoid</div>
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="accordion-head" style="color:#fca5a5">Forgetting the &frac12; in triangle area <span class="accordion-arrow">&#8964;</span></div>
+    <div class="accordion-body"><p>Area of triangle = <strong>&frac12; &times; base &times; height</strong>, NOT base &times; height. The &frac12; is always required.</p></div>
+  </div>
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="accordion-head" style="color:#fca5a5">Using diameter instead of radius in circle formulas <span class="accordion-arrow">&#8964;</span></div>
+    <div class="accordion-body"><p>A = &pi;r&sup2; needs the RADIUS. If given diameter, always halve it first: r = d &divide; 2.</p></div>
+  </div>
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="accordion-head" style="color:#fca5a5">Rounding too early in multi-step calculations <span class="accordion-arrow">&#8964;</span></div>
+    <div class="accordion-body"><p>Keep full accuracy throughout and only round at the final step. Premature rounding causes errors.</p></div>
+  </div>
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="accordion-head" style="color:#fca5a5">Not converting time to decimal hours for SDT <span class="accordion-arrow">&#8964;</span></div>
+    <div class="accordion-body"><p>2 hours 30 minutes = 2.5 hours (not 2.30!). Minutes &divide; 60 to get decimal hours.</p></div>
+  </div>
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="accordion-head" style="color:#fca5a5">Mixing up percentage increase/decrease and reverse percentage <span class="accordion-arrow">&#8964;</span></div>
+    <div class="accordion-body"><p>To increase by 15%: multiply by 1.15. To reverse a 15% reduction: divide by 0.85 (NOT multiply by 1.15 &mdash; that&apos;s a common error!).</p></div>
+  </div>
+  <div class="accordion" onclick="toggleAcc(this)">
+    <div class="accordion-head" style="color:#fca5a5">Bearings: not using 3 digits or measuring from wrong direction <span class="accordion-arrow">&#8964;</span></div>
+    <div class="accordion-body"><p>Bearings are always measured clockwise from NORTH and written with 3 digits. 45&deg; = 045&deg;, not 45&deg;.</p></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function toggleCheck(el){
+  const cb=el.querySelector('input');
+  cb.checked=!cb.checked;
+  el.classList.toggle('done',cb.checked);
+}
+function toggleAcc(el){
+  el.classList.toggle('open');
+}
+function checkMark(el,correct,explanation){
+  const parent=el.parentElement;
+  parent.querySelectorAll('.ms-opt').forEach(function(o){o.style.pointerEvents='none'});
+  el.classList.add(correct?'correct-mark':'wrong-mark');
+  let exp=el.nextElementSibling;
+  if(!exp||!exp.classList.contains('ms-explain')){
+    exp=document.createElement('div');
+    exp.className='ms-explain';
+    el.after(exp);
+  }
+  exp.textContent=(correct?'Correct! ':'Incorrect. ')+explanation;
+  exp.style.display='block';
+}
+</script>
+</body>
+</html>

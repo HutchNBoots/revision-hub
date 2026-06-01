@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ratio &amp; Proportion Quiz — Year 8 Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--accent:#34d399;--accent2:#6ee7b7;--correct:#10b981;--wrong:#ef4444;--text:#e2e8f0;--muted:#94a3b8;--border:#2d3748;--hint:#f59e0b}
+  *{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#065f46,#34d399);padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem}
+  header .back{color:#fff;text-decoration:none;font-size:1.4rem}header h1{font-family:'Fredoka One',cursive;font-size:1.8rem;color:#fff}
+  header .badge{margin-left:auto;background:rgba(0,0,0,0.3);border-radius:20px;padding:0.3rem 1rem;font-weight:700;color:#fff}
+  .container{max-width:860px;margin:0 auto;padding:2rem 1rem}
+  .dots-wrap{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:1.5rem}
+  .dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:var(--card);cursor:pointer;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all 0.2s}
+  .dot.current{border-color:var(--accent);color:var(--accent)}.dot.correct{background:var(--correct);border-color:var(--correct);color:#fff}.dot.wrong{background:var(--wrong);border-color:var(--wrong);color:#fff}
+  .q-card{background:var(--card);border-radius:16px;padding:2rem;margin-bottom:1.5rem;border:1px solid var(--border)}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+  .q-num{font-size:0.85rem;color:var(--muted);font-weight:700}.difficulty{font-size:0.75rem;padding:0.2rem 0.7rem;border-radius:20px;font-weight:700}
+  .easy{background:#064e3b;color:#6ee7b7}.medium{background:#78350f;color:#fcd34d}.hard{background:#7f1d1d;color:#fca5a5}
+  .q-text{font-size:1.15rem;font-weight:700;line-height:1.5;margin-bottom:1.5rem}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}@media(max-width:560px){.options{grid-template-columns:1fr}}
+  .opt{background:var(--card2);border:2px solid var(--border);border-radius:12px;padding:0.85rem 1rem;cursor:pointer;font-size:1rem;font-weight:600;text-align:left;color:var(--text);transition:all 0.2s;display:flex;align-items:center;gap:0.6rem}
+  .opt:hover:not(:disabled){border-color:var(--accent);background:#1e1e3a}.opt.selected-wrong{border-color:var(--wrong);background:#450a0a;color:#fca5a5}.opt.reveal-correct{border-color:var(--correct);background:#064e3b;color:#6ee7b7}.opt:disabled{cursor:default}
+  .opt-letter{width:26px;height:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;flex-shrink:0}
+  .hint-btn{margin-top:1rem;background:none;border:1px dashed var(--hint);color:var(--hint);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:600}
+  .hint-box{margin-top:0.75rem;background:#451a03;border-left:3px solid var(--hint);padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:0.95rem;display:none}
+  .feedback{margin-top:1.2rem;border-radius:12px;padding:1.2rem;display:none}.feedback.correct{background:#064e3b;border:1px solid var(--correct)}.feedback.wrong{background:#450a0a;border:1px solid var(--wrong)}
+  .feedback h3{font-family:'Fredoka One',cursive;font-size:1.1rem;margin-bottom:0.5rem}.feedback.correct h3{color:#6ee7b7}.feedback.wrong h3{color:#fca5a5}
+  .solution{margin-top:0.75rem;background:rgba(0,0,0,0.3);border-radius:8px;padding:1rem;font-size:0.95rem;line-height:1.7}.solution strong{color:var(--accent2)}
+  .nav-row{display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap}
+  .btn{padding:0.75rem 1.5rem;border-radius:10px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;transition:all 0.2s}
+  .btn-primary{background:var(--accent);color:#000}.btn-primary:hover{background:var(--accent2)}.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}.btn-sm{font-size:0.85rem;padding:0.5rem 1rem}
+  .score-bar{background:var(--card);border-radius:12px;padding:1rem 1.5rem;display:flex;gap:2rem;align-items:center;margin-bottom:1.5rem;border:1px solid var(--border);flex-wrap:wrap}
+  .score-item{text-align:center}.score-item .val{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--accent)}.score-item .lbl{font-size:0.75rem;color:var(--muted)}
+  #results-screen{display:none;background:var(--card);border-radius:16px;padding:2rem;text-align:center;border:1px solid var(--border)}
+  #results-screen h2{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--accent);margin-bottom:0.5rem}
+  .results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}.res-box{background:var(--card2);border-radius:12px;padding:1rem}.res-box .big{font-family:'Fredoka One',cursive;font-size:2rem}.res-box .small{font-size:0.8rem;color:var(--muted)}
+  .grade{font-family:'Fredoka One',cursive;font-size:3rem;margin:1rem 0}
+  .ai-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:2rem}
+  .ai-panel h3{font-family:'Fredoka One',cursive;color:var(--accent);margin-bottom:0.5rem;font-size:1.3rem}.ai-panel p{color:var(--muted);font-size:0.9rem;margin-bottom:1rem}
+  .ai-status{font-size:0.9rem;color:var(--muted);margin-top:0.75rem;min-height:1.2em;font-style:italic}
+  .ai-key-row{display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap}
+  .ai-key-row input{flex:1;min-width:200px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.9rem}
+  .ai-key-row input:focus{outline:none;border-color:var(--accent)}.reset-row{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem}
+</style>
+</head>
+<body>
+<header>
+  <a href="hub.html" class="back">⬅</a>
+  <h1>⚖️ Ratio &amp; Proportion</h1>
+  <div class="badge" id="header-score">0 / 0</div>
+</header>
+<div class="container">
+  <div class="score-bar">
+    <div class="score-item"><div class="val" id="sc-correct">0</div><div class="lbl">Correct</div></div>
+    <div class="score-item"><div class="val" id="sc-wrong">0</div><div class="lbl">Wrong</div></div>
+    <div class="score-item"><div class="val" id="sc-remain">20</div><div class="lbl">Remaining</div></div>
+    <div class="score-item"><div class="val" id="sc-pct">0%</div><div class="lbl">Score</div></div>
+  </div>
+  <div class="dots-wrap" id="dots"></div>
+  <div id="quiz-area">
+    <div class="q-card">
+      <div class="q-meta"><span class="q-num" id="q-num">Question 1 of 20</span><span class="difficulty" id="q-diff">Easy</span></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <button class="hint-btn" onclick="showHint()">💡 Show Hint</button>
+      <div class="hint-box" id="hint-box"></div>
+      <div class="feedback" id="feedback"><h3 id="fb-title"></h3><div class="solution" id="fb-solution"></div></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="prevQ()">← Previous</button>
+      <button class="btn btn-primary" onclick="nextQ()">Next →</button>
+      <button class="btn btn-secondary btn-sm" onclick="finishQuiz()">Finish Quiz</button>
+    </div>
+    <div class="reset-row">
+      <button class="btn btn-secondary btn-sm" onclick="resetAnswers()">↺ Reset Answers</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetOriginal()">⟳ Reset to Original 20</button>
+    </div>
+  </div>
+  <div id="results-screen">
+    <h2>Quiz Complete! 🎉</h2>
+    <div class="grade" id="grade-emoji"></div>
+    <p id="grade-msg" style="color:var(--muted);margin-bottom:1rem;"></p>
+    <div class="results-grid">
+      <div class="res-box"><div class="big" style="color:var(--correct)" id="r-correct">0</div><div class="small">Correct</div></div>
+      <div class="res-box"><div class="big" style="color:var(--wrong)" id="r-wrong">0</div><div class="small">Wrong</div></div>
+      <div class="res-box"><div class="big" style="color:var(--accent)" id="r-pct">0%</div><div class="small">Score</div></div>
+    </div>
+    <div class="nav-row" style="justify-content:center">
+      <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+      <button class="btn btn-secondary" onclick="resetOriginal()">Reset to Original 20</button>
+      <a href="hub.html" class="btn btn-secondary">← Back to Hub</a>
+    </div>
+  </div>
+  <div class="ai-panel">
+    <h3>🤖 Generate More Questions</h3>
+    <p>Mr. Euler will write new Ratio &amp; Proportion questions, then CheckerBot verifies them.</p>
+    <div class="ai-key-row">
+      <input type="password" id="api-key" placeholder="Paste your Anthropic API key here…">
+      <button class="btn btn-primary" onclick="generateAI()">Generate 5 More</button>
+    </div>
+    <div class="ai-status" id="ai-status"></div>
+  </div>
+</div>
+<script>
+const SEED_QUESTIONS = [
+  {q:"Simplify the ratio 24 : 36.",opts:["4 : 6","2 : 3","6 : 9","3 : 4"],ans:1,hint:"Divide both numbers by their HCF.",solution:"<strong>Step 1:</strong> HCF of 24 and 36 = 12<br><strong>Step 2:</strong> 24 ÷ 12 = 2, 36 ÷ 12 = 3<br><strong>Answer: 2 : 3</strong>",diff:"easy"},
+  {q:"Share £60 in the ratio 2 : 3.",opts:["£20 and £40","£24 and £36","£30 and £30","£15 and £45"],ans:1,hint:"Find the total number of parts, then find the value of one part.",solution:"<strong>Step 1:</strong> Total parts = 2 + 3 = 5<br><strong>Step 2:</strong> One part = £60 ÷ 5 = £12<br><strong>Step 3:</strong> 2 parts = £24, 3 parts = £36<br><strong>Answer: £24 and £36</strong>",diff:"easy"},
+  {q:"A recipe for 4 people needs 300g of flour. How much flour is needed for 6 people?",opts:["400g","420g","450g","500g"],ans:2,hint:"Find the amount for 1 person first, then multiply by 6.",solution:"<strong>Step 1:</strong> For 1 person: 300 ÷ 4 = 75g<br><strong>Step 2:</strong> For 6 people: 75 × 6 = <strong>450g</strong>",diff:"easy"},
+  {q:"Which is better value: 400g for £2.40 or 600g for £3.90?",opts:["400g for £2.40","600g for £3.90","They are the same","Cannot tell"],ans:1,hint:"Find the price per gram (or per 100g) for each option.",solution:"<strong>Option 1:</strong> £2.40 ÷ 400 = 0.6p per gram<br><strong>Option 2:</strong> £3.90 ÷ 600 = 0.65p per gram<br><strong>Answer: 400g for £2.40</strong> is better value (cheaper per gram)",diff:"easy"},
+  {q:"A map has a scale of 1 : 50 000. A distance on the map is 4 cm. What is the real distance in km?",opts:["0.2 km","2 km","20 km","200 km"],ans:1,hint:"Multiply the map distance by the scale factor, then convert cm to km.",solution:"<strong>Step 1:</strong> Real distance = 4 × 50 000 = 200 000 cm<br><strong>Step 2:</strong> Convert: 200 000 cm ÷ 100 = 2 000 m ÷ 1000 = <strong>2 km</strong>",diff:"easy"},
+  {q:"If y is directly proportional to x, and y = 12 when x = 4, what is y when x = 7?",opts:["16","21","28","3"],ans:1,hint:"Find the constant of proportionality: k = y ÷ x.",solution:"<strong>Step 1:</strong> k = 12 ÷ 4 = 3<br><strong>Step 2:</strong> y = kx = 3 × 7 = <strong>21</strong>",diff:"easy"},
+  {q:"Express 45 minutes as a percentage of 3 hours.",opts:["15%","25%","45%","50%"],ans:1,hint:"Convert everything to the same unit first. 3 hours = 180 minutes.",solution:"<strong>Step 1:</strong> 3 hours = 180 minutes<br><strong>Step 2:</strong> % = (45 ÷ 180) × 100 = 0.25 × 100 = <strong>25%</strong>",diff:"easy"},
+  {q:"Share £120 in the ratio 1 : 2 : 3. What is the largest share?",opts:["£20","£40","£60","£80"],ans:2,hint:"Total parts = 1 + 2 + 3 = 6. Find value of one part.",solution:"<strong>Step 1:</strong> Total parts = 6<br><strong>Step 2:</strong> One part = £120 ÷ 6 = £20<br><strong>Step 3:</strong> Largest share (3 parts) = 3 × £20 = <strong>£60</strong>",diff:"medium"},
+  {q:"A car travels 180 km using 15 litres of fuel. How many litres are needed for 240 km?",opts:["18 litres","20 litres","22 litres","25 litres"],ans:1,hint:"Find km per litre first (unit rate), then use it to find litres for 240 km.",solution:"<strong>Step 1:</strong> 180 km uses 15 L → 1 L covers 12 km<br><strong>Step 2:</strong> 240 km needs 240 ÷ 12 = <strong>20 litres</strong>",diff:"medium"},
+  {q:"The ratio of boys to girls in a class is 3 : 4. There are 28 students in total. How many boys are there?",opts:["10","12","16","21"],ans:1,hint:"Total ratio parts = 3 + 4 = 7. Find value of one part.",solution:"<strong>Step 1:</strong> Total parts = 7<br><strong>Step 2:</strong> One part = 28 ÷ 7 = 4<br><strong>Step 3:</strong> Boys = 3 × 4 = <strong>12</strong>",diff:"medium"},
+  {q:"If y is inversely proportional to x, and y = 8 when x = 3, what is y when x = 6?",opts:["16","4","2","12"],ans:1,hint:"For inverse proportion: y × x = constant (k). Find k, then use it.",solution:"<strong>Step 1:</strong> k = y × x = 8 × 3 = 24<br><strong>Step 2:</strong> When x = 6: y = 24 ÷ 6 = <strong>4</strong>",diff:"medium"},
+  {q:"A photograph is 6 cm wide and 9 cm tall. It is enlarged so that the width becomes 10 cm. What is the new height?",opts:["13 cm","15 cm","16 cm","18 cm"],ans:1,hint:"The ratio of width to height must stay the same (scale factor).",solution:"<strong>Step 1:</strong> Scale factor = 10 ÷ 6 = 5/3<br><strong>Step 2:</strong> New height = 9 × 5/3 = 45/3 = <strong>15 cm</strong>",diff:"medium"},
+  {q:"£200 is shared between Amy and Ben in the ratio 3 : 5. Amy gives half her share to Claire. How much does Claire receive?",opts:["£30","£37.50","£40","£75"],ans:1,hint:"Find Amy's share first, then halve it.",solution:"<strong>Step 1:</strong> Total parts = 8, one part = £25<br><strong>Step 2:</strong> Amy's share = 3 × £25 = £75<br><strong>Step 3:</strong> Claire = £75 ÷ 2 = <strong>£37.50</strong>",diff:"medium"},
+  {q:"A metal alloy is made from copper and zinc in the ratio 5 : 2. If there is 350g of copper, how much zinc is there?",opts:["100g","140g","175g","700g"],ans:1,hint:"If 5 parts = 350g, find 1 part, then find 2 parts.",solution:"<strong>Step 1:</strong> 5 parts = 350g → 1 part = 70g<br><strong>Step 2:</strong> Zinc = 2 parts = 2 × 70g = <strong>140g</strong>",diff:"medium"},
+  {q:"A scale drawing uses a scale of 2 cm : 5 m. What length on the drawing represents 12.5 m?",opts:["3 cm","4 cm","5 cm","6.25 cm"],ans:2,hint:"Find how many 'lots' of 5 m go into 12.5 m, then multiply by 2 cm.",solution:"<strong>Step 1:</strong> 12.5 ÷ 5 = 2.5<br><strong>Step 2:</strong> 2.5 × 2 cm = <strong>5 cm</strong>",diff:"medium"},
+  {q:"Orange squash is mixed with water in the ratio 1 : 4. If you want to make 750 ml of drink, how much squash do you need?",opts:["125 ml","150 ml","175 ml","200 ml"],ans:1,hint:"Total parts = 5. Find the value of 1 part (squash).",solution:"<strong>Step 1:</strong> Total parts = 1 + 4 = 5<br><strong>Step 2:</strong> 1 part = 750 ÷ 5 = 150 ml<br><strong>Answer: 150 ml of squash</strong>",diff:"hard"},
+  {q:"y is directly proportional to x². When x = 3, y = 36. Find y when x = 5.",opts:["60","80","100","120"],ans:2,hint:"Find k using y = kx². Then substitute x = 5.",solution:"<strong>Step 1:</strong> y = kx² → 36 = k × 9 → k = 4<br><strong>Step 2:</strong> When x = 5: y = 4 × 25 = <strong>100</strong>",diff:"hard"},
+  {q:"Three people can paint a fence in 6 days. How long would it take 2 people (working at the same rate)?",opts:["4 days","8 days","9 days","12 days"],ans:2,hint:"This is inverse proportion. More workers = fewer days.",solution:"<strong>Step 1:</strong> Total work = 3 × 6 = 18 person-days<br><strong>Step 2:</strong> 2 people: 18 ÷ 2 = <strong>9 days</strong>",diff:"hard"},
+  {q:"The ratio of red to blue marbles is 2 : 5. Red marbles are increased by 50% and blue marbles are decreased by 20%. What is the new ratio of red to blue?",opts:["3 : 4","3 : 6","4 : 5","6 : 20"],ans:0,hint:"Use a convenient starting number (e.g. 20 red, 50 blue). Apply the percentage changes.",solution:"<strong>Step 1:</strong> Start: 20 red, 50 blue (ratio 2:5)<br><strong>Step 2:</strong> New red = 20 × 1.5 = 30<br><strong>Step 3:</strong> New blue = 50 × 0.8 = 40<br><strong>Step 4:</strong> Ratio = 30 : 40 = <strong>3 : 4</strong>",diff:"hard"},
+  {q:"A recipe for 8 people uses 0.6 kg of rice. Jamie wants to cook for 5 people. How much rice does he need? Give your answer in grams.",opts:["325g","350g","375g","400g"],ans:2,hint:"Find the amount for 1 person, then multiply by 5.",solution:"<strong>Step 1:</strong> 0.6 kg = 600g for 8 people<br><strong>Step 2:</strong> 1 person: 600 ÷ 8 = 75g<br><strong>Step 3:</strong> 5 people: 75 × 5 = <strong>375g</strong>",diff:"hard"},
+];
+
+let questions=[...SEED_QUESTIONS],current=0,answers=new Array(questions.length).fill(null);
+function buildDots(){const w=document.getElementById('dots');w.innerHTML='';questions.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===current?' current':'')+(answers[i]==='correct'?' correct':answers[i]==='wrong'?' wrong':'');d.textContent=i+1;d.onclick=()=>{current=i;render()};w.appendChild(d)})}
+function updateScore(){const c=answers.filter(a=>a==='correct').length,w=answers.filter(a=>a==='wrong').length,ans=c+w,pct=ans?Math.round(c/ans*100):0;document.getElementById('sc-correct').textContent=c;document.getElementById('sc-wrong').textContent=w;document.getElementById('sc-remain').textContent=questions.length-ans;document.getElementById('sc-pct').textContent=pct+'%';document.getElementById('header-score').textContent=c+' / '+questions.length}
+function render(){const q=questions[current];document.getElementById('q-num').textContent=`Question ${current+1} of ${questions.length}`;const de=document.getElementById('q-diff');de.textContent={easy:'Easy',medium:'Medium',hard:'Hard'}[q.diff];de.className='difficulty '+q.diff;document.getElementById('q-text').innerHTML=q.q;document.getElementById('hint-box').style.display='none';document.getElementById('hint-box').textContent=q.hint;const fb=document.getElementById('feedback');fb.style.display='none';fb.className='feedback';const opts=document.getElementById('options');opts.innerHTML='';['A','B','C','D'].forEach((l,i)=>{const btn=document.createElement('button');btn.className='opt';btn.innerHTML=`<span class="opt-letter">${l}</span> ${q.opts[i]}`;if(answers[current]!==null){btn.disabled=true;if(i===q.ans)btn.classList.add('reveal-correct')};btn.onclick=()=>checkAnswer(i);opts.appendChild(btn)});if(answers[current]!==null)showFeedback(answers[current]==='correct');buildDots();updateScore()}
+function checkAnswer(i){if(answers[current]!==null)return;const q=questions[current],ok=i===q.ans;answers[current]=ok?'correct':'wrong';document.getElementById('options').querySelectorAll('.opt').forEach((b,idx)=>{b.disabled=true;if(idx===q.ans)b.classList.add('reveal-correct');if(idx===i&&!ok)b.classList.add('selected-wrong')});showFeedback(ok);buildDots();updateScore()}
+function showFeedback(ok){const q=questions[current],fb=document.getElementById('feedback');fb.style.display='block';fb.className='feedback '+(ok?'correct':'wrong');document.getElementById('fb-title').textContent=ok?'✅ Correct! Well done!':'❌ Not quite — here\'s how to do it:';document.getElementById('fb-solution').innerHTML=q.solution}
+function showHint(){const b=document.getElementById('hint-box');b.style.display=b.style.display==='none'?'block':'none'}
+function prevQ(){if(current>0){current--;render()}}
+function nextQ(){if(current<questions.length-1){current++;render()}else finishQuiz()}
+function finishQuiz(){const c=answers.filter(a=>a==='correct').length,w=answers.filter(a=>a==='wrong').length,pct=Math.round(c/questions.length*100);document.getElementById('r-correct').textContent=c;document.getElementById('r-wrong').textContent=w;document.getElementById('r-pct').textContent=pct+'%';document.getElementById('grade-emoji').textContent=pct>=90?'🏆':pct>=70?'⭐':pct>=50?'👍':'📚';document.getElementById('grade-msg').textContent=pct>=90?'Outstanding ratio master!':pct>=70?'Great work!':pct>=50?'Good effort — review missed questions.':'Keep practising!';document.getElementById('quiz-area').style.display='none';document.getElementById('results-screen').style.display='block'}
+function restartQuiz(){answers=new Array(questions.length).fill(null);current=0;document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+function resetAnswers(){answers=new Array(questions.length).fill(null);document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+function resetOriginal(){questions=[...SEED_QUESTIONS];answers=new Array(questions.length).fill(null);current=0;document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+async function generateAI(){const key=document.getElementById('api-key').value.trim();if(!key){document.getElementById('ai-status').textContent='⚠️ Please enter your Anthropic API key.';return}const s=document.getElementById('ai-status');s.textContent='🧑‍🏫 Mr. Euler is writing 5 new questions…';const p=`You are Mr. Euler, an expert Year 8 UK Maths teacher. Generate 5 multiple-choice questions on RATIO & PROPORTION (ratio, proportion, map scales, direct/inverse proportion, percentage change, best value, sharing in a ratio). 4 options, ONE correct, include hint and step-by-step HTML solution, double-check arithmetic, British English. JSON only: [{"q":"","opts":["","","",""],"ans":0,"hint":"","solution":"","diff":"easy|medium|hard"}]`;try{const r1=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:p}]})});const d1=await r1.json();const newQs=JSON.parse(d1.content[0].text.trim().replace(/```json|```/g,''));s.textContent='🔍 CheckerBot is verifying…';const cp=`You are CheckerBot. Verify these 5 Ratio & Proportion questions: correct arithmetic, one answer, KS3 level, clear solution. ${JSON.stringify(newQs)}. Respond: APPROVED: [json array]`;const r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:cp}]})});const d2=await r2.json();const cr=d2.content[0].text.trim();if(!cr.startsWith('APPROVED:')){s.textContent='❌ CheckerBot rejected questions. Try again.';return}const checked=JSON.parse(cr.replace('APPROVED:','').trim().replace(/```json|```/g,''));questions=[...questions,...checked];answers=new Array(questions.length).fill(null);buildDots();s.textContent=`✅ 5 new questions added! Now ${questions.length} total.`;updateScore()}catch(e){s.textContent='❌ Error: '+e.message}}
+render();
+</script>
+</body>
+</html>

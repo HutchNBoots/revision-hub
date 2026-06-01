@@ -1,66 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Maths — Coming Soon</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Year 8 Maths Revision Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--text:#e2e8f0;--muted:#94a3b8;--border:#2d3748}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh}
 
-    body {
-      background: #0f0e17;
-      color: #e8e8e8;
-      font-family: 'Nunito', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-      padding: 2rem;
-    }
+/* Hero */
+.hero{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 40%,#1e3a5f 100%);padding:3rem 2rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero h1{font-family:'Fredoka One',cursive;font-size:2.8rem;color:#fff;margin-bottom:0.5rem;position:relative}
+.hero p{color:#a5b4fc;font-size:1.1rem;margin-bottom:1.5rem;position:relative}
+.hero-badges{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;position:relative}
+.hero-badge{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:0.4rem 1rem;font-size:0.85rem;font-weight:700;color:#e0e7ff}
 
-    .emoji { font-size: 5rem; line-height: 1; }
+/* Stats bar */
+.stats-bar{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
+.stat{text-align:center}.stat .val{font-family:'Fredoka One',cursive;font-size:1.8rem;color:#a78bfa}.stat .lbl{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
 
-    h1 {
-      font-family: 'Fredoka One', cursive;
-      font-size: clamp(2rem, 6vw, 3.5rem);
-      color: #a78bfa;
-      text-align: center;
-    }
+.container{max-width:1100px;margin:0 auto;padding:2rem 1rem}
 
-    p {
-      font-size: 1.1rem;
-      color: #a8a8b8;
-      text-align: center;
-    }
+/* Section headers */
+.section-header{display:flex;align-items:center;gap:0.75rem;margin:2rem 0 1.2rem}
+.section-header h2{font-family:'Fredoka One',cursive;font-size:1.5rem}
+.section-header .line{flex:1;height:1px;background:var(--border)}
 
-    a.back {
-      margin-top: 0.5rem;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 600;
-      font-size: 1rem;
-      color: #a78bfa;
-      text-decoration: none;
-      border: 2px solid #a78bfa;
-      padding: 0.5rem 1.4rem;
-      border-radius: 999px;
-      transition: background 0.2s, color 0.2s;
-    }
+/* Topic grid */
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem;margin-bottom:2rem}
 
-    a.back:hover {
-      background: #a78bfa;
-      color: #0f0e17;
-    }
-  </style>
+.topic-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:transform 0.2s,border-color 0.2s;position:relative;overflow:hidden}
+.topic-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--tc)}
+.topic-card:hover{transform:translateY(-3px);border-color:var(--tc)}
+.topic-card .tc-header{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem}
+.topic-card .tc-icon{font-size:1.8rem}
+.topic-card .tc-name{font-family:'Fredoka One',cursive;font-size:1.15rem}
+.topic-card .tc-links{display:flex;gap:0.6rem;flex-wrap:wrap}
+.tc-link{display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.85rem;transition:all 0.2s}
+.tc-link.quiz{background:rgba(255,255,255,0.08);color:var(--tc);border:1px solid var(--tc)}
+.tc-link.quiz:hover{background:var(--tc);color:#000}
+.tc-link.cards{background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid var(--border)}
+.tc-link.cards:hover{color:var(--tc);border-color:var(--tc)}
+
+/* Revision tips */
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-bottom:2rem}
+.tip-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem}
+.tip-card .tip-icon{font-size:1.5rem;margin-bottom:0.5rem}
+.tip-card h3{font-family:'Fredoka One',cursive;font-size:1rem;color:#a78bfa;margin-bottom:0.4rem}
+.tip-card p{font-size:0.88rem;color:var(--muted);line-height:1.5}
+
+/* Quick links */
+.quick-links{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem}
+.ql{display:inline-flex;align-items:center;gap:0.5rem;padding:0.8rem 1.4rem;border-radius:12px;text-decoration:none;font-weight:700;font-size:0.95rem;transition:all 0.2s}
+.ql.primary{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff}
+.ql.primary:hover{opacity:0.9}
+.ql.secondary{background:var(--card);color:var(--text);border:1px solid var(--border)}
+.ql.secondary:hover{border-color:#a78bfa;color:#a78bfa}
+
+/* Key facts table */
+.key-facts{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:2rem}
+.key-facts h3{font-family:'Fredoka One',cursive;font-size:1.2rem;margin-bottom:1rem;color:#a78bfa}
+.facts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem}
+.fact-item{background:var(--card2);border-radius:8px;padding:0.75rem 1rem;font-size:0.88rem}
+.fact-item .fact-title{font-weight:800;color:#e2e8f0;margin-bottom:0.2rem;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px}
+.fact-item .fact-val{color:#a5b4fc;font-family:monospace;font-size:0.95rem}
+
+footer{text-align:center;padding:2rem;color:var(--muted);font-size:0.85rem;border-top:1px solid var(--border)}
+</style>
 </head>
 <body>
-  <div class="emoji">🔢</div>
-  <h1>Maths — Coming Soon</h1>
-  <p>Revision materials are being prepared. Check back soon!</p>
-  <a class="back" href="../index.html">← Back to Revision Hub</a>
+
+<div class="hero">
+  <h1>&#127922; Year 8 Maths Hub</h1>
+  <p>Your complete revision toolkit &mdash; quizzes, flashcards, and AI-powered practice</p>
+  <div class="hero-badges">
+    <div class="hero-badge">&#128218; 8 Topics</div>
+    <div class="hero-badge">&#128736; 8 Quizzes</div>
+    <div class="hero-badge">&#127183; 8 Flashcard Decks</div>
+    <div class="hero-badge">&#129302; AI Generation</div>
+    <div class="hero-badge">&#127891; KS3 Aligned</div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat"><div class="val">160</div><div class="lbl">Seed Questions</div></div>
+  <div class="stat"><div class="val">160</div><div class="lbl">Flashcards</div></div>
+  <div class="stat"><div class="val">8</div><div class="lbl">Topics</div></div>
+  <div class="stat"><div class="val">&infin;</div><div class="lbl">AI Questions</div></div>
+</div>
+
+<div class="container">
+
+  <!-- Quick links -->
+  <div class="section-header">
+    <h2>&#9889; Quick Start</h2>
+    <div class="line"></div>
+  </div>
+  <div class="quick-links">
+    <a href="mixed-quiz.html" class="ql primary">&#127922; Mixed Topic Quiz</a>
+    <a href="exam-guide.html" class="ql secondary">&#128196; Exam Technique Guide</a>
+  </div>
+
+  <!-- Topics -->
+  <div class="section-header">
+    <h2>&#128218; Topics</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="topic-grid">
+
+    <div class="topic-card" style="--tc:#f59e0b">
+      <div class="tc-header">
+        <div class="tc-icon">&#128290;</div>
+        <div class="tc-name">Number</div>
+      </div>
+      <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">Fractions &bull; Decimals &bull; Percentages &bull; Indices &bull; Standard Form &bull; Rounding &bull; HCF &amp; LCM</div>
+      <div class="tc-links">
+        <a href="quiz-number.html" class="tc-link quiz">&#128736; Quiz</a>
+        <a href="flashcards-number.html" class="tc-link cards">&#127183; Flashcards</a>
+      </div>
+    </div>
+
+    <div class="topic-card" style="--tc:#a78bfa">
+      <div class="tc-header">
+        <div class="tc-icon">&#128290;</div>
+        <div class="tc-name">Algebra</div>
+      </div>
+      <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">Expanding &bull; Factorising &bull; Equations &bull; Sequences &bull; Graphs &bull; Simultaneous Equations</div>
+      <div class="tc-links">
+        <a href="quiz-algebra.html" class="tc-link quiz">&#128736; Quiz</a>
+        <a href="flashcards-algebra.html" class="tc-link cards">&#127183; Flashcards</a>
+      </div>
+    </div>
+
+    <div class="topic-card" style="--tc:#34d399">
+      <div class="tc-header">
+        <div class="tc-icon">&#9878;</div>
+        <div class="tc-name">Ratio &amp; Proportion</div>
+      </div>
+      <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">Ratios &bull; Direct &amp; Inverse Proportion &bull; Best Value &bull; Map Scales &bull; % Change</div>
+      <div class="tc-links">
+        <a href="quiz-ratio.html" class="tc-link quiz">&#128736; Quiz</a>
+        <a href="flashcards-ratio.html" class="tc-link cards">&#127183; Flashcards</a>
+      </div>
+    </div>
+
+    <div class="topic-card" style="--tc:#fb923c">
+      <div class="tc-header">
+        <div class="tc-icon">&#128208;</div>
+        <div class="tc-name">Geometry: Shapes</div>
+      </div>
+      <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">Area &bull; Perimeter &bull; Volume &bull; Circles &bull; Pythagoras &bull; Surface Area &bull; Prisms</div>
+      <div class="tc-links">
+        <a href="quiz-geometry-shapes.html" class="tc-link quiz">&#128736; Quiz</a>
+        <a href="flashcards-geometry-shapes.html" class="tc-link cards">&#127183; Flashcards</a>
+      </div>
+    </div>
+
+    <div class="topic-card" style="--tc:#38bdf8">
+      <div class="tc-header">
+        <div class="tc-icon">&#128208;</div>
+        <div class="tc-name">Geometry: Angles</div>
+      </div>
+      <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">Angle Facts &bull; Parallel Lines &bull; Polygons &bull; Bearings &bull; Transformations</div>
+      <div class="tc-links">
+        <a href="quiz-geometry-angles.html" class="tc-link quiz">&#128736; Quiz</a>
+        <a href="flashcards-geometry-angles.html" class="tc-link cards">&#127183; Flashcards</a>
+      </div>
+    </div>
+
+    <div class="topic-card" style="--tc:#e879f9">
+      <div class="tc-header">
+        <div class="tc-icon">&#128202;</div>
+        <div class="tc-name">Statistics</div>
+      </div>
+      <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">Mean &bull; Median &bull; Mode &bull; Range &bull; Frequency Tables &bull; Pie Charts &bull; Scatter Graphs</div>
+      <div class="tc-links">
+        <a href="quiz-statistics.html" class="tc-link quiz">&#128736; Quiz</a>
+        <a href="flashcards-statistics.html" class="tc-link cards">&#127183; Flashcards</a>
+      </div>
+    </div>
+
+    <div class="topic-card" style="--tc:#f87171">
+      <div class="tc-header">
+        <div class="tc-icon">&#127922;</div>
+        <div class="tc-name">Probability</div>
+      </div>
+      <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">Basic Probability &bull; Tree Diagrams &bull; Combined Events &bull; Without Replacement</div>
+      <div class="tc-links">
+        <a href="quiz-probability.html" class="tc-link quiz">&#128736; Quiz</a>
+        <a href="flashcards-probability.html" class="tc-link cards">&#127183; Flashcards</a>
+      </div>
+    </div>
+
+    <div class="topic-card" style="--tc:#fbbf24">
+      <div class="tc-header">
+        <div class="tc-icon">&#9201;</div>
+        <div class="tc-name">Measures</div>
+      </div>
+      <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem">Speed/Distance/Time &bull; Density &bull; Unit Conversions &bull; Compound Measures &bull; Pressure</div>
+      <div class="tc-links">
+        <a href="quiz-measures.html" class="tc-link quiz">&#128736; Quiz</a>
+        <a href="flashcards-measures.html" class="tc-link cards">&#127183; Flashcards</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Key Formulas Quick Reference -->
+  <div class="section-header">
+    <h2>&#128196; Key Formulas</h2>
+    <div class="line"></div>
+  </div>
+  <div class="key-facts">
+    <div class="facts-grid">
+      <div class="fact-item"><div class="fact-title">Area of Circle</div><div class="fact-val">A = &#960;r&#178;</div></div>
+      <div class="fact-item"><div class="fact-title">Circumference</div><div class="fact-val">C = &#960;d = 2&#960;r</div></div>
+      <div class="fact-item"><div class="fact-title">Area of Triangle</div><div class="fact-val">A = &frac12;bh</div></div>
+      <div class="fact-item"><div class="fact-title">Area of Trapezium</div><div class="fact-val">A = &frac12;(a+b)h</div></div>
+      <div class="fact-item"><div class="fact-title">Volume of Cylinder</div><div class="fact-val">V = &#960;r&#178;h</div></div>
+      <div class="fact-item"><div class="fact-title">Volume of Prism</div><div class="fact-val">V = Area &times; length</div></div>
+      <div class="fact-item"><div class="fact-title">Pythagoras</div><div class="fact-val">a&#178; + b&#178; = c&#178;</div></div>
+      <div class="fact-item"><div class="fact-title">Speed</div><div class="fact-val">S = D &divide; T</div></div>
+      <div class="fact-item"><div class="fact-title">Density</div><div class="fact-val">D = M &divide; V</div></div>
+      <div class="fact-item"><div class="fact-title">Pressure</div><div class="fact-val">P = F &divide; A</div></div>
+      <div class="fact-item"><div class="fact-title">% Change</div><div class="fact-val">(change&divide;orig)&times;100</div></div>
+      <div class="fact-item"><div class="fact-title">Interior Angles</div><div class="fact-val">(n&minus;2) &times; 180&deg;</div></div>
+      <div class="fact-item"><div class="fact-title">y = mx + c</div><div class="fact-val">m = gradient, c = intercept</div></div>
+      <div class="fact-item"><div class="fact-title">Probability</div><div class="fact-val">P = favourable &divide; total</div></div>
+      <div class="fact-item"><div class="fact-title">Mean</div><div class="fact-val">&Sigma;x &divide; n</div></div>
+      <div class="fact-item"><div class="fact-title">Sector Area</div><div class="fact-val">(&theta;&divide;360) &times; &#960;r&#178;</div></div>
+    </div>
+  </div>
+
+  <!-- Revision Tips -->
+  <div class="section-header">
+    <h2>&#128161; Maths Revision Tips</h2>
+    <div class="line"></div>
+  </div>
+  <div class="tips-grid">
+    <div class="tip-card">
+      <div class="tip-icon">&#128394;</div>
+      <h3>Always Show Your Working</h3>
+      <p>Even if you get the wrong answer, you can earn method marks. Write down every step clearly.</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">&#128270;</div>
+      <h3>Check With the Inverse</h3>
+      <p>After solving an equation, substitute your answer back in to verify it works. For + check with &minus;, for &times; check with &divide;.</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">&#128200;</div>
+      <h3>Use Estimation First</h3>
+      <p>Before calculating, round to 1 significant figure to estimate the answer. This catches big mistakes.</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">&#127359;</div>
+      <h3>Draw a Diagram</h3>
+      <p>For geometry, bearings, and word problems, always sketch the situation. A good diagram is worth marks.</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">&#128210;</div>
+      <h3>Read the Question Twice</h3>
+      <p>Underline what you&apos;re asked to find. Many marks are lost by answering a different question.</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">&#128295;</div>
+      <h3>Learn Your Formula Triangles</h3>
+      <p>Speed&divide;Distance&divide;Time, Mass&divide;Density&divide;Volume, Force&divide;Pressure&divide;Area &mdash; cover the one you want to find.</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">&#128249;</div>
+      <h3>Units Matter!</h3>
+      <p>Always check your units. Convert to the same unit before calculating. Area = cm&sup2;, Volume = cm&sup3;.</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">&#127775;</div>
+      <h3>Practise Weak Topics Daily</h3>
+      <p>Use the flashcard &ldquo;Study Not Yet&rdquo; mode to focus on cards you haven&apos;t mastered yet.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Year 8 Maths Revision Hub &bull; KS3 UK National Curriculum &bull; Powered by Mr. Euler &amp; CheckerBot AI
+</footer>
+
 </body>
 </html>

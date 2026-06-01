@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geometry: Angles Quiz — Year 8 Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0f0f1a;--card:#1a1a2e;--card2:#16213e;--accent:#38bdf8;--accent2:#7dd3fc;--correct:#10b981;--wrong:#ef4444;--text:#e2e8f0;--muted:#94a3b8;--border:#2d3748;--hint:#f59e0b}
+  *{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh}
+  header{background:linear-gradient(135deg,#0c4a6e,#38bdf8);padding:1.2rem 2rem;display:flex;align-items:center;gap:1rem}
+  header .back{color:#fff;text-decoration:none;font-size:1.4rem}header h1{font-family:'Fredoka One',cursive;font-size:1.8rem;color:#fff}
+  header .badge{margin-left:auto;background:rgba(0,0,0,0.3);border-radius:20px;padding:0.3rem 1rem;font-weight:700;color:#fff}
+  .container{max-width:860px;margin:0 auto;padding:2rem 1rem}
+  .dots-wrap{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:1.5rem}
+  .dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:var(--card);cursor:pointer;font-size:0.65rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all 0.2s}
+  .dot.current{border-color:var(--accent);color:var(--accent)}.dot.correct{background:var(--correct);border-color:var(--correct);color:#fff}.dot.wrong{background:var(--wrong);border-color:var(--wrong);color:#fff}
+  .q-card{background:var(--card);border-radius:16px;padding:2rem;margin-bottom:1.5rem;border:1px solid var(--border)}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+  .q-num{font-size:0.85rem;color:var(--muted);font-weight:700}.difficulty{font-size:0.75rem;padding:0.2rem 0.7rem;border-radius:20px;font-weight:700}
+  .easy{background:#064e3b;color:#6ee7b7}.medium{background:#78350f;color:#fcd34d}.hard{background:#7f1d1d;color:#fca5a5}
+  .q-text{font-size:1.15rem;font-weight:700;line-height:1.5;margin-bottom:1.5rem}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}@media(max-width:560px){.options{grid-template-columns:1fr}}
+  .opt{background:var(--card2);border:2px solid var(--border);border-radius:12px;padding:0.85rem 1rem;cursor:pointer;font-size:1rem;font-weight:600;text-align:left;color:var(--text);transition:all 0.2s;display:flex;align-items:center;gap:0.6rem}
+  .opt:hover:not(:disabled){border-color:var(--accent);background:#1e1e3a}.opt.selected-wrong{border-color:var(--wrong);background:#450a0a;color:#fca5a5}.opt.reveal-correct{border-color:var(--correct);background:#064e3b;color:#6ee7b7}.opt:disabled{cursor:default}
+  .opt-letter{width:26px;height:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;flex-shrink:0}
+  .hint-btn{margin-top:1rem;background:none;border:1px dashed var(--hint);color:var(--hint);padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:0.9rem;font-weight:600}
+  .hint-box{margin-top:0.75rem;background:#451a03;border-left:3px solid var(--hint);padding:0.75rem 1rem;border-radius:0 8px 8px 0;font-size:0.95rem;display:none}
+  .feedback{margin-top:1.2rem;border-radius:12px;padding:1.2rem;display:none}.feedback.correct{background:#064e3b;border:1px solid var(--correct)}.feedback.wrong{background:#450a0a;border:1px solid var(--wrong)}
+  .feedback h3{font-family:'Fredoka One',cursive;font-size:1.1rem;margin-bottom:0.5rem}.feedback.correct h3{color:#6ee7b7}.feedback.wrong h3{color:#fca5a5}
+  .solution{margin-top:0.75rem;background:rgba(0,0,0,0.3);border-radius:8px;padding:1rem;font-size:0.95rem;line-height:1.7}.solution strong{color:var(--accent2)}
+  .nav-row{display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap}
+  .btn{padding:0.75rem 1.5rem;border-radius:10px;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;transition:all 0.2s}
+  .btn-primary{background:var(--accent);color:#000}.btn-primary:hover{background:var(--accent2)}.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}.btn-sm{font-size:0.85rem;padding:0.5rem 1rem}
+  .score-bar{background:var(--card);border-radius:12px;padding:1rem 1.5rem;display:flex;gap:2rem;align-items:center;margin-bottom:1.5rem;border:1px solid var(--border);flex-wrap:wrap}
+  .score-item{text-align:center}.score-item .val{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--accent)}.score-item .lbl{font-size:0.75rem;color:var(--muted)}
+  #results-screen{display:none;background:var(--card);border-radius:16px;padding:2rem;text-align:center;border:1px solid var(--border)}
+  #results-screen h2{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--accent);margin-bottom:0.5rem}
+  .results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}.res-box{background:var(--card2);border-radius:12px;padding:1rem}.res-box .big{font-family:'Fredoka One',cursive;font-size:2rem}.res-box .small{font-size:0.8rem;color:var(--muted)}
+  .grade{font-family:'Fredoka One',cursive;font-size:3rem;margin:1rem 0}
+  .ai-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:2rem}
+  .ai-panel h3{font-family:'Fredoka One',cursive;color:var(--accent);margin-bottom:0.5rem;font-size:1.3rem}.ai-panel p{color:var(--muted);font-size:0.9rem;margin-bottom:1rem}
+  .ai-status{font-size:0.9rem;color:var(--muted);margin-top:0.75rem;min-height:1.2em;font-style:italic}
+  .ai-key-row{display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap}
+  .ai-key-row input{flex:1;min-width:200px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text);font-family:'Nunito',sans-serif;font-size:0.9rem}
+  .ai-key-row input:focus{outline:none;border-color:var(--accent)}.reset-row{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem}
+</style>
+</head>
+<body>
+<header>
+  <a href="hub.html" class="back">⬅</a>
+  <h1>📏 Geometry: Angles</h1>
+  <div class="badge" id="header-score">0 / 0</div>
+</header>
+<div class="container">
+  <div class="score-bar">
+    <div class="score-item"><div class="val" id="sc-correct">0</div><div class="lbl">Correct</div></div>
+    <div class="score-item"><div class="val" id="sc-wrong">0</div><div class="lbl">Wrong</div></div>
+    <div class="score-item"><div class="val" id="sc-remain">20</div><div class="lbl">Remaining</div></div>
+    <div class="score-item"><div class="val" id="sc-pct">0%</div><div class="lbl">Score</div></div>
+  </div>
+  <div class="dots-wrap" id="dots"></div>
+  <div id="quiz-area">
+    <div class="q-card">
+      <div class="q-meta"><span class="q-num" id="q-num">Question 1 of 20</span><span class="difficulty" id="q-diff">Easy</span></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <button class="hint-btn" onclick="showHint()">💡 Show Hint</button>
+      <div class="hint-box" id="hint-box"></div>
+      <div class="feedback" id="feedback"><h3 id="fb-title"></h3><div class="solution" id="fb-solution"></div></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="prevQ()">← Previous</button>
+      <button class="btn btn-primary" onclick="nextQ()">Next →</button>
+      <button class="btn btn-secondary btn-sm" onclick="finishQuiz()">Finish Quiz</button>
+    </div>
+    <div class="reset-row">
+      <button class="btn btn-secondary btn-sm" onclick="resetAnswers()">↺ Reset Answers</button>
+      <button class="btn btn-secondary btn-sm" onclick="resetOriginal()">⟳ Reset to Original 20</button>
+    </div>
+  </div>
+  <div id="results-screen">
+    <h2>Quiz Complete! 🎉</h2>
+    <div class="grade" id="grade-emoji"></div>
+    <p id="grade-msg" style="color:var(--muted);margin-bottom:1rem;"></p>
+    <div class="results-grid">
+      <div class="res-box"><div class="big" style="color:var(--correct)" id="r-correct">0</div><div class="small">Correct</div></div>
+      <div class="res-box"><div class="big" style="color:var(--wrong)" id="r-wrong">0</div><div class="small">Wrong</div></div>
+      <div class="res-box"><div class="big" style="color:var(--accent)" id="r-pct">0%</div><div class="small">Score</div></div>
+    </div>
+    <div class="nav-row" style="justify-content:center">
+      <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+      <button class="btn btn-secondary" onclick="resetOriginal()">Reset to Original 20</button>
+      <a href="hub.html" class="btn btn-secondary">← Back to Hub</a>
+    </div>
+  </div>
+  <div class="ai-panel">
+    <h3>🤖 Generate More Questions</h3>
+    <p>Mr. Euler will write new Geometry: Angles questions, then CheckerBot verifies them.</p>
+    <div class="ai-key-row">
+      <input type="password" id="api-key" placeholder="Paste your Anthropic API key here…">
+      <button class="btn btn-primary" onclick="generateAI()">Generate 5 More</button>
+    </div>
+    <div class="ai-status" id="ai-status"></div>
+  </div>
+</div>
+<script>
+const SEED_QUESTIONS = [
+  {q:"Angles on a straight line add up to how many degrees?",opts:["90°","180°","270°","360°"],ans:1,hint:"Think about a straight line — what does a 'flat' angle look like?",solution:"<strong>Angles on a straight line = 180°</strong><br>This is called a 'straight angle'. If you have two angles on a line, they must add up to 180°.",diff:"easy"},
+  {q:"What do angles in a triangle add up to?",opts:["90°","180°","270°","360°"],ans:1,hint:"This is one of the most important angle facts to memorise!",solution:"<strong>Angles in a triangle = 180°</strong><br>Example: A triangle with angles 60°, 70° must have a third angle of 180° − 60° − 70° = 50°.",diff:"easy"},
+  {q:"What do angles in a quadrilateral add up to?",opts:["180°","270°","360°","540°"],ans:2,hint:"A quadrilateral can be split into 2 triangles. Each triangle has 180°.",solution:"<strong>Angles in a quadrilateral = 360°</strong><br>A quadrilateral splits into 2 triangles: 2 × 180° = 360°.",diff:"easy"},
+  {q:"Two angles are vertically opposite. One is 65°. What is the other?",opts:["25°","115°","65°","130°"],ans:2,hint:"Vertically opposite angles are equal.",solution:"<strong>Vertically opposite angles are equal.</strong><br>Answer: <strong>65°</strong><br>These are the angles formed on opposite sides when two straight lines cross.",diff:"easy"},
+  {q:"A triangle has two angles of 50° and 70°. What is the third angle?",opts:["40°","50°","60°","70°"],ans:2,hint:"All three angles must add up to 180°.",solution:"<strong>Step 1:</strong> 50° + 70° = 120°<br><strong>Step 2:</strong> Third angle = 180° − 120° = <strong>60°</strong>",diff:"easy"},
+  {q:"What is the sum of interior angles in a pentagon?",opts:["360°","450°","540°","720°"],ans:2,hint:"Use the formula: (n − 2) × 180°, where n is the number of sides.",solution:"<strong>Formula:</strong> (n − 2) × 180°<br><strong>Step 1:</strong> n = 5 (pentagon)<br><strong>Step 2:</strong> (5 − 2) × 180° = 3 × 180° = <strong>540°</strong>",diff:"easy"},
+  {q:"What is the name of equal angles formed between parallel lines on opposite sides of a transversal?",opts:["Co-interior angles","Corresponding angles","Vertically opposite angles","Alternate angles"],ans:3,hint:"They form a 'Z shape' between the parallel lines.",solution:"<strong>Alternate angles</strong> are equal and form a Z-shape between parallel lines.<br>Co-interior angles add up to 180° (C/U shape).<br>Corresponding angles are equal and form an F-shape.",diff:"easy"},
+  {q:"Two parallel lines are cut by a transversal. A co-interior angle is 115°. What is the other co-interior angle?",opts:["115°","65°","75°","25°"],ans:1,hint:"Co-interior angles (same-side interior) add up to 180°.",solution:"<strong>Co-interior angles sum to 180°.</strong><br><strong>Step 1:</strong> Other angle = 180° − 115° = <strong>65°</strong>",diff:"medium"},
+  {q:"Find the size of each interior angle in a regular hexagon.",opts:["108°","120°","135°","144°"],ans:1,hint:"Find the sum of interior angles, then divide by the number of sides.",solution:"<strong>Step 1:</strong> Sum = (6 − 2) × 180° = 720°<br><strong>Step 2:</strong> Each angle = 720° ÷ 6 = <strong>120°</strong>",diff:"medium"},
+  {q:"A ship travels on a bearing of 070°. What bearing would it take to return directly to its starting point?",opts:["110°","180°","250°","290°"],ans:2,hint:"Add or subtract 180° to find the reverse bearing.",solution:"<strong>Step 1:</strong> Reverse bearing = 070° + 180° = <strong>250°</strong><br><em>If the answer exceeds 360°, subtract 360°.</em>",diff:"medium"},
+  {q:"Point B is on a bearing of 130° from point A. What is the bearing of A from B?",opts:["040°","130°","310°","230°"],ans:2,hint:"Add 180° to the original bearing (subtract 360° if over 360°).",solution:"<strong>Step 1:</strong> 130° + 180° = 310°<br><strong>Answer: 310°</strong>",diff:"medium"},
+  {q:"A shape is reflected in the line y = x. The point (3, 1) maps to which point?",opts:["(−3, −1)","(1, 3)","(3, 1)","(−1, −3)"],ans:1,hint:"When reflecting in y = x, swap the x and y coordinates.",solution:"<strong>Rule:</strong> Reflection in y = x: (x, y) → (y, x)<br><strong>Step 1:</strong> (3, 1) → <strong>(1, 3)</strong>",diff:"medium"},
+  {q:"A shape is rotated 90° clockwise about the origin. The point (2, 4) maps to which point?",opts:["(−4, 2)","(4, −2)","(−2, −4)","(4, 2)"],ans:1,hint:"For 90° clockwise rotation: (x, y) → (y, −x).",solution:"<strong>Rule:</strong> 90° clockwise: (x, y) → (y, −x)<br><strong>Step 1:</strong> (2, 4) → (4, −2)<br><strong>Answer: (4, −2)</strong>",diff:"medium"},
+  {q:"What is the exterior angle of a regular octagon?",opts:["40°","45°","50°","135°"],ans:1,hint:"Exterior angles of any regular polygon: 360° ÷ number of sides.",solution:"<strong>Formula:</strong> Exterior angle = 360° ÷ n<br><strong>Step 1:</strong> 360° ÷ 8 = <strong>45°</strong>",diff:"medium"},
+  {q:"A translation moves a shape by the vector (−3, 5). Where does the point (4, −1) end up?",opts:["(1, 4)","(7, −6)","(−1, 4)","(1, 6)"],ans:0,hint:"Add the vector components to the coordinates.",solution:"<strong>Step 1:</strong> x: 4 + (−3) = 1<br><strong>Step 2:</strong> y: −1 + 5 = 4<br><strong>Answer: (1, 4)</strong>",diff:"medium"},
+  {q:"An isosceles triangle has one angle of 40°. If 40° is the angle between the two equal sides, what are the other two angles?",opts:["70° and 70°","40° and 100°","60° and 80°","50° and 90°"],ans:0,hint:"The two base angles of an isosceles triangle are equal.",solution:"<strong>Step 1:</strong> Remaining angles = 180° − 40° = 140°<br><strong>Step 2:</strong> Base angles are equal: 140° ÷ 2 = <strong>70° each</strong>",diff:"hard"},
+  {q:"Prove that the exterior angle of a triangle equals the sum of the two non-adjacent interior angles. If the interior angles are 48° and 67°, what is the exterior angle at the third vertex?",opts:["65°","115°","125°","180°"],ans:1,hint:"Exterior angle = sum of the two interior opposite angles.",solution:"<strong>Rule:</strong> Exterior angle = sum of two non-adjacent interior angles<br><strong>Step 1:</strong> 48° + 67° = <strong>115°</strong><br><em>Check: Third interior angle = 180° − 48° − 67° = 65°. Exterior angle = 180° − 65° = 115° ✓</em>",diff:"hard"},
+  {q:"A regular polygon has interior angles of 156°. How many sides does it have?",opts:["12","15","16","18"],ans:1,hint:"Exterior angle = 180° − interior angle. Then sides = 360° ÷ exterior angle.",solution:"<strong>Step 1:</strong> Exterior angle = 180° − 156° = 24°<br><strong>Step 2:</strong> Sides = 360° ÷ 24° = <strong>15</strong>",diff:"hard"},
+  {q:"A ship sails from A on a bearing of 050° for 20 km to B, then on a bearing of 140° for 15 km to C. How far is C directly from A? (Use Pythagoras.)",opts:["25 km","35 km","20 km","5 km"],ans:0,hint:"The two legs are perpendicular (050° and 140° differ by 90°). Use Pythagoras.",solution:"<strong>Step 1:</strong> 140° − 50° = 90° → legs are perpendicular<br><strong>Step 2:</strong> AC² = 20² + 15² = 400 + 225 = 625<br><strong>Step 3:</strong> AC = √625 = <strong>25 km</strong>",diff:"hard"},
+  {q:"A shape is enlarged by scale factor 3, centre of enlargement (0, 0). The point (2, 5) maps to which point?",opts:["(5, 8)","(6, 15)","(2, 15)","(6, 5)"],ans:1,hint:"Multiply both coordinates by the scale factor.",solution:"<strong>Rule:</strong> Enlargement with centre origin: (x, y) → (kx, ky)<br><strong>Step 1:</strong> (2 × 3, 5 × 3) = <strong>(6, 15)</strong>",diff:"hard"},
+];
+let questions=[...SEED_QUESTIONS],current=0,answers=new Array(questions.length).fill(null);
+function buildDots(){const w=document.getElementById('dots');w.innerHTML='';questions.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===current?' current':'')+(answers[i]==='correct'?' correct':answers[i]==='wrong'?' wrong':'');d.textContent=i+1;d.onclick=()=>{current=i;render()};w.appendChild(d)})}
+function updateScore(){const c=answers.filter(a=>a==='correct').length,ww=answers.filter(a=>a==='wrong').length,ans=c+ww,pct=ans?Math.round(c/ans*100):0;document.getElementById('sc-correct').textContent=c;document.getElementById('sc-wrong').textContent=ww;document.getElementById('sc-remain').textContent=questions.length-ans;document.getElementById('sc-pct').textContent=pct+'%';document.getElementById('header-score').textContent=c+' / '+questions.length}
+function render(){const q=questions[current];document.getElementById('q-num').textContent=`Question ${current+1} of ${questions.length}`;const de=document.getElementById('q-diff');de.textContent={easy:'Easy',medium:'Medium',hard:'Hard'}[q.diff];de.className='difficulty '+q.diff;document.getElementById('q-text').innerHTML=q.q;document.getElementById('hint-box').style.display='none';document.getElementById('hint-box').textContent=q.hint;const fb=document.getElementById('feedback');fb.style.display='none';fb.className='feedback';const opts=document.getElementById('options');opts.innerHTML='';['A','B','C','D'].forEach((l,i)=>{const btn=document.createElement('button');btn.className='opt';btn.innerHTML=`<span class="opt-letter">${l}</span> ${q.opts[i]}`;if(answers[current]!==null){btn.disabled=true;if(i===q.ans)btn.classList.add('reveal-correct')};btn.onclick=()=>checkAnswer(i);opts.appendChild(btn)});if(answers[current]!==null)showFeedback(answers[current]==='correct');buildDots();updateScore()}
+function checkAnswer(i){if(answers[current]!==null)return;const q=questions[current],ok=i===q.ans;answers[current]=ok?'correct':'wrong';document.getElementById('options').querySelectorAll('.opt').forEach((b,idx)=>{b.disabled=true;if(idx===q.ans)b.classList.add('reveal-correct');if(idx===i&&!ok)b.classList.add('selected-wrong')});showFeedback(ok);buildDots();updateScore()}
+function showFeedback(ok){const q=questions[current],fb=document.getElementById('feedback');fb.style.display='block';fb.className='feedback '+(ok?'correct':'wrong');document.getElementById('fb-title').textContent=ok?'✅ Correct! Well done!':'❌ Not quite — here\'s how to do it:';document.getElementById('fb-solution').innerHTML=q.solution}
+function showHint(){const b=document.getElementById('hint-box');b.style.display=b.style.display==='none'?'block':'none'}
+function prevQ(){if(current>0){current--;render()}}
+function nextQ(){if(current<questions.length-1){current++;render()}else finishQuiz()}
+function finishQuiz(){const c=answers.filter(a=>a==='correct').length,ww=answers.filter(a=>a==='wrong').length,pct=Math.round(c/questions.length*100);document.getElementById('r-correct').textContent=c;document.getElementById('r-wrong').textContent=ww;document.getElementById('r-pct').textContent=pct+'%';document.getElementById('grade-emoji').textContent=pct>=90?'🏆':pct>=70?'⭐':pct>=50?'👍':'📚';document.getElementById('grade-msg').textContent=pct>=90?'Angle master!':pct>=70?'Great work!':pct>=50?'Good effort!':'Keep practising!';document.getElementById('quiz-area').style.display='none';document.getElementById('results-screen').style.display='block'}
+function restartQuiz(){answers=new Array(questions.length).fill(null);current=0;document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+function resetAnswers(){answers=new Array(questions.length).fill(null);document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+function resetOriginal(){questions=[...SEED_QUESTIONS];answers=new Array(questions.length).fill(null);current=0;document.getElementById('quiz-area').style.display='block';document.getElementById('results-screen').style.display='none';render()}
+async function generateAI(){const key=document.getElementById('api-key').value.trim();if(!key){document.getElementById('ai-status').textContent='⚠️ Please enter your Anthropic API key.';return}const s=document.getElementById('ai-status');s.textContent='🧑‍🏫 Mr. Euler is writing 5 new questions…';const p=`You are Mr. Euler, expert Year 8 UK Maths teacher. Generate 5 MCQ on GEOMETRY: ANGLES (angle facts, parallel lines, polygons interior/exterior angles, bearings, transformations - reflection, rotation, translation, enlargement). 4 options, ONE correct, hint, step-by-step HTML solution, British English, mix difficulty. JSON only: [{"q":"","opts":["","","",""],"ans":0,"hint":"","solution":"","diff":"easy|medium|hard"}]`;try{const r1=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:p}]})});const d1=await r1.json();const newQs=JSON.parse(d1.content[0].text.trim().replace(/```json|```/g,''));s.textContent='🔍 CheckerBot verifying…';const cp=`You are CheckerBot. Verify 5 Geometry:Angles questions — correct angle arithmetic, one answer, KS3 level. ${JSON.stringify(newQs)}. Respond: APPROVED: [json]`;const r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:cp}]})});const d2=await r2.json();const cr=d2.content[0].text.trim();if(!cr.startsWith('APPROVED:')){s.textContent='❌ CheckerBot rejected. Try again.';return}const checked=JSON.parse(cr.replace('APPROVED:','').trim().replace(/```json|```/g,''));questions=[...questions,...checked];answers=new Array(questions.length).fill(null);buildDots();s.textContent=`✅ 5 new questions added! Now ${questions.length} total.`;updateScore()}catch(e){s.textContent='❌ Error: '+e.message}}
+render();
+</script>
+</body>
+</html>
