@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water Worries Flashcards — Year 8 Geography</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0f1117;--surface:#1a1d2e;--surface2:#252840;--accent:#29b6f6;--accent2:#0277bd;--text:#e8eaf6;--text-dim:#9094b0;--gotit:#4caf50;--notyet:#f44336;--radius:16px;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;}
+  header{background:linear-gradient(135deg,#29b6f622,#29b6f608);border-bottom:2px solid var(--accent);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .header-left{display:flex;align-items:center;gap:14px;}.topic-icon{font-size:2.2rem;}
+  header h1{font-family:'Fredoka One',cursive;font-size:1.7rem;color:var(--accent);}
+  header p{color:var(--text-dim);font-size:0.85rem;}
+  .back-btn{padding:8px 18px;border-radius:999px;background:var(--surface2);color:var(--text-dim);border:none;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;}
+  .back-btn:hover{background:#353860;color:var(--text);}
+  .exam-badge{background:#29b6f622;border:1px solid #29b6f6;color:#29b6f6;padding:4px 12px;border-radius:999px;font-size:0.78rem;font-weight:800;margin-top:4px;display:inline-block;}
+  .stats-bar{display:flex;gap:20px;align-items:center;padding:14px 24px;background:var(--surface);border-bottom:1px solid var(--surface2);flex-wrap:wrap;}
+  .stat{text-align:center;}.stat-num{font-size:1.4rem;font-weight:800;color:var(--accent);}.stat-label{font-size:0.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;}
+  .progress-bar{flex:1;height:8px;background:var(--surface2);border-radius:999px;overflow:hidden;min-width:100px;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;transition:width .4s ease;}
+  main{max-width:700px;margin:0 auto;padding:24px 20px;}
+  .subtopic-filter{background:var(--surface);border-radius:12px;padding:14px 18px;margin-bottom:16px;border:1px solid var(--surface2);}
+  .subtopic-filter h3{font-size:0.78rem;font-weight:800;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+  .filter-chips{display:flex;flex-wrap:wrap;gap:7px;}
+  .fchip{padding:5px 12px;border-radius:999px;font-size:0.78rem;font-weight:700;cursor:pointer;transition:all .2s;border:2px solid var(--surface2);background:var(--surface);color:var(--text-dim);}
+  .fchip.active{border-color:var(--accent);color:var(--accent);background:#29b6f618;}
+  .controls-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+  .ctrl-btn{padding:7px 16px;border-radius:999px;background:var(--surface2);color:var(--text-dim);border:none;font-family:'Nunito',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;transition:all .2s;}
+  .ctrl-btn:hover{background:#353860;color:var(--text);}
+  .nav-dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--surface2);cursor:pointer;transition:all .2s;border:2px solid transparent;}
+  .dot.current{border-color:var(--accent);transform:scale(1.3);}.dot.gotit{background:var(--gotit);}.dot.notyet{background:var(--notyet);}
+  .card-area{perspective:1200px;margin-bottom:20px;}
+  .card-inner{position:relative;width:100%;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,2,.6,1);cursor:pointer;}
+  .card-inner.flipped{transform:rotateY(180deg);}
+  .card-face{background:var(--surface);border-radius:var(--radius);padding:36px 28px;border:2px solid var(--surface2);backface-visibility:hidden;min-height:220px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;}
+  .card-back{position:absolute;top:0;left:0;width:100%;transform:rotateY(180deg);border-color:var(--accent);}
+  .card-face::before{content:attr(data-label);position:absolute;top:12px;left:16px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;opacity:.45;}
+  .card-subtopic{position:absolute;top:12px;right:16px;background:var(--surface2);padding:3px 10px;border-radius:999px;font-size:0.72rem;color:var(--accent);font-weight:700;}
+  .card-question{font-size:1.15rem;font-weight:800;line-height:1.4;}
+  .card-answer{font-size:0.95rem;font-weight:600;line-height:1.55;color:var(--text);}
+  .flip-hint{font-size:0.78rem;color:var(--text-dim);margin-top:10px;}
+  .mark-row{display:flex;gap:12px;margin-bottom:18px;}
+  .mark-btn{flex:1;padding:13px;border-radius:12px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.95rem;cursor:pointer;border:none;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .mark-btn.gotit{background:#4caf5018;color:var(--gotit);border:2px solid var(--gotit);}.mark-btn.gotit:hover{background:var(--gotit);color:#000;}
+  .mark-btn.notyet{background:#f4433618;color:var(--notyet);border:2px solid var(--notyet);}.mark-btn.notyet:hover{background:var(--notyet);color:#fff;}
+  .mark-btn:disabled{opacity:.4;cursor:default;}
+  .nav-row{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  .nav-btn{padding:10px 22px;border-radius:999px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.93rem;cursor:pointer;border:none;transition:all .2s;}
+  .nav-btn.primary{background:var(--accent);color:#000;}.nav-btn.primary:hover{background:var(--accent2);}
+  .nav-btn.secondary{background:var(--surface2);color:var(--text);}.nav-btn.secondary:hover{background:#353860;}
+  .card-counter{color:var(--text-dim);font-size:0.88rem;font-weight:700;}
+  .done-screen{background:var(--surface);border-radius:var(--radius);padding:36px;text-align:center;display:none;}
+  .done-screen.show{display:block;animation:fadeIn .4s ease;}
+  .done-screen h2{font-family:'Fredoka One',cursive;font-size:1.9rem;color:var(--accent);margin-bottom:12px;}
+  .done-stats{display:flex;gap:16px;justify-content:center;margin:16px 0;flex-wrap:wrap;}
+  .done-stat{background:var(--surface2);padding:14px 22px;border-radius:12px;}
+  .done-stat-num{font-size:1.8rem;font-weight:800;}.done-stat-label{font-size:0.78rem;color:var(--text-dim);}
+  .ai-panel{background:var(--surface);border-radius:var(--radius);padding:22px;border:1px solid var(--accent);margin-bottom:20px;}
+  .ai-panel h3{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--accent);margin-bottom:6px;}
+  .ai-panel p{color:var(--text-dim);font-size:0.87rem;margin-bottom:14px;}
+  .ai-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+  .ai-chip{padding:5px 12px;border-radius:999px;font-size:0.78rem;font-weight:700;cursor:pointer;transition:all .2s;border:2px solid var(--surface2);background:var(--surface);color:var(--text-dim);}
+  .ai-chip.active{border-color:var(--accent);color:var(--accent);background:#29b6f618;}
+  .ai-generate-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:none;padding:11px 22px;border-radius:999px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.95rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;}
+  .ai-generate-btn:hover{transform:translateY(-2px);box-shadow:0 4px 20px #29b6f644;}
+  .ai-generate-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+  .ai-status{margin-top:10px;font-size:0.87rem;color:var(--text-dim);min-height:18px;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .spinner{animation:spin 1s linear infinite;display:inline-block;}@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left"><div class="topic-icon">💧</div><div><h1>Water Worries Flashcards</h1><p>Year 8 Geography · KS3 · Water cycle, drainage basins, flooding, engineering, scarcity</p><span class="exam-badge">⭐ End-of-Year Exam Topic</span></div></div>
+  <a href="index.html" class="back-btn">← Hub</a>
+</header>
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num" id="totalCount">0</div><div class="stat-label">Total</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--gotit)" id="gotItCount">0</div><div class="stat-label">Got It ✓</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--notyet)" id="notYetCount">0</div><div class="stat-label">Not Yet ✗</div></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+<main>
+  <div class="subtopic-filter"><h3>Filter by subtopic</h3><div class="filter-chips" id="filterChips"><div class="fchip active" data-topic="Importance of Water">Importance of Water</div><div class="fchip active" data-topic="Water Stores &amp; Flows">Water Stores &amp; Flows</div><div class="fchip active" data-topic="Hydrological Cycle">Hydrological Cycle</div><div class="fchip active" data-topic="Drainage Basin">Drainage Basin</div><div class="fchip active" data-topic="Hydrographs">Hydrographs</div><div class="fchip active" data-topic="Flooding HIC">Flooding HIC</div><div class="fchip active" data-topic="Flooding LIC">Flooding LIC</div><div class="fchip active" data-topic="Engineering Management">Engineering Management</div><div class="fchip active" data-topic="Water Scarcity">Water Scarcity</div></div></div>
+  <div class="controls-row"><button class="ctrl-btn" onclick="shuffleCards()">🔀 Shuffle</button><button class="ctrl-btn" onclick="studyNotYet()">📚 Study Not Yet</button><button class="ctrl-btn" onclick="resetAll()">🔄 Reset All</button><button class="ctrl-btn" onclick="resetToOriginal()">↩ Reset to Original</button></div>
+  <div class="nav-dots" id="navDots"></div>
+  <div class="card-area">
+    <div class="card-inner" id="cardInner" onclick="flipCard()">
+      <div class="card-face" data-label="Term / Question"><div class="card-subtopic" id="cardSubtopic"></div><div class="card-question" id="cardQuestion"></div><div class="flip-hint">👆 Tap to reveal answer</div></div>
+      <div class="card-face card-back" data-label="Answer"><div class="card-subtopic" id="cardSubtopicBack"></div><div class="card-answer" id="cardAnswer"></div></div>
+    </div>
+  </div>
+  <div class="mark-row"><button class="mark-btn gotit" id="gotItBtn" onclick="markCard('gotit')" disabled>✅ Got It!</button><button class="mark-btn notyet" id="notYetBtn" onclick="markCard('notyet')" disabled>❌ Not Yet</button></div>
+  <div class="nav-row"><button class="nav-btn secondary" onclick="prevCard()">← Previous</button><span class="card-counter" id="cardCounter">1 / 0</span><button class="nav-btn primary" onclick="nextCard()">Next →</button></div>
+  <div class="done-screen" id="doneScreen"><h2>Deck Complete! 🎓</h2><div class="done-stats"><div class="done-stat"><div class="done-stat-num" style="color:var(--gotit)" id="doneGotIt">0</div><div class="done-stat-label">Got It ✓</div></div><div class="done-stat"><div class="done-stat-num" style="color:var(--notyet)" id="doneNotYet">0</div><div class="done-stat-label">Not Yet ✗</div></div></div><button class="nav-btn primary" style="margin:0 auto 12px;" onclick="studyNotYet()">📚 Study Not Yet Cards</button><br><button class="nav-btn secondary" style="margin:0 auto;" onclick="resetAll()">🔄 Start Over</button></div>
+  <div class="ai-panel"><h3>🤖 Generate More Cards</h3><p>Generate new flashcards validated for KS3 accuracy.</p><div class="ai-chips" id="aiChips"><div class="ai-chip active" data-topic="Importance of Water">Importance of Water</div><div class="ai-chip active" data-topic="Water Stores &amp; Flows">Water Stores &amp; Flows</div><div class="ai-chip active" data-topic="Hydrological Cycle">Hydrological Cycle</div><div class="ai-chip active" data-topic="Drainage Basin">Drainage Basin</div><div class="ai-chip active" data-topic="Hydrographs">Hydrographs</div><div class="ai-chip active" data-topic="Flooding HIC">Flooding HIC</div><div class="ai-chip active" data-topic="Flooding LIC">Flooding LIC</div><div class="ai-chip active" data-topic="Engineering Management">Engineering Management</div><div class="ai-chip active" data-topic="Water Scarcity">Water Scarcity</div></div><button class="ai-generate-btn" id="generateBtn" onclick="generateCards()"><span>✨</span> Generate 5 New Cards</button><div class="ai-status" id="aiStatus"></div></div>
+</main>
+<script>
+const SEED_CARDS=[{"id":"wwc01","q":"What percentage of Earth's water is in the oceans?","a":"Approximately 97% — but it is salt water and cannot be directly consumed. Only about 3% is fresh water.","subtopic":"Water Stores & Flows"},{"id":"wwc02","q":"Name the four main global water stores.","a":"1) Oceans/seas (97% — saline). 2) Ice caps and glaciers (~69% of fresh water). 3) Groundwater (~30% of fresh water). 4) Surface water — rivers, lakes (~1% of fresh water but most accessible).","subtopic":"Water Stores & Flows"},{"id":"wwc03","q":"What is sublimation?","a":"The direct conversion of ice or snow into water vapour without first passing through a liquid stage. Occurs in cold, dry, windy conditions.","subtopic":"Water Stores & Flows"},{"id":"wwc04","q":"Describe the key processes in the water cycle.","a":"Evaporation (water → vapour) → Transpiration (plants release vapour) → Condensation (vapour → clouds) → Precipitation (rain/snow) → Surface runoff / Infiltration / Percolation → River flow → back to ocean. A continuous closed system.","subtopic":"Hydrological Cycle"},{"id":"wwc05","q":"What is transpiration?","a":"The process by which plants release water vapour through stomata in their leaves. Tropical rainforests return vast amounts of water to the atmosphere, influencing regional rainfall patterns.","subtopic":"Hydrological Cycle"},{"id":"wwc06","q":"What is surface runoff and when does it increase?","a":"Water flowing across the land surface into streams. It INCREASES when: soil is saturated, ground is frozen, impermeable rock/clay present, slopes are steep, vegetation removed, or urban surfaces present.","subtopic":"Hydrological Cycle"},{"id":"wwc07","q":"What is a drainage basin?","a":"The area of land drained by a river and all its tributaries. Also called a catchment area. Bounded by a watershed (ridge of high land).","subtopic":"Drainage Basin"},{"id":"wwc08","q":"Define: source, mouth, and confluence of a river.","a":"SOURCE: where a river begins (spring, lake, glacier). MOUTH: where a river flows into the sea/lake/another river. CONFLUENCE: the point where two rivers join together.","subtopic":"Drainage Basin"},{"id":"wwc09","q":"What is a watershed?","a":"The boundary of a drainage basin — a ridge of high land that divides one river catchment from another. Precipitation on one side flows into one river system; on the other side into a different system.","subtopic":"Drainage Basin"},{"id":"wwc10","q":"What does the rising limb of a hydrograph show?","a":"River discharge INCREASING after rainfall. A steep rising limb = short lag time = HIGH FLOOD RISK. Caused by: impermeable surfaces, deforestation, steep slopes.","subtopic":"Hydrographs"},{"id":"wwc11","q":"What is peak discharge on a hydrograph?","a":"The MAXIMUM river flow recorded — the highest point on the curve. The time between peak rainfall and peak discharge is the LAG TIME. High peak discharge + short lag time = high flood risk.","subtopic":"Hydrographs"},{"id":"wwc12","q":"How does urbanisation affect a hydrograph?","a":"Makes hydrographs more FLASHY: impermeable surfaces → no infiltration → rapid runoff → shorter lag time → higher peak discharge → greater flood risk.","subtopic":"Hydrographs"},{"id":"wwc13","q":"Name the causes, impacts, and responses for a HIC flooding case study.","a":"BOSCASTLE, UK (2004): CAUSES — 200mm rain in 2 hours, steep impermeable hillsides. IMPACTS — 75 cars swept away, 100 buildings damaged, £15m damage. RESPONSES — helicopter rescue, EU flood defence funding.","subtopic":"Flooding HIC"},{"id":"wwc14","q":"Name the causes, impacts, and responses for a LIC flooding case study.","a":"BANGLADESH (1998): CAUSES — 80% low-lying floodplain, 3 rivers converge, monsoon rains, Himalayan snowmelt. IMPACTS — 2/3 flooded 10 weeks, 30m homeless, 1,000 deaths. RESPONSES — flood shelters, embankments, international aid.","subtopic":"Flooding LIC"},{"id":"wwc15","q":"What is a dam as a hard engineering flood strategy?","a":"A barrier across a river creating a reservoir. ADVANTAGES: controls flooding, stores water, can generate HEP, leisure use. DISADVANTAGES: expensive, displaces communities, blocks fish migration, reduces downstream sediment.","subtopic":"Engineering Management"},{"id":"wwc16","q":"What are embankments (levées)?","a":"Raised banks of earth or concrete alongside a river to increase channel capacity. ADVANTAGES: relatively cheap, can raise existing banks. DISADVANTAGES: if they fail flooding is severe, don't address flood causes, can increase downstream risk.","subtopic":"Engineering Management"},{"id":"wwc17","q":"What is flood plain zoning as a soft engineering strategy?","a":"Planning policy restricting land use on floodplains — parks near river, housing only on higher ground. Prevents damage without expensive engineering. Sustainable and proactive.","subtopic":"Engineering Management"},{"id":"wwc18","q":"What is water scarcity?","a":"When demand for fresh water EXCEEDS available supply, or quality is too poor to use. Can be PHYSICAL (not enough water) or ECONOMIC (water exists but lack of infrastructure). Affects 2.3 billion people globally.","subtopic":"Water Scarcity"},{"id":"wwc19","q":"Give a specific case study of water scarcity.","a":"CAPE TOWN, SOUTH AFRICA (2018 'Day Zero'): 3 years of drought reduced dam levels to 13%. City of 4 million nearly ran out of water. Responses: 50 litre/person/day rationing, desalination, groundwater extraction.","subtopic":"Water Scarcity"},{"id":"wwc20","q":"How does deforestation contribute to water scarcity?","a":"1) Fewer trees = less interception → water runs off quickly not recharging groundwater. 2) Less transpiration = less moisture returned to atmosphere → reduced local rainfall. 3) Increased runoff causes soil erosion → rivers silt up → reduced storage capacity.","subtopic":"Water Scarcity"}];
+let allCards=[...SEED_CARDS],originalCards=[...SEED_CARDS],currentDeck=[...SEED_CARDS];
+let marks={},currentIdx=0,isFlipped=false,activeFilters=null;
+function getFiltered(){if(!activeFilters||activeFilters.size===0)return allCards;return allCards.filter(c=>activeFilters.has(c.subtopic));}
+function init(){currentDeck=getFiltered();renderCard();renderDots();updateStats();document.getElementById('filterChips').addEventListener('click',e=>{if(!e.target.classList.contains('fchip'))return;e.target.classList.toggle('active');const active=[...document.querySelectorAll('#filterChips .fchip.active')].map(c=>c.dataset.topic);activeFilters=active.length>0&&active.length<document.querySelectorAll('#filterChips .fchip').length?new Set(active):null;currentDeck=getFiltered();currentIdx=0;isFlipped=false;document.getElementById('doneScreen').classList.remove('show');renderCard();renderDots();updateStats();});document.getElementById('aiChips').addEventListener('click',e=>{if(e.target.classList.contains('ai-chip'))e.target.classList.toggle('active');});}
+function renderCard(){if(currentIdx>=currentDeck.length){showDone();return;}document.getElementById('doneScreen').classList.remove('show');const c=currentDeck[currentIdx];document.getElementById('cardQuestion').textContent=c.q;document.getElementById('cardAnswer').textContent=c.a;document.getElementById('cardSubtopic').textContent=c.subtopic;document.getElementById('cardSubtopicBack').textContent=c.subtopic;document.getElementById('cardCounter').textContent=`${currentIdx+1} / ${currentDeck.length}`;const ci=document.getElementById('cardInner');ci.classList.remove('flipped');isFlipped=false;document.getElementById('gotItBtn').disabled=true;document.getElementById('notYetBtn').disabled=true;renderDots();}
+function flipCard(){isFlipped=!isFlipped;document.getElementById('cardInner').classList.toggle('flipped');document.getElementById('gotItBtn').disabled=false;document.getElementById('notYetBtn').disabled=false;}
+function markCard(m){const cId=currentDeck[currentIdx].id;marks[cId]=m;updateStats();nextCard();}
+function nextCard(){currentIdx=Math.min(currentIdx+1,currentDeck.length);renderCard();renderDots();}
+function prevCard(){currentIdx=Math.max(currentIdx-1,0);renderCard();renderDots();}
+function goTo(i){currentIdx=i;renderCard();}
+function renderDots(){const c=document.getElementById('navDots');c.innerHTML='';currentDeck.forEach((_,i)=>{const d=document.createElement('div');const cId=currentDeck[i].id;d.className='dot'+(i===currentIdx?' current':'')+(marks[cId]==='gotit'?' gotit':marks[cId]==='notyet'?' notyet':'');d.onclick=()=>goTo(i);c.appendChild(d);});}
+function updateStats(){const got=Object.values(marks).filter(m=>m==='gotit').length;const nyet=Object.values(marks).filter(m=>m==='notyet').length;const total=allCards.length;document.getElementById('totalCount').textContent=total;document.getElementById('gotItCount').textContent=got;document.getElementById('notYetCount').textContent=nyet;document.getElementById('progressFill').style.width=(total>0?Math.round((got/total)*100):0)+'%';}
+function shuffleCards(){currentDeck=[...currentDeck].sort(()=>Math.random()-.5);currentIdx=0;isFlipped=false;renderCard();renderDots();}
+function studyNotYet(){const ids=Object.keys(marks).filter(id=>marks[id]==='notyet');const cards=allCards.filter(c=>ids.includes(c.id));if(!cards.length){alert('No "Not Yet" cards — great work!');return;}currentDeck=cards;currentIdx=0;isFlipped=false;document.getElementById('doneScreen').classList.remove('show');renderCard();renderDots();}
+function resetAll(){marks={};currentDeck=getFiltered();currentIdx=0;isFlipped=false;document.getElementById('doneScreen').classList.remove('show');renderCard();renderDots();updateStats();}
+function resetToOriginal(){allCards=[...originalCards];marks={};activeFilters=null;currentDeck=[...originalCards];currentIdx=0;isFlipped=false;document.querySelectorAll('#filterChips .fchip').forEach(c=>c.classList.add('active'));document.getElementById('doneScreen').classList.remove('show');renderCard();renderDots();updateStats();}
+function showDone(){document.getElementById('doneScreen').classList.add('show');document.getElementById('doneGotIt').textContent=Object.values(marks).filter(m=>m==='gotit').length;document.getElementById('doneNotYet').textContent=Object.values(marks).filter(m=>m==='notyet').length;}
+async function generateCards(){const chips=[...document.querySelectorAll('#aiChips .ai-chip.active')].map(c=>c.dataset.topic);if(!chips.length){document.getElementById('aiStatus').textContent='Select at least one subtopic.';return;}const btn=document.getElementById('generateBtn'),status=document.getElementById('aiStatus');btn.disabled=true;btn.innerHTML='<span class="spinner">⟳</span> Generating...';status.textContent='Generating...';try{const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:`Generate 5 flashcards about Water Worries for Year 8 UK Geography, subtopics: ${chips.join(', ')}. Return ONLY JSON array: [{"id":"x","q":"","a":"","subtopic":""}]`}]})});const data=await res.json();let newCards=JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());newCards=newCards.map((c,i)=>({...c,id:'gen_'+Date.now()+'_'+i}));allCards=[...allCards,...newCards];currentDeck=getFiltered();updateStats();renderDots();status.textContent=`✅ ${newCards.length} cards added!`;}catch(e){status.textContent='⚠️ Failed. Try again.';}btn.disabled=false;btn.innerHTML='<span>✨</span> Generate 5 New Cards';}
+init();
+</script>
+</body>
+</html>
