@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breathing & Respiration Flashcards</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--accent-dark:#72243E;--accent-light:#FBEAF0;--accent-mid:#D4537E;--got-it:#3B6D11;--not-yet:#A32D2D;--not-yet-light:#FCEBEB;--gray-bg:#FDF4F7;--gray-border:#F4C0D1;--text:#2a0d1a;--text-muted:#7a3050;--white:#fff;--radius:16px;--radius-sm:10px;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito Sans',sans-serif;background:var(--gray-bg);color:var(--text);min-height:100vh;padding:0 0 60px;}
+  .header{background:var(--accent-dark);color:#fff;padding:26px 20px 22px;text-align:center;position:relative;overflow:hidden;}
+  .header::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.05);}
+  .header-tag{display:inline-block;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.9);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:10px;}
+  .header h1{font-family:'Nunito',sans-serif;font-size:26px;font-weight:900;margin-bottom:4px;}
+  .header p{font-size:13px;opacity:0.8;}
+  .stats-bar{display:flex;gap:10px;padding:14px 16px;background:var(--white);border-bottom:1px solid var(--gray-border);}
+  .stat-pill{flex:1;text-align:center;background:var(--gray-bg);border-radius:10px;padding:9px 4px;}
+  .stat-num{font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;line-height:1;}
+  .stat-num.green{color:var(--got-it);}.stat-num.red{color:var(--not-yet);}.stat-num.blue{color:#185FA5;}
+  .stat-label{font-size:10px;color:var(--text-muted);margin-top:2px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+  .progress-wrap{padding:10px 16px 0;}
+  .progress-bar-bg{background:var(--gray-border);border-radius:10px;height:7px;overflow:hidden;display:flex;}
+  .progress-got{background:var(--got-it);height:100%;transition:width 0.4s ease;}
+  .progress-notyet{background:var(--not-yet);height:100%;transition:width 0.4s ease;}
+  .progress-label{font-size:11px;color:var(--text-muted);margin-top:5px;text-align:right;}
+  .controls{display:flex;gap:8px;padding:12px 16px 0;flex-wrap:wrap;}
+  .ctrl-btn{background:none;border:1.5px solid var(--gray-border);border-radius:20px;padding:5px 14px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;color:var(--text-muted);transition:all 0.18s;}
+  .ctrl-btn:hover{background:var(--gray-border);}
+  .card-area{padding:16px;display:flex;flex-direction:column;align-items:center;}
+  .card-counter{font-size:12px;color:var(--text-muted);font-weight:700;margin-bottom:10px;letter-spacing:1px;}
+  .flip-wrap{width:100%;max-width:420px;height:220px;perspective:1000px;cursor:pointer;margin-bottom:16px;}
+  .flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.5s cubic-bezier(.4,2,.6,1);border-radius:var(--radius);}
+  .flip-wrap.flipped .flip-inner{transform:rotateY(180deg);}
+  .card-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px;text-align:center;}
+  .card-front{background:var(--white);border:2px solid var(--gray-border);}
+  .card-back{background:var(--accent-dark);color:#fff;transform:rotateY(180deg);}
+  .card-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:0.5;margin-bottom:10px;}
+  .card-front .card-label{color:var(--accent-mid);}.card-back .card-label{color:rgba(255,255,255,0.6);}
+  .card-text{font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;line-height:1.45;color:var(--text);}
+  .card-back .card-text{color:#fff;font-size:15px;font-weight:700;}
+  .tap-hint{font-size:11px;color:var(--text-muted);margin-top:12px;font-weight:600;}
+  .card-back .tap-hint{color:rgba(255,255,255,0.5);}
+  .mark-row{display:flex;gap:12px;width:100%;max-width:420px;margin-bottom:12px;}
+  .mark-btn{flex:1;padding:13px;border:none;border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all 0.18s;}
+  .mark-btn.not-yet{background:var(--not-yet-light);color:var(--not-yet);border:2px solid var(--not-yet);}
+  .mark-btn.not-yet:hover{background:var(--not-yet);color:#fff;}
+  .mark-btn.got-it{background:var(--accent-light);color:var(--got-it);border:2px solid var(--got-it);}
+  .mark-btn.got-it:hover{background:var(--got-it);color:#fff;}
+  .mark-btn:disabled{opacity:0.35;cursor:default;}
+  .nav-row{display:flex;gap:10px;width:100%;max-width:420px;}
+  .nav-btn{flex:1;padding:12px;border-radius:var(--radius-sm);border:1.5px solid var(--gray-border);font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:var(--white);color:var(--text-muted);transition:all 0.18s;}
+  .nav-btn:hover:not(:disabled){background:var(--gray-border);}
+  .nav-btn:disabled{opacity:0.3;cursor:default;}
+  .deck-done{display:none;text-align:center;padding:30px 20px;}
+  .done-circle{width:110px;height:110px;border-radius:50%;background:var(--accent-light);border:4px solid var(--got-it);display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto 18px;}
+  .done-pct{font-family:'Nunito',sans-serif;font-size:30px;font-weight:900;color:var(--accent-dark);line-height:1;}
+  .done-sub-label{font-size:11px;color:var(--got-it);font-weight:700;}
+  .done-msg{font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;}
+  .done-detail{font-size:13px;color:var(--text-muted);margin-bottom:22px;}
+  .done-actions{display:flex;flex-direction:column;gap:10px;max-width:300px;margin:0 auto;}
+  .done-btn{padding:13px;border-radius:var(--radius-sm);font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;border:none;}
+  .done-btn.primary{background:var(--got-it);color:#fff;}
+  .done-btn.secondary{background:var(--not-yet);color:#fff;}
+  .done-btn.outline{background:none;border:1.5px solid var(--gray-border);color:var(--text-muted);}
+  .main{padding:0 16px;}
+  .section-title{font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin:14px 0 10px;display:flex;align-items:center;gap:8px;}
+  .section-title::after{content:'';flex:1;height:1px;background:var(--gray-border);}
+  .generate-card{background:var(--accent-dark);border-radius:var(--radius);padding:18px;color:#fff;text-align:center;margin-bottom:14px;}
+  .generate-card h3{font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;margin-bottom:5px;}
+  .generate-card p{font-size:12px;opacity:0.8;margin-bottom:12px;}
+  .topic-chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:12px;}
+  .chip{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.1);transition:all 0.18s;}
+  .chip.selected,.chip:hover{background:rgba(255,255,255,0.25);border-color:rgba(255,255,255,0.7);color:#fff;}
+  .generate-btn{background:#fff;color:var(--accent-dark);border:none;border-radius:var(--radius-sm);padding:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;width:100%;}
+  .generate-btn:disabled{opacity:0.6;cursor:default;}
+  .ai-status{text-align:center;font-size:13px;color:var(--text-muted);padding:8px;display:none;}
+  .ai-status.show{display:block;}
+  .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--gray-border);border-top-color:var(--accent-mid);border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:5px;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-tag">Year 8 Science · Unit 8C</div>
+  <h1>🫁 Breathing & Respiration Flashcards</h1>
+  <p>20 cards · Tap to flip · Mark yourself honestly!</p>
+</div>
+<div id="study-screen">
+  <div class="stats-bar">
+    <div class="stat-pill"><div class="stat-num blue" id="stat-seen">0</div><div class="stat-label">Seen</div></div>
+    <div class="stat-pill"><div class="stat-num green" id="stat-got">0</div><div class="stat-label">Got it ✓</div></div>
+    <div class="stat-pill"><div class="stat-num red" id="stat-notyet">0</div><div class="stat-label">Not yet ✗</div></div>
+    <div class="stat-pill"><div class="stat-num" id="stat-total">20</div><div class="stat-label">Total</div></div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar-bg"><div class="progress-got" id="prog-got" style="width:0%"></div><div class="progress-notyet" id="prog-notyet" style="width:0%"></div></div>
+    <div class="progress-label" id="prog-label">Card 1 of 20</div>
+  </div>
+  <div class="controls">
+    <button class="ctrl-btn" onclick="shuffleCards()">🔀 Shuffle</button>
+    <button class="ctrl-btn" onclick="resetDeck()">↺ Reset All</button>
+    <button class="ctrl-btn" onclick="resetToSeed()">⚠ Original 20</button>
+    <button class="ctrl-btn" id="study-notyet-btn" onclick="studyNotYet()" style="display:none">📋 Study Not Yet</button>
+  </div>
+  <div class="card-area">
+    <div class="card-counter" id="card-counter">CARD 1 OF 20</div>
+    <div class="flip-wrap" id="flip-wrap" onclick="flipCard()">
+      <div class="flip-inner">
+        <div class="card-face card-front"><div class="card-label">Question</div><div class="card-text" id="card-front-text"></div><div class="tap-hint">Tap to reveal answer</div></div>
+        <div class="card-face card-back"><div class="card-label">Answer</div><div class="card-text" id="card-back-text"></div><div class="tap-hint">Tap to flip back</div></div>
+      </div>
+    </div>
+    <div class="mark-row">
+      <button class="mark-btn not-yet" id="btn-notyet" onclick="mark('notyet')" disabled>✗ Not Yet</button>
+      <button class="mark-btn got-it" id="btn-gotit" onclick="mark('gotit')" disabled>✓ Got It</button>
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn" id="prev-btn" onclick="navPrev()">← Prev</button>
+      <button class="nav-btn" id="next-btn" onclick="navNext()">Next →</button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="section-title">Generate More Cards</div>
+    <div class="generate-card">
+      <h3>🤖 Ask the Science Teacher AI</h3>
+      <p>Pick a subtopic and generate 5 fresh flashcards.</p>
+      <div class="topic-chips">
+        <div class="chip selected" onclick="selectChip(this)">Aerobic Respiration</div>
+        <div class="chip" onclick="selectChip(this)">Anaerobic Respiration</div>
+        <div class="chip" onclick="selectChip(this)">Breathing & Ventilation</div>
+        <div class="chip" onclick="selectChip(this)">Respiratory System</div>
+        <div class="chip" onclick="selectChip(this)">Gas Exchange</div>
+        <div class="chip" onclick="selectChip(this)">Exercise & Oxygen</div>
+      </div>
+      <button class="generate-btn" id="gen-btn" onclick="generateCards()">Generate 5 New Cards</button>
+    </div>
+    <div class="ai-status" id="ai-status"><span class="spinner"></span> Mr. Proton is writing your cards...</div>
+  </div>
+</div>
+<div class="deck-done" id="deck-done">
+  <div class="done-circle"><div class="done-pct" id="done-pct">0%</div><div class="done-sub-label">Got it</div></div>
+  <div class="done-msg" id="done-msg">Deck complete!</div>
+  <div class="done-detail" id="done-detail"></div>
+  <div class="done-actions">
+    <button class="done-btn primary" onclick="resetDeck()">↺ Start Again (all cards)</button>
+    <button class="done-btn secondary" onclick="studyNotYet()">📋 Study "Not Yet" cards</button>
+    <button class="done-btn outline" onclick="shuffleAndReset()">🔀 Shuffle &amp; Restart</button>
+  </div>
+</div>
+<script>
+const SEED_CARDS=[
+  {q:'What is the word equation for aerobic respiration?',a:'Glucose + oxygen → carbon dioxide + water (+ energy released).'},
+  {q:'What is the word equation for anaerobic respiration in humans?',a:'Glucose → lactic acid (+ small amount of energy released).'},
+  {q:'What is the difference between breathing and respiration?',a:'Breathing (ventilation) is the physical movement of air in and out of the lungs. Respiration is the chemical reaction inside cells that releases energy from glucose.'},
+  {q:'What is the role of the diaphragm in breathing?',a:'A dome-shaped muscle below the lungs. When it contracts and flattens, the chest volume increases and air is drawn in (inhalation).'},
+  {q:'What are alveoli, and what is their function?',a:'Tiny air sacs in the lungs. They provide a very large surface area for gas exchange — oxygen diffuses into the blood, carbon dioxide diffuses out.'},
+  {q:'Name three adaptations of alveoli for gas exchange.',a:'Very large surface area (millions of alveoli), thin walls (one cell thick) for short diffusion distance, and a rich capillary blood supply.'},
+  {q:'How is oxygen transported in the blood?',a:'Oxygen binds to haemoglobin in red blood cells, forming oxyhaemoglobin. Carried from lungs to all body cells.'},
+  {q:'Why does exhaled air contain more CO₂ than inhaled air?',a:'CO₂ is produced in cells during aerobic respiration. It diffuses into the blood and is transported to the lungs to be exhaled.'},
+  {q:'What are the approximate percentages of gases in inhaled air?',a:'Oxygen: 21%, Nitrogen: 78%, Carbon dioxide: 0.04%, plus water vapour.'},
+  {q:'What are the approximate percentages of gases in exhaled air?',a:'Oxygen: ~16%, Nitrogen: ~78%, Carbon dioxide: ~4%, plus more water vapour than inhaled.'},
+  {q:'Why does breathing rate increase during exercise?',a:'Muscles respire faster and need more oxygen. They produce more CO₂. Increased breathing delivers more O₂ and removes CO₂ more quickly.'},
+  {q:'What is lactic acid and why is it a problem?',a:'Lactic acid is the product of anaerobic respiration. It builds up in muscles during intense exercise, causing fatigue and the burning sensation.'},
+  {q:'What is oxygen debt?',a:'After intense exercise, extra oxygen is needed to break down lactic acid that built up during anaerobic respiration. Explains why you keep breathing fast after exercise stops.'},
+  {q:'Name the organs of the respiratory system in order from nose to alveoli.',a:'Nose/mouth → trachea → bronchi → bronchioles → alveoli.'},
+  {q:'What is the role of the trachea?',a:'Carries air from the mouth/nose to the bronchi. Lined with mucus (traps dirt) and cilia (move mucus away from lungs).'},
+  {q:'How does anaerobic respiration in yeast differ from in humans?',a:'Humans produce lactic acid. Yeast produce ethanol and carbon dioxide (fermentation). Used in baking and brewing.'},
+  {q:'How is aerobic respiration similar to combustion?',a:'Both use oxygen and glucose/fuel, produce CO₂ and water, and release energy. However, respiration is controlled by enzymes at body temperature; combustion is rapid and uncontrolled.'},
+  {q:'What happens to heart rate during exercise and why?',a:'Heart rate increases to pump blood faster, delivering more oxygen and glucose to muscles and removing CO₂ more quickly.'},
+  {q:'What is the role of the bronchi?',a:'Two tubes (one per lung) that branch from the trachea. They carry air into each lung, then branch further into bronchioles.'},
+  {q:'Why is carbon dioxide concentration higher in blood arriving at the lungs than in alveolar air?',a:'CO₂ is produced during respiration in body tissues and carried in the blood. It diffuses down its concentration gradient from blood into the alveoli.'}
+];
+let cards=[...SEED_CARDS],currentIdx=0,marks={},isFlipped=false,studyingNotYet=false,notYetIndices=[],selectedChip='Aerobic Respiration';
+function selectChip(el){document.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');selectedChip=el.textContent;}
+function currentDeck(){return studyingNotYet?notYetIndices:cards.map((_,i)=>i);}
+function renderCard(){
+  const deck=currentDeck();
+  if(deck.length===0){showDone();return;}
+  const pos=Math.max(0,deck.indexOf(currentIdx));
+  currentIdx=deck[pos];
+  const c=cards[currentIdx];
+  document.getElementById('card-front-text').textContent=c.q;
+  document.getElementById('card-back-text').textContent=c.a;
+  document.getElementById('card-counter').textContent=`CARD ${pos+1} OF ${deck.length}${studyingNotYet?' · NOT YET DECK':''}`;
+  document.getElementById('prog-label').textContent=`Card ${pos+1} of ${deck.length}`;
+  isFlipped=false;document.getElementById('flip-wrap').classList.remove('flipped');
+  document.getElementById('btn-gotit').disabled=true;document.getElementById('btn-notyet').disabled=true;
+  document.getElementById('prev-btn').disabled=pos===0;
+  document.getElementById('next-btn').textContent=pos===deck.length-1?'Finish':'Next →';
+  updateStats();
+}
+function flipCard(){isFlipped=!isFlipped;document.getElementById('flip-wrap').classList.toggle('flipped',isFlipped);if(isFlipped){document.getElementById('btn-gotit').disabled=false;document.getElementById('btn-notyet').disabled=false;}}
+function mark(result){marks[currentIdx]=result;const deck=currentDeck(),pos=deck.indexOf(currentIdx);updateStats();if(pos<deck.length-1){currentIdx=deck[pos+1];renderCard();}else{showDone();}}
+function navPrev(){const deck=currentDeck(),pos=deck.indexOf(currentIdx);if(pos>0){currentIdx=deck[pos-1];renderCard();}}
+function navNext(){const deck=currentDeck(),pos=deck.indexOf(currentIdx);if(pos<deck.length-1){currentIdx=deck[pos+1];renderCard();}else{showDone();}}
+function updateStats(){const got=Object.values(marks).filter(v=>v==='gotit').length,notyet=Object.values(marks).filter(v=>v==='notyet').length,seen=Object.keys(marks).length;document.getElementById('stat-seen').textContent=seen;document.getElementById('stat-got').textContent=got;document.getElementById('stat-notyet').textContent=notyet;document.getElementById('stat-total').textContent=cards.length;document.getElementById('prog-got').style.width=Math.round((got/cards.length)*100)+'%';document.getElementById('prog-notyet').style.width=Math.round((notyet/cards.length)*100)+'%';document.getElementById('study-notyet-btn').style.display=notyet>0?'block':'none';}
+function showDone(){document.getElementById('study-screen').style.display='none';document.getElementById('deck-done').style.display='block';const got=Object.values(marks).filter(v=>v==='gotit').length,total=cards.length,pct=Math.round((got/total)*100),notyet=Object.values(marks).filter(v=>v==='notyet').length;document.getElementById('done-pct').textContent=pct+'%';const msgs=[[90,'🌟 Brilliant!',`You got ${got}/${total} cards. Outstanding!`],[70,'👏 Well done!',`You got ${got}/${total}. Review the ${notyet} Not Yet cards.`],[50,'📚 Good effort!',`You got ${got}/${total}. Focus on the ${notyet} Not Yet cards next.`],[0,'💪 Keep going!',`You got ${got}/${total}. Drill the Not Yet cards to improve.`]];const[,msg,detail]=msgs.find(([t])=>pct>=t);document.getElementById('done-msg').textContent=msg;document.getElementById('done-detail').textContent=detail;}
+function resetDeck(){marks={};currentIdx=0;studyingNotYet=false;document.getElementById('deck-done').style.display='none';document.getElementById('study-screen').style.display='block';renderCard();}
+function resetToSeed(){if(!confirm('Remove AI-generated cards and reset to original 20?'))return;cards=[...SEED_CARDS];marks={};currentIdx=0;studyingNotYet=false;document.getElementById('deck-done').style.display='none';document.getElementById('study-screen').style.display='block';renderCard();}
+function shuffleCards(){for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}marks={};currentIdx=0;studyingNotYet=false;renderCard();}
+function shuffleAndReset(){shuffleCards();document.getElementById('deck-done').style.display='none';document.getElementById('study-screen').style.display='block';}
+function studyNotYet(){notYetIndices=Object.entries(marks).filter(([,v])=>v==='notyet').map(([k])=>parseInt(k));if(notYetIndices.length===0){alert('No Not Yet cards!');return;}studyingNotYet=true;currentIdx=notYetIndices[0];document.getElementById('deck-done').style.display='none';document.getElementById('study-screen').style.display='block';renderCard();}
+async function generateCards(){const btn=document.getElementById('gen-btn'),status=document.getElementById('ai-status');btn.disabled=true;status.className='ai-status show';const SYS=`You are Mr. Proton, an expert Year 8 UK science teacher. Create flashcards aligned to KS3 UK National Curriculum Unit 8C: Breathing and Respiration. Clear, age-appropriate for 12-13 year olds, British English, scientifically accurate. Return ONLY a raw JSON array with "q" and "a" fields.`;const USR=`Generate 5 flashcards about "${selectedChip}" for Year 8 KS3 Unit 8C: Breathing and Respiration. Each: {"q":"...","a":"..."}. Answer 1-3 sentences. JSON array only.`;try{const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,system:SYS,messages:[{role:"user",content:USR}]})});const d=await r.json();const t=d.content.map(i=>i.text||'').join('');const nc=JSON.parse(t.replace(/```json|```/g,'').trim());if(Array.isArray(nc)&&nc.length>0){cards=cards.concat(nc);status.innerHTML=`✅ ${nc.length} new cards added!`;setTimeout(()=>{status.className='ai-status';},3000);updateStats();}else throw new Error();}catch(e){status.innerHTML='⚠️ Could not generate cards. Please try again.';setTimeout(()=>{status.className='ai-status';},3000);}btn.disabled=false;}
+renderCard();
+</script>
+</body>
+</html>
